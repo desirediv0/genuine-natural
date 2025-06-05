@@ -106,28 +106,28 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-white">
       <ClientOnly>
-        <div className="container mx-auto py-12 px-4">
+        <div className="container mx-auto py-8 sm:py-12 px-4 sm:px-6">
           {/* Header Section */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full mb-6">
-              <Heart className="h-8 w-8 text-white" />
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-black rounded-full mb-4 sm:mb-6">
+              <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-3 sm:mb-4">
               My Wishlist
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               Your saved favorites - ready when you are
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-8 max-w-2xl mx-auto">
+            <div className="bg-red-50 border-l-4 border-red-900 text-red-900 px-4 sm:px-6 py-3 sm:py-4 rounded-lg mb-6 sm:mb-8 max-w-2xl mx-auto">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <svg
-                    className="h-5 w-5 text-red-400"
+                    className="h-4 w-4 sm:h-5 sm:w-5 text-red-900"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -146,22 +146,22 @@ export default function WishlistPage() {
           )}
 
           {loadingItems ? (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 flex justify-center">
-              <div className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-8 sm:p-12 flex justify-center">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : wishlistItems.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 text-center max-w-md mx-auto">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-6">
-                <Heart className="h-8 w-8 text-yellow-600" />
+            <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-8 sm:p-12 text-center max-w-md mx-auto">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full mb-4 sm:mb-6">
+                <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-gray-600" />
               </div>
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-900">
                 Your Wishlist is Empty
               </h2>
-              <p className="text-gray-600 mb-8">
+              <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
                 Save your favorite items to your wishlist for easy access later.
               </p>
               <Link href="/products">
-                <Button className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105">
+                <Button className="bg-black hover:bg-gray-900 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200">
                   <ShoppingBag className="h-4 w-4 mr-2" />
                   Explore Products
                 </Button>
@@ -170,21 +170,21 @@ export default function WishlistPage() {
           ) : (
             <>
               {/* Wishlist Stats */}
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
-                <div className="flex items-center justify-between">
+              <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-800">
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                       {wishlistItems.length}{" "}
                       {wishlistItems.length === 1 ? "Item" : "Items"} Saved
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-sm sm:text-base text-gray-600">
                       Your favorite products are waiting for you
                     </p>
                   </div>
                   <Link href="/products">
                     <Button
                       variant="outline"
-                      className="border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+                      className="w-full sm:w-auto border-2 border-black text-black hover:bg-black hover:text-white transition-colors"
                     >
                       <ShoppingBag className="h-4 w-4 mr-2" />
                       Continue Shopping
@@ -194,14 +194,14 @@ export default function WishlistPage() {
               </div>
 
               {/* Wishlist Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                 {wishlistItems.map((product) => (
                   <div
                     key={product.id}
-                    className="bg-white overflow-hidden transition-all hover:shadow-xl shadow-lg rounded-2xl border border-gray-100 group"
+                    className="bg-white overflow-hidden transition-all hover:shadow-xl shadow-md rounded-lg border border-gray-100 group"
                   >
                     <Link href={`/products/${product.slug}`}>
-                      <div className="relative h-64 w-full bg-gradient-to-br from-yellow-50 to-yellow-100 overflow-hidden">
+                      <div className="relative h-48 sm:h-56 md:h-64 w-full bg-gray-50 overflow-hidden">
                         <Image
                           src={
                             product.images[0] ||
@@ -210,37 +210,39 @@ export default function WishlistPage() {
                           alt={product.name}
                           fill
                           className="object-contain p-4 transition-transform group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         />
 
-                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 backdrop-blur-[2px] flex justify-center py-3 translate-y-full group-hover:translate-y-0 transition-transform">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-white hover:text-white hover:bg-yellow-500/80 rounded-full p-2"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleQuickView(product);
-                            }}
-                          >
-                            <Eye className="h-5 w-5" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-white hover:text-white hover:bg-red-500/80 rounded-full p-2 mx-2"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              removeFromWishlist(product.id);
-                            }}
-                            disabled={removingItems.has(product.id)}
-                          >
-                            {removingItems.has(product.id) ? (
-                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            ) : (
-                              <Trash2 className="h-5 w-5" />
-                            )}
-                          </Button>
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300">
+                          <div className="absolute bottom-0 left-0 right-0 flex justify-center py-3 translate-y-full group-hover:translate-y-0 transition-transform">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-transparent group-hover:text-white hover:bg-white/20 rounded-full p-2"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleQuickView(product);
+                              }}
+                            >
+                              <Eye className="h-5 w-5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-transparent group-hover:text-white hover:bg-white/20 rounded-full p-2 mx-2"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                removeFromWishlist(product.id);
+                              }}
+                              disabled={removingItems.has(product.id)}
+                            >
+                              {removingItems.has(product.id) ? (
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                              ) : (
+                                <Trash2 className="h-5 w-5" />
+                              )}
+                            </Button>
+                          </div>
                         </div>
 
                         {/* Remove button - always visible on mobile */}
@@ -250,10 +252,10 @@ export default function WishlistPage() {
                             removeFromWishlist(product.id);
                           }}
                           disabled={removingItems.has(product.id)}
-                          className="absolute top-3 right-3 bg-white/90 hover:bg-white text-red-500 hover:text-red-600 p-2 rounded-full shadow-md transition-all md:opacity-0 group-hover:opacity-100"
+                          className="absolute top-2 right-2 bg-white/90 hover:bg-white text-gray-700 hover:text-black p-2 rounded-full shadow-md transition-all sm:opacity-0 group-hover:opacity-100"
                         >
                           {removingItems.has(product.id) ? (
-                            <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
                           ) : (
                             <Trash2 className="h-4 w-4" />
                           )}
@@ -261,13 +263,13 @@ export default function WishlistPage() {
                       </div>
                     </Link>
 
-                    <div className="p-6 text-center">
-                      <div className="flex items-center justify-center mb-3">
-                        <div className="flex text-yellow-400">
+                    <div className="p-4 sm:p-6 text-center">
+                      <div className="flex items-center justify-center mb-2 sm:mb-3">
+                        <div className="flex text-black">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className="h-4 w-4"
+                              className="h-3 w-3 sm:h-4 sm:w-4"
                               fill={
                                 i < Math.round(product.avgRating || 0)
                                   ? "currentColor"
@@ -283,15 +285,15 @@ export default function WishlistPage() {
 
                       <Link
                         href={`/products/${product.slug}`}
-                        className="hover:text-yellow-600 transition-colors"
+                        className="hover:text-gray-600 transition-colors"
                       >
-                        <h3 className="font-semibold text-gray-800 mb-3 line-clamp-2 text-lg">
+                        <h3 className="font-medium text-gray-900 mb-2 sm:mb-3 line-clamp-2 text-sm sm:text-base">
                           {product.name}
                         </h3>
                       </Link>
 
                       {product.flavors > 1 && (
-                        <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full mb-4 inline-block">
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 sm:px-3 py-1 rounded-full mb-3 sm:mb-4 inline-block">
                           {product.flavors} variants
                         </span>
                       )}
@@ -301,9 +303,9 @@ export default function WishlistPage() {
                           href={`/products/${product.slug}`}
                           className="flex-1"
                         >
-                          <Button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-xl font-semibold transition-all duration-200">
+                          <Button className="w-full bg-black hover:bg-gray-900 text-white text-xs sm:text-sm rounded-lg font-medium transition-colors">
                             View Product
-                            <ArrowRight className="h-4 w-4 ml-2" />
+                            <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-2" />
                           </Button>
                         </Link>
                       </div>

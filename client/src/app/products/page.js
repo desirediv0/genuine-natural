@@ -349,6 +349,8 @@ function ProductsContent() {
   };
 
   const handleAddToCart = async (product) => {
+
+    console.log(product);
     try {
       if (!product || !product.variants || product.variants.length === 0) {
         const response = await fetchApi(

@@ -17,9 +17,6 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import Hero from "@/components/hero";
 import FeatureBanner from "@/components/featurebanner";
 
-
-
-
 // Testimonials Section
 const TestimonialsSection = () => {
   const testimonials = [
@@ -50,11 +47,11 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="py-32 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+    <section className="py-32 bg-white relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-[#ce801f]/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#ce801f]/5 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-black/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-black/5 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -65,13 +62,16 @@ const TestimonialsSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <Headtext text="WHAT OUR CUSTOMERS SAY" />
+          <h2 className="text-4xl font-bold text-gray-900 mb-2 tracking-tight">
+            Testimonials
+          </h2>
+          <div className="w-20 h-1 bg-black/70 mx-auto mb-6"></div>
           <p className="text-gray-600 mt-6 max-w-2xl mx-auto text-lg">
             Real experiences from people who trust our products
           </p>
         </motion.div>
 
-        <div className="relative max-w-6xl mx-auto">
+        <div className="relative max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
             {testimonials.map((testimonial, index) => (
               <motion.div
@@ -80,62 +80,57 @@ const TestimonialsSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
-                className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="group relative bg-black/5 backdrop-blur-lg rounded-3xl p-8 border border-black/10 hover:bg-black/10 transition-all duration-300"
               >
-                {/* Decorative elements */}
-                <div className="absolute top-0 left-0 w-24 h-24 bg-primary/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl"></div>
-
                 {/* Quote mark */}
-                <div className="absolute top-6 right-6 text-6xl text-[#ce801f]/10 font-serif">
-                  &quot;
+                <div className="absolute top-6 right-6 text-7xl text-black/80 font-serif">
+                  "
                 </div>
 
                 {/* Content */}
                 <div className="relative">
                   {/* Avatar and info */}
-                  <div className="flex items-center mb-6">
-                    <div className="w-16 h-16 relative rounded-full overflow-hidden border-2 border-[#ce801f]/20 shadow-md">
-                      <div className="w-full h-full bg-gradient-to-br from-[#ce801f] to-[#ce801f]/80 flex items-center justify-center text-white font-bold text-xl">
+                  <div className="flex items-center mb-8">
+                    <div className="w-20 h-20 relative rounded-2xl overflow-hidden border border-black/20 shadow-xl group-hover:scale-105 transition-transform duration-300">
+                      <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center text-white font-bold text-2xl">
                         {testimonial.name.substring(0, 2).toUpperCase()}
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <h3 className="font-bold text-gray-900 text-lg">
+                    <div className="ml-5">
+                      <h3 className="font-bold text-gray-900 text-xl mb-1 group-hover:text-black transition-colors">
                         {testimonial.name}
                       </h3>
-                      <p className="text-sm text-[#ce801f] font-medium">
+                      <p className="text-sm text-gray-600 font-medium">
                         {testimonial.role}
                       </p>
                     </div>
                   </div>
 
                   {/* Rating */}
-                  <div className="flex mb-4">
+                  <div className="flex mb-6 space-x-1">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
                         className={`h-5 w-5 ${
                           i < testimonial.rating
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
+                            ? "text-yellow-500 fill-yellow-500"
+                            : "text-yellow-300"
                         }`}
                       />
                     ))}
                   </div>
 
                   {/* Quote */}
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    &quot;{testimonial.quote}&quot;
+                  <p className="text-gray-700 text-lg leading-relaxed font-light">
+                    "{testimonial.quote}"
                   </p>
 
                   {/* Bottom design element */}
-                  <div className="mt-8 flex justify-center">
-                    <motion.div
-                      className="h-1 w-12 bg-[#ce801f]/30 rounded-full"
-                      whileHover={{ width: 60 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
+                  <motion.div
+                    className="mt-8 w-full h-[1px] bg-gradient-to-r from-transparent via-black/30 to-transparent"
+                    whileHover={{ scaleX: 1.2 }}
+                    transition={{ duration: 0.3 }}
+                  />
                 </div>
               </motion.div>
             ))}
@@ -145,7 +140,6 @@ const TestimonialsSection = () => {
     </section>
   );
 };
-
 
 // Home page component
 export default function Home() {

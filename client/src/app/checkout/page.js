@@ -230,7 +230,7 @@ export default function CheckoutPage() {
           key: razorpayKey,
           amount: razorpayOrder.amount,
           currency: razorpayOrder.currency,
-          name: "Power Fitness - Premium Supplements for Your Fitness Journey",
+          name: "Being Genuine Natural - Premium Supplements for Your Fitness Journey",
           description: "Get high-quality supplements at the best prices.",
           order_id: razorpayOrder.id,
           prefill: {
@@ -286,7 +286,7 @@ export default function CheckoutPage() {
             }
           },
           theme: {
-            color: "#F47C20",
+            color: "#000000",
           },
           modal: {
             ondismiss: () => {
@@ -320,96 +320,71 @@ export default function CheckoutPage() {
     }
   };
 
+  // Loading state UI
   if (!isAuthenticated || loadingAddresses) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-[#fafafa]">
         <div className="container mx-auto px-4 py-10">
           <div className="flex justify-center items-center h-64">
-            <div className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
       </div>
     );
   }
 
-  // If order created successfully
+  // Order success UI
   if (orderCreated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-[#fafafa]">
         <div className="container mx-auto px-4 py-12">
-          <div className="max-w-lg mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100 relative overflow-hidden">
-            {/* Background pattern for festive feel */}
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-transparent z-0"></div>
+          <div className="max-w-xl mx-auto bg-white p-10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-gray-50 opacity-50"></div>
 
-            {/* Celebration animation */}
             <div className="relative z-10">
-              <div className="relative flex justify-center">
-                <div className="h-36 w-36 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
-                  <PartyPopper
-                    className={`h-20 w-20 text-yellow-600 ${
-                      confettiCannon ? "animate-pulse" : ""
-                    }`}
-                  />
-                </div>
-
-                {/* Radiating circles animation */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="animate-ping absolute h-40 w-40 rounded-full bg-yellow-500 opacity-20"></div>
-                  <div className="animate-ping absolute h-32 w-32 rounded-full bg-green-500 opacity-10 delay-150"></div>
-                  <div className="animate-ping absolute h-24 w-24 rounded-full bg-yellow-500 opacity-10 delay-300"></div>
+              <div className="relative flex justify-center mb-8">
+                <div className="h-32 w-32 bg-black rounded-full flex items-center justify-center mx-auto animate-bounce">
+                  <PartyPopper className={`h-16 w-16 text-white ${confettiCannon ? "animate-pulse" : ""}`} />
                 </div>
               </div>
 
-              <div className="text-center">
-                <h1 className="text-4xl font-bold mb-2 text-gray-800 animate-pulse">
-                  Woohoo!
-                </h1>
-
-                <h2 className="text-2xl font-bold mb-2 text-gray-800">
-                  Order Confirmed!
-                </h2>
+              <div className="text-center space-y-6">
+                <div>
+                  <h1 className="text-5xl font-bold mb-2 text-black">Success</h1>
+                  <p className="text-xl text-gray-600">Order Confirmed</p>
+                </div>
 
                 {orderNumber && (
-                  <div className="bg-gradient-to-r from-yellow-100 to-yellow-200 py-3 px-6 rounded-full inline-block mb-4">
-                    <p className="text-lg font-semibold text-yellow-700">
-                      Order #{orderNumber}
-                    </p>
+                  <div className="inline-flex items-center px-6 py-3 bg-black text-white rounded-full">
+                    <span className="text-lg font-medium">Order #{orderNumber}</span>
                   </div>
                 )}
 
-                <div className="my-6 flex items-center justify-center bg-green-50 p-4 rounded-xl border border-green-200">
-                  <CheckCircle className="h-8 w-8 text-green-500 mr-2" />
-                  <p className="text-xl text-green-600 font-medium">
-                    Payment Successful
-                  </p>
+                <div className="flex items-center justify-center space-x-2 text-green-600 bg-green-50 p-4 rounded-2xl">
+                  <CheckCircle className="h-6 w-6" />
+                  <p className="text-lg font-medium">Payment Successful</p>
                 </div>
 
-                <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                  Thank you for your purchase! Your order has been successfully
-                  placed and you&apos;ll receive an email confirmation shortly.
+                <p className="text-gray-600 max-w-md mx-auto">
+                  Thank you for your purchase! We've sent you an email with order details and tracking information.
                 </p>
 
-                <div className="mb-6 bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-center justify-center space-x-2">
-                  <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
-                  <p className="text-blue-700">
-                    Redirecting to orders page in {redirectCountdown} seconds...
-                  </p>
+                <div className="flex items-center justify-center space-x-2 text-gray-600 bg-gray-50 p-4 rounded-2xl">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <p>Redirecting in {redirectCountdown} seconds...</p>
                 </div>
 
                 <div className="flex justify-center gap-4">
                   <Link href="/account/orders">
-                    <Button className="gap-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 rounded-xl">
-                      <ShoppingBag size={16} />
-                      My Orders
+                    <Button className="bg-black hover:bg-gray-900 text-white px-8 py-6 rounded-xl text-lg">
+                      <ShoppingBag className="mr-2 h-5 w-5" />
+                      View Orders
                     </Button>
                   </Link>
                   <Link href="/products">
-                    <Button
-                      variant="outline"
-                      className="gap-2 border-yellow-200 text-yellow-600 hover:bg-yellow-50 rounded-xl"
-                    >
-                      <Gift size={16} />
-                      Continue Shopping
+                    <Button variant="outline" className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 px-8 py-6 rounded-xl text-lg">
+                      <Gift className="mr-2 h-5 w-5" />
+                      Shop More
                     </Button>
                   </Link>
                 </div>
@@ -421,299 +396,300 @@ export default function CheckoutPage() {
     );
   }
 
+  // Main checkout UI
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Secure Checkout</h1>
-          <div className="flex items-center space-x-4 text-sm text-gray-600">
-            <div className="flex items-center">
-              <Shield className="h-4 w-4 mr-1 text-green-500" />
-              <span>Secure</span>
-            </div>
-            <div className="flex items-center">
-              <Truck className="h-4 w-4 mr-1 text-blue-500" />
-              <span>Free Shipping</span>
-            </div>
-          </div>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start">
-            <AlertCircle className="text-red-500 mt-0.5 mr-3 flex-shrink-0" />
-            <div>
-              <p className="text-red-700 font-semibold">Payment Failed</p>
-              <p className="text-red-600">{error}</p>
-            </div>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main checkout area */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Shipping Addresses */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold flex items-center text-gray-800">
-                  <MapPin className="h-6 w-6 mr-3 text-yellow-500" />
-                  Shipping Address
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-yellow-600 hover:bg-yellow-50 rounded-xl"
-                  onClick={() => setShowAddressForm(!showAddressForm)}
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add New
-                </Button>
+    <div className="min-h-screen bg-[#fafafa]">
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-12">
+            <h1 className="text-4xl font-bold text-black">Checkout</h1>
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <Shield className="h-5 w-5 text-black" />
+                <span className="text-sm font-medium">Secure Checkout</span>
               </div>
-
-              {showAddressForm && (
-                <div className="mb-6">
-                  <AddressForm
-                    onSuccess={handleAddressFormSuccess}
-                    onCancel={() => setShowAddressForm(false)}
-                    isInline={true}
-                  />
-                </div>
-              )}
-
-              {addresses.length === 0 && !showAddressForm ? (
-                <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
-                  <span className="text-yellow-700">
-                    You don&apos;t have any saved addresses.{" "}
-                    <button
-                      className="font-medium underline hover:text-yellow-800"
-                      onClick={() => setShowAddressForm(true)}
-                    >
-                      Add an address
-                    </button>{" "}
-                    to continue.
-                  </span>
-                </div>
-              ) : (
-                <div
-                  className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${
-                    showAddressForm ? "mt-6" : ""
-                  }`}
-                >
-                  {addresses.map((address) => (
-                    <div
-                      key={address.id}
-                      className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
-                        selectedAddressId === address.id
-                          ? "border-yellow-500 bg-yellow-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                      onClick={() => handleAddressSelect(address.id)}
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="font-semibold text-gray-800">
-                          {address.name}
-                        </span>
-                        {address.isDefault && (
-                          <span className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">
-                            Default
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <p>{address.street}</p>
-                        <p>
-                          {address.city}, {address.state} {address.postalCode}
-                        </p>
-                        <p>{address.country}</p>
-                        <p className="mt-2">
-                          Phone: {address.phone || "Not provided"}
-                        </p>
-                      </div>
-                      <div className="mt-3 flex items-center">
-                        <input
-                          type="radio"
-                          name="addressSelection"
-                          checked={selectedAddressId === address.id}
-                          onChange={() => handleAddressSelect(address.id)}
-                          className="h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-500"
-                        />
-                        <label className="ml-2 text-sm font-medium text-gray-700">
-                          Ship to this address
-                        </label>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="flex items-center space-x-2">
+                <Truck className="h-5 w-5 text-black" />
+                <span className="text-sm font-medium">Free Shipping</span>
+              </div>
             </div>
+          </div>
 
-            {/* Payment Method */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-              <h2 className="text-xl font-bold flex items-center mb-6 text-gray-800">
-                <CreditCard className="h-6 w-6 mr-3 text-yellow-500" />
-                Payment Method
-              </h2>
+          {error && (
+            <div className="mb-8 p-6 bg-red-50 rounded-2xl flex items-start">
+              <AlertCircle className="text-red-500 mt-1 mr-4 flex-shrink-0 h-6 w-6" />
+              <div>
+                <p className="text-lg font-semibold text-red-700">Payment Failed</p>
+                <p className="text-red-600 mt-1">{error}</p>
+              </div>
+            </div>
+          )}
 
-              <div className="space-y-4">
-                <div
-                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
-                    paymentMethod === "RAZORPAY"
-                      ? "border-yellow-500 bg-yellow-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                  onClick={() => handlePaymentMethodSelect("RAZORPAY")}
-                >
-                  <div className="flex items-center">
-                    <input
-                      type="radio"
-                      id="razorpay"
-                      name="paymentMethod"
-                      checked={paymentMethod === "RAZORPAY"}
-                      onChange={() => handlePaymentMethodSelect("RAZORPAY")}
-                      className="h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-500"
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Main checkout area */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Shipping Addresses */}
+              <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-8">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-bold flex items-center text-black">
+                    <MapPin className="h-7 w-7 mr-3" />
+                    Delivery Address
+                  </h2>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl"
+                    onClick={() => setShowAddressForm(!showAddressForm)}
+                  >
+                    <Plus className="h-5 w-5 mr-2" />
+                    Add New Address
+                  </Button>
+                </div>
+
+                {showAddressForm && (
+                  <div className="mb-8">
+                    <AddressForm
+                      onSuccess={handleAddressFormSuccess}
+                      onCancel={() => setShowAddressForm(false)}
+                      isInline={true}
                     />
-                    <label
-                      htmlFor="razorpay"
-                      className="ml-3 flex items-center flex-1"
-                    >
-                      <span className="font-semibold text-gray-800">
-                        Pay Online
-                      </span>
-                      <span className="ml-2 text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                        Recommended
-                      </span>
-                    </label>
-                    <span className="flex items-center">
-                      <IndianRupee className="h-5 w-5 text-yellow-500" />
-                    </span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-2 ml-7">
-                    Pay securely with Credit/Debit Card, UPI, NetBanking, etc.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+                )}
 
-          {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-20">
-              <h2 className="text-xl font-bold mb-6 text-gray-800">
-                Order Summary
-              </h2>
-
-              <div className="divide-y divide-gray-100">
-                <div className="pb-4">
-                  <p className="text-sm font-semibold mb-3 text-gray-700">
-                    {cart.totalQuantity} Items in Cart
-                  </p>
-                  <div className="max-h-52 overflow-y-auto space-y-3">
-                    {cart.items?.map((item) => (
-                      <div key={item.id} className="flex items-center gap-3">
-                        <div className="h-12 w-12 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg flex-shrink-0 relative">
-                          {item.product.image && (
-                            <Image
-                              src={item.product.image || "/placeholder.svg"}
-                              alt={item.product.name}
-                              fill
-                              className="object-contain p-1"
-                            />
+                {addresses.length === 0 && !showAddressForm ? (
+                  <div className="bg-gray-50 p-6 rounded-2xl border-2 border-gray-100">
+                    <p className="text-gray-600 text-lg">
+                      No addresses saved yet.{" "}
+                      <button
+                        className="font-medium text-black underline hover:text-gray-700"
+                        onClick={() => setShowAddressForm(true)}
+                      >
+                        Add your first address
+                      </button>
+                    </p>
+                  </div>
+                ) : (
+                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${showAddressForm ? "mt-8" : ""}`}>
+                    {addresses.map((address) => (
+                      <div
+                        key={address.id}
+                        className={`border-2 rounded-2xl p-6 cursor-pointer transition-all duration-200 ${
+                          selectedAddressId === address.id
+                            ? "border-black bg-gray-50 shadow-lg"
+                            : "border-gray-200 hover:border-gray-400"
+                        }`}
+                        onClick={() => handleAddressSelect(address.id)}
+                      >
+                        <div className="flex justify-between items-start mb-4">
+                          <span className="text-lg font-bold text-black">{address.name}</span>
+                          {address.isDefault && (
+                            <span className="px-3 py-1 bg-black text-white text-sm font-medium rounded-full">
+                              Default
+                            </span>
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate text-gray-800">
-                            {item.product.name}
+                        <div className="space-y-2 text-gray-600">
+                          <p className="text-base">{address.street}</p>
+                          <p className="text-base">
+                            {address.city}, {address.state} {address.postalCode}
                           </p>
-                          <p className="text-xs text-gray-500">
-                            {item.quantity} × {formatCurrency(item.price)}
+                          <p className="text-base">{address.country}</p>
+                          <p className="text-base font-medium mt-4">
+                            📞 {address.phone || "Not provided"}
                           </p>
                         </div>
-                        <p className="font-semibold text-sm text-gray-800">
-                          {formatCurrency(item.subtotal)}
-                        </p>
+                        <div className="mt-4 flex items-center">
+                          <input
+                            type="radio"
+                            name="addressSelection"
+                            checked={selectedAddressId === address.id}
+                            onChange={() => handleAddressSelect(address.id)}
+                            className="h-5 w-5 text-black border-gray-300 focus:ring-black"
+                          />
+                          <label className="ml-3 text-base font-medium text-gray-700">
+                            Deliver to this address
+                          </label>
+                        </div>
                       </div>
                     ))}
                   </div>
-                </div>
+                )}
+              </div>
 
-                <div className="py-4 space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">
-                      {formatCurrency(totals.subtotal)}
-                    </span>
-                  </div>
+              {/* Payment Method */}
+              <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-8">
+                <h2 className="text-2xl font-bold flex items-center mb-8 text-black">
+                  <CreditCard className="h-7 w-7 mr-3" />
+                  Payment Method
+                </h2>
 
-                  {coupon && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Discount</span>
-                      <span className="font-medium">
-                        -{formatCurrency(totals.discount)}
-                      </span>
+                <div className="space-y-4">
+                  <div
+                    className={`border-2 rounded-2xl p-6 cursor-pointer transition-all duration-200 ${
+                      paymentMethod === "RAZORPAY"
+                        ? "border-black bg-gray-50 shadow-lg"
+                        : "border-gray-200 hover:border-gray-400"
+                    }`}
+                    onClick={() => handlePaymentMethodSelect("RAZORPAY")}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center flex-1">
+                        <input
+                          type="radio"
+                          id="razorpay"
+                          name="paymentMethod"
+                          checked={paymentMethod === "RAZORPAY"}
+                          onChange={() => handlePaymentMethodSelect("RAZORPAY")}
+                          className="h-5 w-5 text-black border-gray-300 focus:ring-black"
+                        />
+                        <label htmlFor="razorpay" className="ml-3">
+                          <span className="text-lg font-bold text-black">Pay Online</span>
+                          <span className="ml-3 px-3 py-1 bg-black text-white text-xs font-medium rounded-full">
+                            Recommended
+                          </span>
+                        </label>
+                      </div>
+                      <IndianRupee className="h-6 w-6 text-gray-600" />
                     </div>
-                  )}
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="text-green-600 font-semibold flex items-center">
-                      <Gift className="h-4 w-4 mr-1" />
-                      FREE
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-4">
-                  <div className="flex justify-between font-bold text-xl">
-                    <span className="text-gray-800">Total</span>
-                    <span className="text-yellow-600">
-                      {formatCurrency(totals.subtotal - totals.discount)}
-                    </span>
+                    <p className="text-base text-gray-600 mt-3 ml-8">
+                      Secure payment via Credit/Debit Card, UPI, or NetBanking
+                    </p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <Button
-                className="w-full mt-6 h-14 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold text-lg rounded-xl transition-all duration-200 transform hover:scale-[1.02]"
-                onClick={handleCheckout}
-                disabled={
-                  processing ||
-                  !selectedAddressId ||
-                  !paymentMethod ||
-                  addresses.length === 0
-                }
-              >
-                {processing ? (
-                  <span className="flex items-center">
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Processing...
-                  </span>
-                ) : (
-                  <span className="flex items-center">
-                    <Shield className="mr-2 h-5 w-5" />
-                    Place Secure Order
-                  </span>
-                )}
-              </Button>
+            {/* Order Summary */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-8 sticky top-8">
+                <h2 className="text-2xl font-bold mb-8 text-black">Order Summary</h2>
 
-              <p className="text-xs text-gray-500 mt-4 text-center">
-                By placing your order, you agree to our terms and conditions.
-              </p>
-
-              {/* Trust Badges */}
-              <div className="mt-6 pt-6 border-t border-gray-100">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="flex flex-col items-center">
-                    <Shield className="h-6 w-6 text-green-500 mb-1" />
-                    <span className="text-xs text-gray-600">
-                      Secure Payment
-                    </span>
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-base font-medium text-gray-600 mb-4">
+                      {cart.totalQuantity} {cart.totalQuantity === 1 ? 'Item' : 'Items'} in Cart
+                    </p>
+                    <div className="max-h-[300px] overflow-y-auto space-y-4 pr-2">
+                      {cart.items?.map((item) => (
+                        <div key={item.id} className="flex items-center gap-4">
+                          <div className="h-16 w-16 bg-gray-50 rounded-xl flex-shrink-0 relative">
+                            {item.product.image && (
+                              <Image
+                                src={item.product.image || "/placeholder.svg"}
+                                alt={item.product.name}
+                                fill
+                                className="object-contain p-2"
+                              />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-base font-medium text-black truncate">
+                              {item.product.name}
+                            </p>
+                            <p className="text-sm text-gray-500 mt-1">
+                              {item.quantity} × {formatCurrency(item.price)}
+                            </p>
+                          </div>
+                          <p className="text-base font-bold text-black">
+                            {formatCurrency(item.subtotal)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <Truck className="h-6 w-6 text-blue-500 mb-1" />
-                    <span className="text-xs text-gray-600">Free Shipping</span>
+
+                  <div className="border-t border-gray-100 pt-6 space-y-4">
+                    <div className="flex justify-between text-base">
+                      <span className="text-gray-600">Subtotal</span>
+                      <span className="font-bold text-black">
+                        {formatCurrency(totals.subtotal)}
+                      </span>
+                    </div>
+
+                    {coupon && (
+                      <div className="flex justify-between text-base">
+                        <span className="text-green-600">Discount Applied</span>
+                        <span className="font-bold text-green-600">
+                          -{formatCurrency(totals.discount)}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between text-base">
+                      <span className="text-gray-600">Shipping</span>
+                      <span className="flex items-center text-green-600 font-bold">
+                        <Gift className="h-5 w-5 mr-2" />
+                        FREE
+                      </span>
+                    </div>
+
+                    <div className="border-t border-gray-100 pt-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-bold text-black">Total</span>
+                        <span className="text-2xl font-bold text-black">
+                          {formatCurrency(totals.subtotal - totals.discount)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <Clock className="h-6 w-6 text-yellow-500 mb-1" />
-                    <span className="text-xs text-gray-600">Fast Delivery</span>
+
+                  <Button
+                    className="w-full h-16 bg-black hover:bg-gray-900 text-white text-lg font-bold rounded-2xl
+                    transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed
+                    disabled:hover:scale-100 flex items-center justify-center gap-3"
+                    onClick={handleCheckout}
+                    disabled={
+                      processing ||
+                      !selectedAddressId ||
+                      !paymentMethod ||
+                      addresses.length === 0
+                    }
+                  >
+                    {processing ? (
+                      <>
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Shield className="h-6 w-6" />
+                        <span>Place Secure Order</span>
+                      </>
+                    )}
+                  </Button>
+
+                  <p className="text-sm text-gray-500 text-center">
+                    By placing your order, you agree to our Terms & Conditions
+                  </p>
+
+                  {/* Security Badges */}
+                  <div className="border-t border-gray-100 pt-6">
+                    <div className="grid grid-cols-3 gap-6">
+                      <div className="flex flex-col items-center">
+                        <Shield className="h-8 w-8 text-black mb-2" />
+                        <span className="text-sm text-gray-600 text-center">
+                          Secure
+                          <br />
+                          Payment
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <Truck className="h-8 w-8 text-black mb-2" />
+                        <span className="text-sm text-gray-600 text-center">
+                          Free
+                          <br />
+                          Shipping
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <Clock className="h-8 w-8 text-black mb-2" />
+                        <span className="text-sm text-gray-600 text-center">
+                          Fast
+                          <br />
+                          Delivery
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

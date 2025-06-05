@@ -39,7 +39,7 @@ export function Footer() {
           <div>
             <div className="mb-6">
               <Image
-                src="/logo__2_-removebg-preview.png"
+                src="/white-logo.png"
                 alt="PowerFuel Logo"
                 width={120}
                 height={140}

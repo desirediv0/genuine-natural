@@ -387,51 +387,51 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto p-0 bg-white">
+      <DialogContent className="sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-[1100px] w-full max-h-[90vh] md:max-h-[95vh] overflow-y-auto p-0 bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-2xl">
         {/* Header */}
-        <DialogHeader className="px-6 py-4 border-b border-gray-100">
+        <DialogHeader className="px-4 sm:px-6 md:px-8 py-4 md:py-6 bg-black text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl font-bold text-[#2C3E50] pr-8">
+            <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-light tracking-wider line-clamp-1">
               {displayProduct.name}
             </DialogTitle>
-            <div className="flex items-center space-x-2">
+            {/* <div className="flex items-center space-x-2 sm:space-x-3">
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-10 h-10 p-0 hover:bg-gray-100 rounded-full"
+                className="w-10 h-10 sm:w-12 sm:h-12 p-0 hover:bg-white/10 rounded-full transition-all duration-300 group"
               >
-                <Heart className="h-5 w-5 text-gray-600" />
+                <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-white group-hover:text-white transition-colors duration-300" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-10 h-10 p-0 hover:bg-gray-100 rounded-full"
+                className="w-10 h-10 sm:w-12 sm:h-12 p-0 hover:bg-white/10 rounded-full transition-all duration-300 group"
               >
-                <Share2 className="h-5 w-5 text-gray-600" />
+                <Share2 className="h-5 w-5 sm:h-6 sm:w-6 text-white group-hover:text-white transition-colors duration-300" />
               </Button>
-            </div>
+            </div> */}
           </div>
         </DialogHeader>
 
         {loading && !productDetails ? (
-          <div className="py-16 flex justify-center">
-            <div className="w-12 h-12 border-4 border-[#F47C20] border-t-transparent rounded-full animate-spin"></div>
+          <div className="py-16 md:py-32 flex justify-center">
+            <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 p-4 sm:p-6 md:p-8">
             {/* Product Image */}
             <div className="relative">
-              <div className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden bg-gray-50 shadow-sm">
+              <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-none overflow-hidden bg-gray-50 transition-shadow duration-300 group">
                 <Image
                   src={imgSrc || "/placeholder.svg"}
                   alt={displayProduct.name}
                   fill
-                  className="object-contain p-6"
-                  sizes="(max-width: 768px) 100vw, 450px"
+                  className="object-contain p-4 sm:p-6 md:p-8 transform group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 60vw, 50vw"
                   onError={() => setImgSrc("/product-placeholder.jpg")}
                 />
                 {displayProduct.hasSale && (
-                  <div className="absolute top-4 left-4 bg-[#F47C20] text-white text-sm font-bold px-3 py-2 rounded-lg shadow-lg">
+                  <div className="absolute top-4 sm:top-6 left-4 sm:left-6 bg-black text-white text-xs sm:text-sm font-light tracking-wider px-4 sm:px-6 py-2 sm:py-3">
                     SALE
                   </div>
                 )}
@@ -439,12 +439,12 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
             </div>
 
             {/* Product Info */}
-            <div className="flex flex-col space-y-6">
+            <div className="flex flex-col space-y-6 md:space-y-8">
               {/* Success Message */}
               {success && (
-                <div className="p-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg flex items-center">
-                  <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0" />
-                  <span className="font-medium">
+                <div className="p-3 md:p-4 bg-green-50 border-l-4 border-green-900 text-green-900 text-xs sm:text-sm flex items-center">
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 flex-shrink-0" />
+                  <span className="font-light tracking-wide">
                     Item added to cart successfully!
                   </span>
                 </div>
@@ -452,33 +452,33 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
               {/* Error message */}
               {error && (
-                <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg flex items-center">
-                  <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" />
-                  <span className="font-medium">{error}</span>
+                <div className="p-3 md:p-4 bg-red-50 border-l-4 border-red-900 text-red-900 text-xs sm:text-sm flex items-center">
+                  <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 flex-shrink-0" />
+                  <span className="font-light tracking-wide">{error}</span>
                 </div>
               )}
 
               {/* Price */}
-              <div className="border-b border-gray-100 pb-4">
+              <div className="border-b border-gray-200 pb-4 md:pb-6">
                 {getPriceDisplay()}
               </div>
 
               {/* Rating */}
               {displayProduct.avgRating > 0 && (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 md:space-x-4 p-3 md:p-4">
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-5 w-5 ${
+                        className={`h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 ${
                           star <= Math.round(displayProduct.avgRating || 0)
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
+                            ? "text-black fill-black"
+                            : "text-gray-200"
+                        } transform hover:scale-110 transition-transform duration-200`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600 font-medium">
+                  <span className="text-xs sm:text-sm text-gray-600 font-light tracking-wide">
                     {displayProduct.avgRating?.toFixed(1)} (
                     {displayProduct.reviewCount || 0} reviews)
                   </span>
@@ -486,91 +486,85 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
               )}
 
               {/* Flavor selection */}
-              {productDetails?.flavorOptions &&
-                productDetails.flavorOptions.length > 0 && (
-                  <div>
-                    <label className="block text-sm font-semibold text-[#2C3E50] mb-3">
-                      Choose Flavor
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {productDetails.flavorOptions.map((flavor) => {
-                        const availableWeightIds = getAvailableWeightsForFlavor(
-                          flavor.id
-                        );
-                        const isAvailable = availableWeightIds.length > 0;
+              {productDetails?.flavorOptions && productDetails.flavorOptions.length > 0 && (
+                <div className="space-y-3 md:space-y-4">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-900 tracking-wide uppercase">
+                    Choose Flavor
+                  </label>
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                    {productDetails.flavorOptions.map((flavor) => {
+                      const availableWeightIds = getAvailableWeightsForFlavor(flavor.id);
+                      const isAvailable = availableWeightIds.length > 0;
 
-                        return (
-                          <button
-                            key={flavor.id}
-                            type="button"
-                            onClick={() => handleFlavorChange(flavor)}
-                            disabled={!isAvailable}
-                            className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
-                              selectedFlavor?.id === flavor.id
-                                ? "border-[#F47C20] bg-[#F47C20] text-white shadow-md"
-                                : isAvailable
-                                ? "border-gray-300 hover:border-[#F47C20] hover:text-[#F47C20]"
-                                : "border-gray-200 text-gray-400 cursor-not-allowed"
-                            }`}
-                          >
-                            {flavor.name}
-                          </button>
-                        );
-                      })}
-                    </div>
+                      return (
+                        <button
+                          key={flavor.id}
+                          type="button"
+                          onClick={() => handleFlavorChange(flavor)}
+                          disabled={!isAvailable}
+                          className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-xs sm:text-sm font-light tracking-wider transition-all duration-300 ${
+                            selectedFlavor?.id === flavor.id
+                              ? "bg-black text-white"
+                              : isAvailable
+                              ? "border border-black hover:bg-black hover:text-white"
+                              : "border border-gray-200 text-gray-400 cursor-not-allowed"
+                          }`}
+                        >
+                          {flavor.name}
+                        </button>
+                      );
+                    })}
                   </div>
-                )}
+                </div>
+              )}
 
               {/* Weight selection */}
-              {productDetails?.weightOptions &&
-                productDetails.weightOptions.length > 0 && (
-                  <div>
-                    <label className="block text-sm font-semibold text-[#2C3E50] mb-3">
-                      Choose Weight
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {productDetails.weightOptions.map((weight) => {
-                        const availableFlavorIds = getAvailableFlavorsForWeight(
-                          weight.id
-                        );
-                        const isAvailable = selectedFlavor
-                          ? availableCombinations.some(
-                              (combo) =>
-                                combo.flavorId === selectedFlavor.id &&
-                                combo.weightId === weight.id
-                            )
-                          : availableFlavorIds.length > 0;
+              {productDetails?.weightOptions && productDetails.weightOptions.length > 0 && (
+                <div className="space-y-3 md:space-y-4">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-900 tracking-wide uppercase">
+                    Choose Weight
+                  </label>
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                    {productDetails.weightOptions.map((weight) => {
+                      const availableFlavorIds = getAvailableFlavorsForWeight(weight.id);
+                      const isAvailable = selectedFlavor
+                        ? availableCombinations.some(
+                            (combo) =>
+                              combo.flavorId === selectedFlavor.id &&
+                              combo.weightId === weight.id
+                          )
+                        : availableFlavorIds.length > 0;
 
-                        return (
-                          <button
-                            key={weight.id}
-                            type="button"
-                            onClick={() => handleWeightChange(weight)}
-                            disabled={!isAvailable}
-                            className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
-                              selectedWeight?.id === weight.id
-                                ? "border-[#F47C20] bg-[#F47C20] text-white shadow-md"
-                                : isAvailable
-                                ? "border-gray-300 hover:border-[#F47C20] hover:text-[#F47C20]"
-                                : "border-gray-200 text-gray-400 cursor-not-allowed"
-                            }`}
-                          >
-                            {weight.value} {weight.unit}
-                          </button>
-                        );
-                      })}
-                    </div>
+                      return (
+                        <button
+                          key={weight.id}
+                          type="button"
+                          onClick={() => handleWeightChange(weight)}
+                          disabled={!isAvailable}
+                          className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-xs sm:text-sm font-light tracking-wider transition-all duration-300 ${
+                            selectedWeight?.id === weight.id
+                              ? "bg-black text-white"
+                              : isAvailable
+                              ? "border border-black hover:bg-black hover:text-white"
+                              : "border border-gray-200 text-gray-400 cursor-not-allowed"
+                          }`}
+                        >
+                          {weight.value} {weight.unit}
+                        </button>
+                      );
+                    })}
                   </div>
-                )}
+                </div>
+              )}
 
               {/* Stock Availability */}
               {selectedVariant && (
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="p-3 md:p-4 border-l-4 border-gray-900 bg-gray-50">
                   <span
-                    className={`text-sm font-medium ${
+                    className={`text-xs sm:text-sm font-light tracking-wide ${
                       selectedVariant.quantity > 0
-                        ? "text-green-600"
-                        : "text-red-600"
+                        ? "text-gray-900"
+                        : "text-red-900"
                     }`}
                   >
                     {selectedVariant.quantity > 0
@@ -581,25 +575,25 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
               )}
 
               {/* Quantity */}
-              <div>
-                <label className="block text-sm font-semibold text-[#2C3E50] mb-3">
+              <div className="space-y-3 md:space-y-4">
+                <label className="block text-xs sm:text-sm font-medium text-gray-900 tracking-wide uppercase">
                   Quantity
                 </label>
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden">
+                  <div className="flex items-center border border-black">
                     <button
                       onClick={() => handleQuantityChange(-1)}
-                      className="p-3 bg-gray-50 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="p-2 sm:p-3 md:p-4 hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={quantity <= 1 || loading}
                     >
-                      <Minus className="h-4 w-4" />
+                      <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
                     </button>
-                    <span className="px-6 py-3 bg-white font-semibold text-[#2C3E50] min-w-[4rem] text-center">
+                    <span className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 font-light text-gray-900 min-w-[3rem] sm:min-w-[4rem] text-center border-x border-black">
                       {quantity}
                     </span>
                     <button
                       onClick={() => handleQuantityChange(1)}
-                      className="p-3 bg-gray-50 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="p-2 sm:p-3 md:p-4 hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={
                         loading ||
                         (selectedVariant &&
@@ -607,17 +601,17 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                           quantity >= selectedVariant.quantity)
                       }
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
                     </button>
                   </div>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex space-x-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4 pt-4 md:pt-6">
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 py-4 bg-[#F47C20] hover:bg-[#E06A1A] text-white font-semibold text-lg rounded-lg shadow-lg hover:shadow-xl transition-all"
+                  className="w-full sm:flex-1 py-3 sm:py-4 md:py-6 bg-black text-white text-sm sm:text-base md:text-lg font-light tracking-wider hover:bg-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={
                     loading ||
                     addingToCart ||
@@ -629,24 +623,21 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                 >
                   {addingToCart ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 sm:mr-3"></div>
                       Adding to Cart...
                     </>
                   ) : (
                     <>
-                      <ShoppingCart className="h-5 w-5 mr-3" />
+                      <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       Add to Cart
                     </>
                   )}
                 </Button>
 
-                <Link
-                  href={`/products/${displayProduct.slug}`}
-                  className="flex-1"
-                >
+                <Link href={`/products/${displayProduct.slug}`} className="w-full sm:flex-1">
                   <Button
                     variant="outline"
-                    className="w-full py-4 border-2 border-[#2C3E50] text-[#2C3E50] hover:bg-[#2C3E50] hover:text-white font-semibold text-lg rounded-lg transition-all"
+                    className="w-full py-3 sm:py-4 md:py-6 border border-black text-black hover:bg-black hover:text-white text-sm sm:text-base md:text-lg font-light tracking-wider transition-all duration-300"
                   >
                     View Full Details
                   </Button>

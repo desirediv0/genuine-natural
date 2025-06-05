@@ -16,6 +16,8 @@ import {
   MapPin,
   LogIn,
   ShoppingBag,
+  Star,
+  Zap,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -157,129 +159,138 @@ export function Navbar() {
         style={{ maxHeight: "100vh" }}
       >
         <div className="flex flex-col h-full">
-          <div className="sticky top-0 bg-gradient-to-r from-black  to-black  border-b border-black  flex justify-between items-center px-4 py-4 z-10">
+          <div className="sticky top-0 bg-black border-b border-gray-800 flex justify-between items-center px-6 py-5 z-10">
             <Link
               href="/"
               className="flex items-center"
               onClick={() => setIsMenuOpen(false)}
             >
-              <div className="flex items-center space-x-2">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <ShoppingBag className="h-6 w-6 text-white" />
+              <div className="flex items-center space-x-3">
+                <div className="bg-white p-2.5 rounded-xl shadow-lg">
+                  <ShoppingBag className="h-7 w-7 text-black" />
                 </div>
-                <span className="text-xl font-bold text-white">
+                <span className="text-2xl font-bold text-white tracking-tight">
                   Power Fitness
                 </span>
               </div>
             </Link>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="p-2 text-white hover:bg-white/20 rounded-lg focus:outline-none transition-colors"
-                aria-label="Close menu"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="p-3 text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+              aria-label="Close menu"
+            >
+              <X className="h-6 w-6" />
+            </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 bg-gradient-to-b from-black to-white">
-            <form onSubmit={handleMobileSearch} className="relative mb-6">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <Input
-                  ref={mobileSearchInputRef}
-                  type="text"
-                  placeholder="Search products..."
-                  className="w-full pl-12 pr-12 py-4 text-base border-2 border-black  focus:border-black  focus:ring-black  rounded-xl bg-white"
-                  value={searchQuery}
-                  onChange={handleSearchInputChange}
-                  autoComplete="off"
-                  onClick={(e) => e.stopPropagation()}
-                />
-                {searchQuery && (
+          <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8 bg-gradient-to-b from-gray-50 to-white">
+            <form onSubmit={handleMobileSearch} className="relative">
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                <div className="relative bg-white rounded-2xl border-2 border-gray-100 shadow-lg overflow-hidden">
+                  <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    ref={mobileSearchInputRef}
+                    type="text"
+                    placeholder="Search for fitness products..."
+                    className="w-full pl-14 pr-16 py-5 text-base border-0 focus:ring-0 focus:outline-none bg-transparent"
+                    value={searchQuery}
+                    onChange={handleSearchInputChange}
+                    autoComplete="off"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      className="absolute right-16 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-all"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSearchQuery("");
+                        if (mobileSearchInputRef.current) {
+                          mobileSearchInputRef.current.focus();
+                        }
+                      }}
+                      aria-label="Clear search"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
                   <button
-                    type="button"
-                    className="absolute right-12 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSearchQuery("");
-                      if (mobileSearchInputRef.current) {
-                        mobileSearchInputRef.current.focus();
-                      }
-                    }}
-                    aria-label="Clear search"
+                    type="submit"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-3 rounded-xl bg-black text-white hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                    aria-label="Search"
                   >
-                    <X className="h-5 w-5" />
+                    <Search className="h-4 w-4" />
                   </button>
-                )}
-                <button
-                  type="submit"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-black  text-white hover:bg-black  transition-colors"
-                  aria-label="Search"
-                >
-                  <Search className="h-4 w-4" />
-                </button>
+                </div>
               </div>
             </form>
 
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <Link
                 href="/products"
-                className="block py-3 text-lg font-semibold hover:text-black  transition-colors"
+                className="flex items-center justify-between py-4 text-lg font-semibold hover:text-black transition-colors group"
                 onClick={() => setIsMenuOpen(false)}
               >
-                All Products
+                <span>All Products</span>
+                <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+                  <Star className="w-4 h-4" />
+                </div>
               </Link>
             </div>
 
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <h3 className="font-bold text-lg mb-3 text-gray-800">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <h3 className="font-bold text-xl mb-5 text-gray-800 flex items-center">
+                <div className="w-2 h-8 bg-black rounded-full mr-3"></div>
                 Categories
               </h3>
-              <div className="space-y-2 pl-2">
-                {categories.map((category) => (
-                  <div key={category.id} className="py-1">
-                    <Link
-                      href={`/category/${category.slug}`}
-                      className="block hover:text-black  text-base transition-colors py-2"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {category.name}
-                    </Link>
-                  </div>
+              <div className="grid grid-cols-1 gap-3">
+                {categories.map((category, index) => (
+                  <Link
+                    key={category.id}
+                    href={`/category/${category.slug}`}
+                    className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-all duration-200 group border border-transparent hover:border-gray-200"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <span className="font-medium">{category.name}</span>
+                    <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold group-hover:bg-black group-hover:text-white transition-all">
+                      {index + 1}
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-4">
               {[
-                { href: "/blog", label: "Blog" },
-                { href: "/about", label: "About Us" },
-                { href: "/shipping", label: "Shipping Policy" },
-                { href: "/contact", label: "Contact Us" },
+                { href: "/blog", label: "Blog", icon: Star },
+                { href: "/about", label: "About Us", icon: Heart },
+                { href: "/shipping", label: "Shipping", icon: Zap },
+                { href: "/contact", label: "Contact", icon: Phone },
               ].map((item) => (
-                <div
+                <Link
                   key={item.href}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100"
+                  href={item.href}
+                  className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-200 group"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <Link
-                    href={item.href}
-                    className="block py-2 text-lg font-semibold hover:text-black  transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                </div>
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <div className="w-12 h-12 rounded-xl bg-black/5 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <span className="font-semibold text-sm">{item.label}</span>
+                  </div>
+                </Link>
               ))}
             </div>
 
             {isAuthenticated ? (
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <h3 className="font-bold text-lg mb-3 text-gray-800">
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                <h3 className="font-bold text-xl mb-5 text-gray-800 flex items-center">
+                  <div className="w-2 h-8 bg-black rounded-full mr-3"></div>
                   My Account
                 </h3>
-                <div className="space-y-2 pl-2">
+                <div className="space-y-3">
                   {[
                     { href: "/account", label: "Profile" },
                     { href: "/account/orders", label: "My Orders" },
@@ -288,10 +299,11 @@ export function Navbar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-2 hover:text-black  transition-colors"
+                      className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-all duration-200 group"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      {item.label}
+                      <span className="font-medium">{item.label}</span>
+                      <ChevronDown className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   ))}
                   <button
@@ -299,38 +311,46 @@ export function Navbar() {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="block py-2 text-red-600 hover:text-red-800 w-full text-left transition-colors"
+                    className="flex items-center justify-between p-4 text-red-600 hover:bg-red-50 w-full text-left transition-all duration-200 rounded-xl group"
                   >
-                    Logout
+                    <span className="font-medium">Logout</span>
+                    <ChevronDown className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col space-y-3">
+              <div className="space-y-4">
                 <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button
-                    variant="outline"
-                    className="w-full py-6 text-base border-2 border-black  text-black  hover:bg-black rounded-xl"
-                  >
-                    Login
+                  <Button className="w-full py-6 text-base bg-black hover:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold">
+                    Login to Your Account
                   </Button>
                 </Link>
                 <Link href="/register" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full py-6 text-base bg-gradient-to-r from-black  to-black  hover:from-black  hover:to-black  rounded-xl">
-                    Register
+                  <Button
+                    variant="outline"
+                    className="w-full py-6 text-base border-2 border-black text-black hover:bg-black hover:text-white rounded-2xl font-semibold transition-all duration-200"
+                  >
+                    Create New Account
                   </Button>
                 </Link>
               </div>
             )}
 
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-center gap-3 mb-4">
-                <Phone className="h-5 w-5 text-black " />
-                <span className="font-medium">+91 98765 43210</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="h-5 w-5 text-black " />
-                <span className="font-medium">Store Locator</span>
+            <div className="bg-gradient-to-r from-black to-gray-800 rounded-2xl p-6 text-white">
+              <h3 className="font-bold text-lg mb-4">Get in Touch</h3>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <span className="font-medium">+91 98765 43210</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <span className="font-medium">Find Store Near You</span>
+                </div>
               </div>
             </div>
           </div>
@@ -341,97 +361,114 @@ export function Navbar() {
 
   return (
     <>
-      {/* Top bar */}
-      <div className="bg-black text-white px-4 py-2.5 text-center text-sm font-medium tracking-wide ">
-        <span className="inline-flex items-center gap-2">
-          <span className="hidden sm:inline">🎁</span>
-          Free shipping on all orders over ₹999
-        </span>
+      {/* Enhanced Top bar */}
+      <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white px-4 py-3 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
+        <div className="relative flex items-center justify-center gap-3">
+          <Zap className="h-4 w-4 text-yellow-400 animate-pulse" />
+          <span className="font-semibold tracking-wide text-sm md:text-base">
+            🎁 Free shipping on all orders over ₹999 | Limited Time Offer!
+          </span>
+          <Zap className="h-4 w-4 text-yellow-400 animate-pulse" />
+        </div>
       </div>
 
-      <header className="sticky top-0 z-50 bg-white" ref={navbarRef}>
+      <header className="sticky top-0 z-50 bg-white shadow-lg" ref={navbarRef}>
         <Toaster position="top-center" />
 
-        {/* Main navbar */}
-        <div className="border-b border-gray-100 bg-white/95 backdrop-blur-md">
-          <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center h-16 md:h-20">
-              {/* Menu toggle for mobile */}
+        {/* Enhanced Main navbar */}
+        <div className="bg-white/95 backdrop-blur-xl border-b border-gray-100">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="flex justify-between items-center h-18 md:h-24">
+              {/* Mobile menu button */}
               <div className="flex items-center md:hidden">
                 <button
-                  className="p-2 hover:bg-black/5 rounded-lg transition-colors focus:outline-none"
+                  className="p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 focus:outline-none group"
                   onClick={() => setIsMenuOpen(true)}
                   aria-label="Open menu"
                 >
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-6 w-6 group-hover:scale-110 transition-transform" />
                 </button>
               </div>
 
-              {/* Logo */}
-              <Link href="/" className="flex items-center">
-                <Image
-                  src="/logo.png"
-                  width={100}
-                  height={100}
-                  alt="Logo"
-                  className="h-14 w-auto hover:opacity-80 transition-opacity"
-                />
+              {/* Enhanced Logo */}
+              <Link href="/" className="flex items-center group">
+                
+                <div className="">
+                  <Image
+                    src="/logo.png"
+                    alt="PowerFuel Logo"
+                    width={120}
+                    height={140}
+                    className="mb-4"
+                  />
+                </div>
               </Link>
 
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-8">
+              {/* Enhanced Desktop Navigation */}
+              <nav className="hidden lg:flex items-center space-x-1">
                 <Link
                   href="/products"
-                  className="font-medium text-gray-800 hover:text-black transition-colors relative group py-2"
+                  className="px-6 py-3 font-semibold text-gray-700 hover:text-black transition-all duration-200 relative group rounded-xl hover:bg-gray-50"
                 >
                   All Products
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                  <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-black group-hover:w-8 transition-all duration-300"></span>
                 </Link>
 
-                {/* Categories dropdown */}
+                {/* Enhanced Categories dropdown */}
                 <div
-                  className="relative group"
+                  className="relative"
                   onMouseEnter={() => handleDropdownHover("categories")}
                   onMouseLeave={handleDropdownLeave}
                 >
                   <button
-                    className={`font-medium ${
+                    className={`px-6 py-3 font-semibold ${
                       activeDropdown === "categories"
-                        ? "text-black"
-                        : "text-gray-800"
-                    } hover:text-black transition-all duration-200 flex items-center focus:outline-none group py-2`}
+                        ? "text-black bg-gray-50"
+                        : "text-gray-700 hover:text-black hover:bg-gray-50"
+                    } transition-all duration-200 flex items-center focus:outline-none rounded-xl relative group`}
                     onClick={() => toggleDropdown("categories")}
                     aria-expanded={activeDropdown === "categories"}
                   >
                     Categories
                     <ChevronDown
-                      className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                      className={`ml-2 h-4 w-4 transition-all duration-300 ${
                         activeDropdown === "categories" ? "rotate-180" : ""
-                      } group-hover:rotate-180`}
+                      }`}
                     />
+                    <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-black group-hover:w-8 transition-all duration-300"></span>
                   </button>
                   <div
-                    className={`absolute left-0 top-full mt-0.5 w-64 bg-white shadow-xl rounded-lg py-2 border border-gray-100 z-50 transition-all duration-300 ease-in-out transform origin-top ${
+                    className={`absolute left-0 top-full mt-2 w-80 bg-white shadow-2xl rounded-2xl py-4 border border-gray-100 z-50 transition-all duration-300 ease-out transform origin-top ${
                       activeDropdown === "categories"
                         ? "opacity-100 scale-100 translate-y-0"
-                        : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                        : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
                     }`}
                   >
-                    {categories.map((category) => (
-                      <div key={category.id}>
+                    <div className="px-6 py-3 border-b border-gray-100">
+                      <h3 className="font-bold text-lg text-gray-800">
+                        Shop by Category
+                      </h3>
+                    </div>
+                    <div className="py-2">
+                      {categories.map((category, index) => (
                         <Link
+                          key={category.id}
                           href={`/category/${category.slug}`}
-                          className="block px-4 py-2.5 hover:bg-gray-50 hover:text-black transition-all duration-200"
+                          className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-all duration-200 group"
                           onClick={() => setActiveDropdown(null)}
                         >
-                          {category.name}
+                          <span className="font-medium">{category.name}</span>
+                          <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold group-hover:bg-black group-hover:text-white transition-all">
+                            {index + 1}
+                          </div>
                         </Link>
-                      </div>
-                    ))}
-                    <div className="pt-2 mt-2 border-t border-gray-100">
+                      ))}
+                    </div>
+                    <div className="px-6 py-3 border-t border-gray-100">
                       <Link
                         href="/categories"
-                        className="block px-4 py-2.5 text-black font-medium hover:bg-gray-50 transition-all duration-200"
+                        className="flex items-center justify-center w-full py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-all duration-200 font-semibold"
                         onClick={() => setActiveDropdown(null)}
                       >
                         View All Categories
@@ -448,77 +485,89 @@ export function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="font-medium text-gray-800 hover:text-black transition-colors relative group py-2"
+                    className="px-6 py-3 font-semibold text-gray-700 hover:text-black transition-all duration-200 relative group rounded-xl hover:bg-gray-50"
                   >
                     {item.label}
-                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                    <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-black group-hover:w-8 transition-all duration-300"></span>
                   </Link>
                 ))}
               </nav>
 
-              {/* Search, Cart, Account */}
-              <div className="flex items-center space-x-2 md:space-x-5">
-                {/* Search button/form */}
+              {/* Enhanced Search, Cart, Account */}
+              <div className="flex items-center space-x-2 md:space-x-4">
+                {/* Enhanced Search */}
                 <div className="relative">
                   {isSearchExpanded ? (
                     <>
                       <div
-                        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
                         onClick={() => setIsSearchExpanded(false)}
                       />
                       <div className="fixed inset-x-0 top-0 z-50 w-full animate-in slide-in-from-top duration-300 p-4">
                         <form
                           onSubmit={handleSearch}
-                          className="relative bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden max-h-[90vh] md:max-w-[600px] mx-auto"
+                          className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-2xl mx-auto"
                         >
-                          <div className="flex items-center px-4 py-4 border-b border-gray-100 bg-black">
-                            <h3 className="text-lg font-semibold text-white">
-                              Search Products
-                            </h3>
+                          <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-black to-gray-800 text-white">
+                            <div>
+                              <h3 className="text-xl font-bold">
+                                Search Products
+                              </h3>
+                              <p className="text-sm text-gray-300 mt-1">
+                                Find your perfect fitness gear
+                              </p>
+                            </div>
                             <button
                               type="button"
-                              className="ml-auto p-2 rounded-lg hover:bg-white/10 transition-all duration-200"
+                              className="p-2 rounded-xl hover:bg-white/10 transition-all duration-200"
                               onClick={() => setIsSearchExpanded(false)}
                               aria-label="Close search"
                             >
-                              <X className="h-6 w-6 text-white" />
+                              <X className="h-6 w-6" />
                             </button>
                           </div>
 
-                          <div className="p-5">
-                            <div className="relative">
-                              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                              <Input
-                                ref={searchInputRef}
-                                type="search"
-                                placeholder="Search for products..."
-                                className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 focus:border-black focus:ring-black rounded-lg text-base"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoComplete="off"
-                              />
-                              {searchQuery && (
-                                <button
-                                  type="button"
-                                  className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
-                                  onClick={() => setSearchQuery("")}
-                                  aria-label="Clear search"
-                                >
-                                  <X className="h-5 w-5" />
-                                </button>
-                              )}
+                          <div className="p-6">
+                            <div className="relative group">
+                              <div className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 rounded-2xl blur opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                              <div className="relative">
+                                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+                                <Input
+                                  ref={searchInputRef}
+                                  type="search"
+                                  placeholder="Search for protein, equipment, supplements..."
+                                  className="w-full pl-14 pr-14 py-5 border-2 border-gray-200 focus:border-black focus:ring-0 rounded-2xl text-lg font-medium"
+                                  value={searchQuery}
+                                  onChange={(e) =>
+                                    setSearchQuery(e.target.value)
+                                  }
+                                  autoComplete="off"
+                                />
+                                {searchQuery && (
+                                  <button
+                                    type="button"
+                                    className="absolute right-5 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-all"
+                                    onClick={() => setSearchQuery("")}
+                                    aria-label="Clear search"
+                                  >
+                                    <X className="h-5 w-5" />
+                                  </button>
+                                )}
+                              </div>
                             </div>
 
-                            <div className="mt-4">
-                              <h4 className="text-sm font-medium text-gray-500 mb-2">
+                            {/* <div className="mt-6">
+                              <h4 className="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">
                                 Popular Searches
                               </h4>
-                              <div className="flex flex-wrap gap-2">
+                              <div className="flex flex-wrap gap-3">
                                 {[
                                   "Protein Powder",
                                   "Dumbbells",
                                   "Resistance Bands",
                                   "Pre-Workout",
+                                  "Yoga Mats",
+                                  "Supplements",
                                 ].map((term) => (
                                   <button
                                     key={term}
@@ -529,29 +578,29 @@ export function Navbar() {
                                         preventDefault: () => {},
                                       });
                                     }}
-                                    className="px-3 py-1.5 text-sm border border-gray-200 hover:bg-gray-50 hover:border-black text-gray-700 rounded-lg transition-all duration-200"
+                                    className="px-4 py-2 text-sm border-2 border-gray-200 hover:border-black hover:bg-black hover:text-white text-gray-700 rounded-xl transition-all duration-200 font-medium"
                                   >
                                     {term}
                                   </button>
                                 ))}
                               </div>
-                            </div>
+                            </div> */}
                           </div>
 
-                          <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between">
+                          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
                             <button
                               type="button"
                               onClick={() => setIsSearchExpanded(false)}
-                              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 font-medium text-sm"
+                              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all duration-200 font-semibold"
                             >
                               Cancel
                             </button>
                             <button
                               type="submit"
-                              className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-all duration-200 flex items-center gap-2 font-medium text-sm"
+                              className="px-8 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 font-semibold shadow-lg hover:shadow-xl"
                             >
-                              <Search className="h-4 w-4" />
-                              Search
+                              <Search className="h-5 w-5" />
+                              Search Now
                             </button>
                           </div>
                         </form>
@@ -560,31 +609,31 @@ export function Navbar() {
                   ) : (
                     <button
                       onClick={() => setIsSearchExpanded(true)}
-                      className="p-2 text-gray-600 hover:text-black hover:bg-black/5 rounded-lg transition-all duration-200 focus:outline-none"
+                      className="p-3 text-gray-600 hover:text-black hover:bg-gray-100 rounded-xl transition-all duration-200 focus:outline-none group"
                       aria-label="Search"
                     >
-                      <Search className="h-5 w-5" />
+                      <Search className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     </button>
                   )}
                 </div>
 
-                {/* Wishlist */}
+                {/* Enhanced Wishlist */}
                 <Link
                   href="/wishlist"
-                  className="p-2 text-gray-600 hover:text-black hover:bg-black/5 rounded-lg transition-all duration-200"
+                  className="p-3 text-gray-600 hover:text-black hover:bg-gray-100 rounded-xl transition-all duration-200 group relative"
                 >
-                  <Heart className="h-5 w-5" />
+                  <Heart className="h-5 w-5 group-hover:scale-110 transition-transform" />
                 </Link>
 
-                {/* Cart */}
+                {/* Enhanced Cart */}
                 <ClientOnly>
                   <Link
                     href="/cart"
-                    className="p-2 text-gray-600 hover:text-black hover:bg-black/5 rounded-lg transition-all duration-200 relative"
+                    className="p-3 text-gray-600 hover:text-black hover:bg-gray-100 rounded-xl transition-all duration-200 relative group"
                   >
-                    <ShoppingCart className="h-5 w-5" />
+                    <ShoppingCart className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     {cart && cart.items?.length > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-black text-white rounded-full text-xs min-w-[20px] h-5 flex items-center justify-center px-1 animate-in zoom-in">
+                      <span className="absolute -top-1 -right-1 bg-gradient-to-r from-black to-gray-800 text-white rounded-full text-xs min-w-[22px] h-6 flex items-center justify-center px-2 font-bold shadow-lg animate-pulse">
                         {cart.items.reduce(
                           (acc, item) => acc + item.quantity,
                           0
@@ -594,7 +643,7 @@ export function Navbar() {
                   </Link>
                 </ClientOnly>
 
-                {/* Account dropdown */}
+                {/* Enhanced Account dropdown */}
                 <div
                   className="relative"
                   onMouseEnter={() => handleDropdownHover("account")}
@@ -602,96 +651,115 @@ export function Navbar() {
                 >
                   <ClientOnly>
                     <button
-                      className={`p-2 ${
+                      className={`p-3 ${
                         activeDropdown === "account"
-                          ? "text-black bg-black/5"
-                          : "text-gray-600 hover:text-black hover:bg-black/5"
-                      } rounded-lg transition-all duration-200 flex items-center focus:outline-none group`}
+                          ? "text-black bg-gray-100"
+                          : "text-gray-600 hover:text-black hover:bg-gray-100"
+                      } rounded-xl transition-all duration-200 flex items-center focus:outline-none group`}
                       onClick={() => toggleDropdown("account")}
                       aria-expanded={activeDropdown === "account"}
                     >
                       {isAuthenticated ? (
-                        <User className="h-5 w-5" />
+                        <User className="h-5 w-5 group-hover:scale-110 transition-transform" />
                       ) : (
-                        <LogIn className="h-5 w-5" />
+                        <LogIn className="h-5 w-5 group-hover:scale-110 transition-transform" />
                       )}
                       <ChevronDown
-                        className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                        className={`ml-1 h-4 w-4 transition-all duration-300 ${
                           activeDropdown === "account" ? "rotate-180" : ""
-                        } group-hover:rotate-180`}
+                        }`}
                       />
                     </button>
 
                     <div
-                      className={`absolute right-0 top-full mt-1 w-64 bg-white shadow-xl rounded-lg py-2 border border-gray-100 z-50 transition-all duration-300 ease-in-out transform origin-top ${
+                      className={`absolute right-0 top-full mt-2 w-80 bg-white shadow-2xl rounded-2xl py-4 border border-gray-100 z-50 transition-all duration-300 ease-out transform origin-top ${
                         activeDropdown === "account"
                           ? "opacity-100 scale-100 translate-y-0"
-                          : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                          : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
                       }`}
                     >
                       {isAuthenticated ? (
                         <>
-                          <div className="px-4 py-3 border-b border-gray-100 mb-2">
-                            <p className="font-medium text-gray-800">
-                              Hi, {user?.name || "User"}
-                            </p>
-                            <p className="text-xs text-gray-500 truncate">
-                              {user?.email}
-                            </p>
+                          <div className="px-6 py-4 border-b border-gray-100">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-black to-gray-800 flex items-center justify-center">
+                                <User className="h-6 w-6 text-white" />
+                              </div>
+                              <div>
+                                <p className="font-bold text-gray-800">
+                                  Hi, {user?.name || "User"}
+                                </p>
+                                <p className="text-sm text-gray-500 truncate">
+                                  {user?.email}
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                          <Link
-                            href="/account"
-                            className="block px-4 py-2 hover:bg-gray-50 hover:text-black transition-all duration-200"
-                            onClick={() => setActiveDropdown(null)}
-                          >
-                            My Account
-                          </Link>
-                          <Link
-                            href="/account/orders"
-                            className="block px-4 py-2 hover:bg-gray-50 hover:text-black transition-all duration-200"
-                            onClick={() => setActiveDropdown(null)}
-                          >
-                            My Orders
-                          </Link>
-                          <Link
-                            href="/wishlist"
-                            className="block px-4 py-2 hover:bg-gray-50 hover:text-black transition-all duration-200"
-                            onClick={() => setActiveDropdown(null)}
-                          >
-                            My Wishlist
-                          </Link>
-                          <button
-                            onClick={() => {
-                              handleLogout();
-                              setActiveDropdown(null);
-                            }}
-                            className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-all duration-200 mt-2 border-t border-gray-100"
-                          >
-                            Logout
-                          </button>
+                          <div className="py-2">
+                            <Link
+                              href="/account"
+                              className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-all duration-200 group"
+                              onClick={() => setActiveDropdown(null)}
+                            >
+                              <span className="font-medium">My Account</span>
+                              <ChevronDown className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link
+                              href="/account/orders"
+                              className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-all duration-200 group"
+                              onClick={() => setActiveDropdown(null)}
+                            >
+                              <span className="font-medium">My Orders</span>
+                              <ChevronDown className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link
+                              href="/wishlist"
+                              className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-all duration-200 group"
+                              onClick={() => setActiveDropdown(null)}
+                            >
+                              <span className="font-medium">My Wishlist</span>
+                              <ChevronDown className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                          </div>
+                          <div className="px-6 py-3 border-t border-gray-100">
+                            <button
+                              onClick={() => {
+                                handleLogout();
+                                setActiveDropdown(null);
+                              }}
+                              className="w-full py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-xl font-semibold"
+                            >
+                              Logout
+                            </button>
+                          </div>
                         </>
                       ) : (
                         <>
-                          <div className="px-4 py-3">
-                            <Link
-                              href="/login"
-                              onClick={() => setActiveDropdown(null)}
-                            >
-                              <Button className="w-full mb-2 hover:scale-[1.02] transition-transform duration-200 bg-black hover:bg-gray-900 rounded-lg">
-                                Login
-                              </Button>
-                            </Link>
-                            <Link
-                              href="/register"
-                              onClick={() => setActiveDropdown(null)}
-                            >
-                              <Button
-                                variant="outline"
-                                className="w-full hover:scale-[1.02] transition-transform duration-200 text-black border-black hover:bg-gray-50 rounded-lg"
+                          <div className="px-6 py-4">
+                            <h3 className="font-bold text-lg text-gray-800 mb-4">
+                              Welcome Back!
+                            </h3>
+                            <div className="space-y-3">
+                              <Link
+                                href="/login"
+                                onClick={() => setActiveDropdown(null)}
                               >
-                                Register
-                              </Button>
-                            </Link>
+                                <Button className="w-full py-3 bg-black hover:bg-gray-800 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                                  Login to Account
+                                </Button>
+                              </Link>
+                              <Link
+                                href="/register"
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                <Button
+                                  variant="outline"
+                                  className="w-full py-3 border-2 border-black text-black hover:bg-black hover:text-white rounded-xl font-semibold transition-all duration-200"
+                                >
+                                  Create Account
+                                </Button>
+                              </Link>
+                            </div>
                           </div>
                         </>
                       )}
