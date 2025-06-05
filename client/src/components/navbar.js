@@ -362,14 +362,35 @@ export function Navbar() {
   return (
     <>
       {/* Enhanced Top bar */}
-      <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white px-4 py-3 text-center relative overflow-hidden">
+      <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
-        <div className="relative flex items-center justify-center gap-3">
-          <Zap className="h-4 w-4 text-gray-400 animate-pulse" />
-          <span className="font-semibold tracking-wide text-sm md:text-base">
-            🎁 Free shipping on all orders over ₹999 | Limited Time Offer!
-          </span>
-          <Zap className="h-4 w-4 text-gray-400 animate-pulse" />
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between py-2">
+            {/* Left section with shipping info */}
+            <div className="flex items-center justify-center md:justify-start gap-2 py-2 md:py-0">
+              <Zap className="h-4 w-4 text-gray-400 animate-pulse hidden md:block" />
+              <span className="font-medium text-sm md:text-base whitespace-nowrap">
+                🎁 Free shipping on all orders over ₹999
+              </span>
+            </div>
+            
+            {/* Right section with nav items */}
+            <div className="flex items-center justify-center md:justify-end z-40 gap-4 text-sm border-t md:border-t-0 border-white/10 py-2 md:py-0">
+              <Link href="/faqs" className="hover:text-gray-300 transition-colors duration-200 flex items-center gap-1">
+                <span className="whitespace-nowrap">FAQs</span>
+              </Link>
+              <div className="w-px h-4 bg-white/20 hidden md:block"></div>
+              <Link href="/contact" className="hover:text-gray-300 transition-colors duration-200 flex items-center gap-1">
+                <Phone className="h-3 w-3" />
+                <span className="whitespace-nowrap">Contact Us</span>
+              </Link>
+              <div className="w-px h-4 bg-white/20 hidden md:block"></div>
+              <Link href="/contact" className="hover:text-gray-300 transition-colors duration-200 flex items-center gap-1">
+                <MapPin className="h-3 w-3" />
+                <span className="whitespace-nowrap">Find Store</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
