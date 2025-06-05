@@ -127,10 +127,10 @@ export default function CategoryPage() {
   // Loading state
   if (loading && !category) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center items-center h-64">
-            <div className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ export default function CategoryPage() {
   // Error state
   if (error && !category) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-8">
           <div className="bg-red-50 p-6 rounded-2xl border border-red-200 flex items-start max-w-2xl mx-auto">
             <AlertCircle className="text-red-500 mr-3 mt-0.5 flex-shrink-0" />
@@ -157,7 +157,7 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-white ">
       <div className="container mx-auto px-4 py-8">
         {/* Category header */}
         {category && (
@@ -165,19 +165,19 @@ export default function CategoryPage() {
             <div className="flex items-center mb-4 text-sm text-gray-600">
               <Link
                 href="/"
-                className="hover:text-yellow-600 transition-colors"
+                className="hover:text-white transition-colors"
               >
                 Home
               </Link>
               <span className="mx-2">•</span>
               <Link
                 href="/products"
-                className="hover:text-yellow-600 transition-colors"
+                className="hover:text-white transition-colors"
               >
                 Products
               </Link>
               <span className="mx-2">•</span>
-              <span className="text-yellow-600 font-medium">
+              <span className="text-black font-medium">
                 {category.name}
               </span>
             </div>
@@ -196,7 +196,7 @@ export default function CategoryPage() {
                 </div>
 
                 {category.image && (
-                  <div className="w-32 h-32 rounded-2xl overflow-hidden bg-gradient-to-br from-yellow-50 to-yellow-100 flex-shrink-0">
+                  <div className="w-32 h-32 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
                     <Image
                       src={getImageUrl(category.image) || "/placeholder.svg"}
                       alt={category.name}
@@ -216,7 +216,7 @@ export default function CategoryPage() {
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center text-gray-600">
-                <Filter className="h-5 w-5 mr-2 text-yellow-500" />
+                <Filter className="h-5 w-5 mr-2 text-black" />
                 <span className="font-medium">
                   Showing {products.length} of {pagination.total} products
                 </span>
@@ -230,7 +230,7 @@ export default function CategoryPage() {
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-md transition-colors ${
                     viewMode === "grid"
-                      ? "bg-white text-yellow-600 shadow-sm"
+                      ? "bg-white text-gray-600 shadow-sm"
                       : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
@@ -240,7 +240,7 @@ export default function CategoryPage() {
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-md transition-colors ${
                     viewMode === "list"
-                      ? "bg-white text-yellow-600 shadow-sm"
+                      ? "bg-white text-gray-600 shadow-sm"
                       : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
@@ -259,7 +259,7 @@ export default function CategoryPage() {
                 <select
                   id="sort"
                   name="sort"
-                  className="rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:ring-yellow-500 px-4 py-2 text-sm"
+                  className="rounded-xl border-2 border-gray-200 focus:border-black focus:ring-black px-4 py-2 text-sm"
                   onChange={handleSortChange}
                   value={sortOption}
                 >
@@ -278,8 +278,8 @@ export default function CategoryPage() {
         {/* Products Grid */}
         {products.length === 0 ? (
           <div className="bg-white p-12 rounded-2xl shadow-lg border border-gray-100 text-center max-w-md mx-auto">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-6">
-              <ShoppingBag className="h-8 w-8 text-yellow-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-6">
+              <ShoppingBag className="h-8 w-8 text-gray-600" />
             </div>
             <h2 className="text-2xl font-bold mb-3 text-gray-800">
               No products found
@@ -288,7 +288,7 @@ export default function CategoryPage() {
               There are no products in this category yet.
             </p>
             <Link href="/products">
-              <Button className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-xl font-semibold">
+              <Button className="bg-gradient-to-r from-black to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-3 rounded-xl font-semibold">
                 Browse All Products
               </Button>
             </Link>
@@ -313,7 +313,7 @@ export default function CategoryPage() {
                   className={viewMode === "list" ? "flex-shrink-0" : "block"}
                 >
                   <div
-                    className={`relative bg-gradient-to-br from-yellow-50 to-yellow-100 overflow-hidden ${
+                    className={`relative bg-gray-200 overflow-hidden ${
                       viewMode === "grid" ? "h-64 w-full" : "h-32 w-32"
                     }`}
                   >
@@ -335,11 +335,11 @@ export default function CategoryPage() {
                     )}
 
                     {viewMode === "grid" && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 backdrop-blur-[2px] flex justify-center py-3 translate-y-full group-hover:translate-y-0 transition-transform">
+                      <div className="absolute bottom-0 left-0 right-0 bg-white bg-opacity-0 group-hover:bg-opacity-70 backdrop-blur-[2px] flex justify-center py-3 translate-y-full group-hover:translate-y-0 transition-transform">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-white hover:text-white hover:bg-yellow-500/80 rounded-full p-2"
+                          className="text-white hover:text-white hover:bg-white rounded-full p-2"
                           onClick={(e) => {
                             e.preventDefault();
                             handleQuickView(product);
@@ -350,7 +350,7 @@ export default function CategoryPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-white hover:text-white hover:bg-yellow-500/80 rounded-full p-2 mx-2"
+                          className="text-white hover:text-white hover:bg-white rounded-full p-2 mx-2"
                         >
                           <Heart className="h-5 w-5" />
                         </Button>
@@ -365,7 +365,7 @@ export default function CategoryPage() {
                   }`}
                 >
                   <div className="flex items-center justify-center mb-3">
-                    <div className="flex text-yellow-400">
+                    <div className="flex text-gray-400">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
@@ -385,7 +385,7 @@ export default function CategoryPage() {
 
                   <Link
                     href={`/products/${product.slug}`}
-                    className="hover:text-yellow-600 transition-colors"
+                    className="hover:text-black transition-colors"
                   >
                     <h3 className="font-semibold text-gray-800 mb-3 line-clamp-2 text-lg">
                       {product.name}
@@ -395,7 +395,7 @@ export default function CategoryPage() {
                   <div className="flex items-center justify-center mb-3">
                     {product.variants[0]?.salePrice ? (
                       <div className="flex items-center">
-                        <span className="font-bold text-xl text-yellow-600">
+                        <span className="font-bold text-xl text-black">
                           {formatCurrency(product.variants[0]?.salePrice)}
                         </span>
                         <span className="text-gray-500 line-through text-sm ml-2">
@@ -403,7 +403,7 @@ export default function CategoryPage() {
                         </span>
                       </div>
                     ) : (
-                      <span className="font-bold text-xl text-yellow-600">
+                      <span className="font-bold text-xl text-black">
                         {formatCurrency(
                           product.basePrice || product.variants[0]?.price || 0
                         )}
@@ -422,7 +422,7 @@ export default function CategoryPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+                        className="border-gray-200 text-gray-600 hover:bg-white"
                         onClick={() => handleQuickView(product)}
                       >
                         <Eye className="h-4 w-4 mr-1" />
@@ -431,7 +431,7 @@ export default function CategoryPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+                        className="border-gray-200 text-gray-600 hover:bg-white"
                       >
                         <Heart className="h-4 w-4" />
                       </Button>
@@ -453,7 +453,7 @@ export default function CategoryPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className="border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+                  className="border-gray-200 text-gray-600 hover:bg-white"
                 >
                   <ChevronUp className="h-4 w-4 rotate-90" />
                 </Button>
@@ -476,8 +476,8 @@ export default function CategoryPage() {
                         onClick={() => handlePageChange(page)}
                         className={`w-10 h-10 p-0 ${
                           pagination.page === page
-                            ? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white"
-                            : "border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+                            ? "bg-gradient-to-r from-black to-gray-600 text-white"
+                            : "border-gray-200 text-gray-600 hover:bg-white"
                         }`}
                       >
                         {page}
@@ -506,7 +506,7 @@ export default function CategoryPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.pages}
-                  className="border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+                  className="border-gray-200 text-gray-600 hover:bg-white"
                 >
                   <ChevronDown className="h-4 w-4 rotate-90" />
                 </Button>

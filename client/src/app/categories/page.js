@@ -75,7 +75,7 @@ const CategoryCard = ({ category, index }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 transform -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/80 transform -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <span className="relative flex items-center space-x-2">
                   <span className="font-medium">Explore Collection</span>
                   <svg
@@ -158,7 +158,7 @@ export default function CategoriesPage() {
             {/* <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gray-900 to-gray-700 rounded-2xl mb-8 shadow-xl">
               <ShoppingBag className="h-10 w-10 text-white" />
             </div> */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4  text-gray-900 tracking-tight">
               Explore Categories
             </h1>
             <div className="flex items-center justify-center text-sm text-gray-600 mb-6 font-medium">
@@ -200,7 +200,7 @@ export default function CategoriesPage() {
           <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-pink-200/20 rounded-full blur-3xl animate-pulse" />
 
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
               {[...Array(8)].map((_, index) => (
                 <CategoryCardSkeleton key={index} />
               ))}
@@ -226,13 +226,13 @@ export default function CategoriesPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 transform -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black-600/20 to-gray-600/20 transform -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   <span className="relative">Browse All Products</span>
                 </motion.button>
               </Link>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
               {categories.map((category, index) => (
                 <Link key={category.id} href={`/category/${category.slug}`}>
                   <CategoryCard category={category} index={index} />

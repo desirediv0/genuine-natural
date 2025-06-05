@@ -120,7 +120,7 @@ export default function AddressesPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-3">
       {/* Page Header */}
       <div className="bg-gradient-to-r from-black to-black rounded-2xl p-8 text-white">
         <div className="flex items-center justify-between">
@@ -178,13 +178,13 @@ export default function AddressesPage() {
 
       {editingAddress && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-blackto-black px-8 py-6 border-b border-black">
+          <div className="bg-gradient-to-r from-black to-black px-8 py-6 border-b border-black">
             <div className="flex items-center">
               <div className="bg-black p-3 rounded-xl mr-4">
                 <Edit className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 bg-black">
+                <h2 className="text-2xl font-bold text-gray-100">
                   Edit Address
                 </h2>
                 <p className="text-gray-600">Update your address information</p>
@@ -288,7 +288,7 @@ export default function AddressesPage() {
                   <Button
                     onClick={() => setEditingAddress(address)}
                     variant="outline"
-                    className="border-2 border-black text-black hover:bg-blackhover:border-black px-4 py-2 rounded-lg font-semibold transition-all duration-200 text-sm"
+                    className="border-2 border-black text-black hover:bg-black hover:border-black px-4 py-2 rounded-lg font-semibold transition-all duration-200 text-sm"
                   >
                     <Edit className="h-4 w-4 mr-2" />
                     Edit

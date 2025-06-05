@@ -386,14 +386,14 @@ function ProductsContent() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center items-center h-64">
-          <div className="w-12 h-12 border-4 border-[#ce801f] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-[#0a0a0a] border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 py-16 min-h-screen ">
       <div className="container mx-auto px-4">
         {/* Hero Banner */}
         <div className="relative w-full h-[350px] mb-12 overflow-hidden">
@@ -842,13 +842,13 @@ function ProductsContent() {
                       )}
 
                       <div className="absolute top-3 right-3 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Button
+                        {/* <Button
                           variant="ghost"
                           size="sm"
                           className="w-10 h-10 p-0 bg-white hover:bg-black hover:text-white border border-black transition-colors duration-300"
                         >
                           <Heart className="h-4 w-4" />
-                        </Button>
+                        </Button> */}
                         <Button
                           variant="ghost"
                           size="sm"
@@ -915,7 +915,7 @@ function ProductsContent() {
                         </p>
                       )}
 
-                      <Button
+                      {/* <Button
                         className="w-full bg-black hover:bg-gray-900 text-white font-semibold py-3 rounded-none transition-colors duration-300"
                         onClick={(e) => {
                           e.preventDefault();
@@ -924,7 +924,7 @@ function ProductsContent() {
                       >
                         <ShoppingCart className="h-4 w-4 mr-2" />
                         Add to Cart
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 ))}
@@ -1016,7 +1016,7 @@ export default function ProductsPage() {
       fallback={
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center items-center h-64">
-            <div className="w-12 h-12 border-4 border-[#ce801f] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#191918] border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
       }

@@ -213,12 +213,12 @@ export default function OrderDetailsPage({ params }) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="relative">
-          <div className="h-24 w-24 rounded-full border-t-4 border-b-4 border-yellow-500 animate-spin"></div>
+          <div className="h-24 w-24 rounded-full border-t-4 border-b-4 border-black  animate-spin"></div>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="h-16 w-16 rounded-full bg-white shadow-lg"></div>
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-8 w-8 rounded-full bg-yellow-500"></div>
+            <div className="h-8 w-8 rounded-full bg-black "></div>
           </div>
         </div>
       </div>
@@ -233,12 +233,12 @@ export default function OrderDetailsPage({ params }) {
           <div>
             <Link
               href="/account/orders"
-              className="inline-flex items-center text-sm text-gray-600 hover:text-yellow-600 mb-2 font-medium transition-colors group"
+              className="inline-flex items-center text-gray-100 text-sm  hover:text-white  mb-2 font-medium transition-colors group"
             >
-              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1  transition-transform" />
               Back to Orders
             </Link>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-100">
               Order Details
             </h1>
           </div>
@@ -282,9 +282,9 @@ export default function OrderDetailsPage({ params }) {
         {loadingOrder ? (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 flex justify-center">
             <div className="relative">
-              <div className="h-16 w-16 rounded-full border-4 border-gray-200 border-t-yellow-500 animate-spin"></div>
+              <div className="h-16 w-16 rounded-full border-4 border-gray-200 border-t-black  animate-spin"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <Package className="h-6 w-6 text-yellow-500" />
+                <Package className="h-6 w-6 text-black " />
               </div>
             </div>
           </div>
@@ -297,11 +297,11 @@ export default function OrderDetailsPage({ params }) {
               Order Not Found
             </h2>
             <p className="text-gray-500 mb-8 max-w-md mx-auto">
-              The order you&apos;re looking for doesn&apos;t exist or you don&apos;t have
-              permission to view it.
+              The order you&apos;re looking for doesn&apos;t exist or you
+              don&apos;t have permission to view it.
             </p>
             <Link href="/account/orders">
-              <Button className="bg-yellow-600 hover:bg-yellow-700 px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all">
+              <Button className="bg-black  hover:bg-black  px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all">
                 View All Orders
               </Button>
             </Link>
@@ -457,7 +457,7 @@ export default function OrderDetailsPage({ params }) {
                   onClick={() => toggleSection("items")}
                 >
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Package className="h-5 w-5 mr-3 text-yellow-500" />
+                    <Package className="h-5 w-5 mr-3 text-black " />
                     Order Items ({order.items.length})
                   </h3>
                   {expandedSections.items ? (
@@ -473,7 +473,7 @@ export default function OrderDetailsPage({ params }) {
                       {order.items.map((item, index) => (
                         <div
                           key={item.id}
-                          className="flex items-center p-4 border border-gray-100 rounded-xl hover:border-yellow-200 hover:shadow-sm transition-all"
+                          className="flex items-center p-4 border border-gray-100 rounded-xl hover:border-black  hover:shadow-sm transition-all"
                         >
                           <Link
                             href={`/products/${item.slug}`}
@@ -684,7 +684,7 @@ export default function OrderDetailsPage({ params }) {
                       )}
                       <div className="border-t border-gray-200 pt-3 mt-3 flex justify-between font-bold text-lg">
                         <span>Total:</span>
-                        <span className="text-yellow-600">
+                        <span className="text-black ">
                           {formatCurrency(order.total)}
                         </span>
                       </div>
@@ -693,7 +693,7 @@ export default function OrderDetailsPage({ params }) {
                     {/* Payment Info */}
                     <div className="border-t border-gray-200 pt-6">
                       <h4 className="text-sm font-bold mb-4 text-gray-900 flex items-center">
-                        <CreditCard className="h-4 w-4 mr-2 text-yellow-500" />
+                        <CreditCard className="h-4 w-4 mr-2 text-black " />
                         Payment Information
                       </h4>
                       <div className="space-y-3 text-sm">
@@ -766,7 +766,7 @@ export default function OrderDetailsPage({ params }) {
                     {order.shippingAddress ? (
                       <div className="space-y-2">
                         <div className="flex items-center mb-3">
-                          <User className="h-4 w-4 text-yellow-500 mr-2" />
+                          <User className="h-4 w-4 text-black  mr-2" />
                           <p className="font-semibold text-gray-900">
                             {order.shippingAddress.name || ""}
                           </p>

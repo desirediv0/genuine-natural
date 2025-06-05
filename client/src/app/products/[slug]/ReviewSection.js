@@ -184,7 +184,7 @@ export default function ReviewSection({ product }) {
           </div>
 
           <div className="bg-gray-50 p-8 rounded-xl border border-gray-200">
-            <h3 className="font-bold text-2xl mb-6 text-[#2C3E50]">
+            <h3 className="font-bold text-2xl mb-6  text-[#2C3E50]">
               Write a Review
             </h3>
 
@@ -199,7 +199,7 @@ export default function ReviewSection({ product }) {
                   }
                   setShowForm(true);
                 }}
-                className="px-8 py-3 bg-[#F47C20] hover:bg-[#E06A1A] rounded-lg font-semibold text-lg"
+                className="px-8 py-3 bg-[#000] hover:bg-[#171717] rounded-lg font-semibold text-lg"
               >
                 Write a Review
               </Button>
@@ -243,7 +243,7 @@ export default function ReviewSection({ product }) {
                     name="title"
                     value={reviewForm.title}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C20] ${
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#000] ${
                       formErrors.title ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Give your review a title (optional)"
@@ -268,7 +268,7 @@ export default function ReviewSection({ product }) {
                     value={reviewForm.comment}
                     onChange={handleInputChange}
                     rows={4}
-                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C20] ${
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#000] ${
                       formErrors.comment ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Write your review here"
@@ -283,7 +283,7 @@ export default function ReviewSection({ product }) {
                 <div className="flex gap-4">
                   <Button
                     type="submit"
-                    className="px-8 py-3 bg-[#F47C20] hover:bg-[#E06A1A] rounded-lg font-semibold"
+                    className="px-8 py-3 bg-[#000] hover:bg-[#000] rounded-lg font-semibold"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
@@ -336,7 +336,7 @@ export default function ReviewSection({ product }) {
               }
               setShowForm(true);
             }}
-            className="px-8 py-3 bg-[#F47C20] hover:bg-[#E06A1A] rounded-lg font-semibold text-lg"
+            className="px-8 py-3 bg-[#000] hover:bg-[#000] rounded-lg font-semibold text-lg"
           >
             Write a Review
           </Button>
@@ -382,7 +382,7 @@ export default function ReviewSection({ product }) {
                     name="title"
                     value={reviewForm.title}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C20] ${
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#000] ${
                       formErrors.title ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Give your review a title (optional)"
@@ -407,7 +407,7 @@ export default function ReviewSection({ product }) {
                     value={reviewForm.comment}
                     onChange={handleInputChange}
                     rows={4}
-                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C20] ${
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#000] ${
                       formErrors.comment ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Write your review here"
@@ -422,7 +422,7 @@ export default function ReviewSection({ product }) {
                 <div className="flex gap-4 justify-center">
                   <Button
                     type="submit"
-                    className="px-8 py-3 bg-[#F47C20] hover:bg-[#E06A1A] rounded-lg font-semibold"
+                    className="px-8 py-3 bg-[#000] hover:bg-[#000] rounded-lg font-semibold"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (

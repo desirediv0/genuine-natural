@@ -21,7 +21,7 @@ export default function AccountLayout({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black-50 via-white to-black-50">
+      <div className="min-h-screen bg-gradient-to-br from-black via-white to-black">
         <div className="container mx-auto py-10 flex justify-center">
           <div className="w-12 h-12 border-4 border-black-700 border-t-transparent rounded-full animate-spin"></div>
         </div>
