@@ -21,7 +21,7 @@ export default function AccountLayout({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-white to-black">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto py-10 flex justify-center">
           <div className="w-12 h-12 border-4 border-black-700 border-t-transparent rounded-full animate-spin"></div>
         </div>
@@ -49,7 +49,7 @@ export default function AccountLayout({ children }) {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-700 to-black">
+    <div className="min-h-screen bg-gray-200">
       <ClientOnly>
         <div className="container mx-auto py-10 px-4">
           {isSpecialPage ? (
@@ -77,7 +77,7 @@ export default function AccountLayout({ children }) {
                             href={item.path}
                             className={`flex items-center p-3 rounded-xl transition-all duration-200 ${
                               isActive(item.path)
-                                ? "bg-gradient-to-r from-black-500 to-black-600 text-white shadow-lg"
+                                ? "bg-gradient-to-r from-black-500 to-black-600 text-black shadow-lg"
                                 : "hover:bg-black-50 text-gray-700 hover:text-black-600"
                             }`}
                           >

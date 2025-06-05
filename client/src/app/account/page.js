@@ -147,11 +147,11 @@ export default function AccountPage() {
                 className="lg:w-1/4 space-y-6"
                 variants={itemVariants}
               >
-                <div className="bg-gradient-to-br from-gray-900 to-black rounded-3xl p-8 text-center">
+                <div className="rounded-3xl p-8 text-center">
                   <div className="mx-auto w-28 h-28 bg-gray-800 rounded-full border-4 border-gray-700 flex items-center justify-center mb-4">
                     <User className="w-14 h-14 text-gray-300" />
                   </div>
-                  <h2 className="text-xl text-white font-bold mb-2">
+                  <h2 className="text-xl text-black font-bold mb-2">
                     {user?.name || "User"}
                   </h2>
                   <p className="text-gray-400 text-sm mb-6">

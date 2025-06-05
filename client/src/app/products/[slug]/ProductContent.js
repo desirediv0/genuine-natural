@@ -491,12 +491,12 @@ export default function ProductContent({ slug }) {
     return (
       <div className="bg-gray-50 min-h-screen">
         <div className="container mx-auto px-4 py-8">
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-yellow-200 flex flex-col items-center text-center max-w-md mx-auto">
-            <AlertCircle className="text-yellow-500 h-16 w-16 mb-6" />
-            <h2 className="text-2xl font-bold text-yellow-700 mb-4">
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center max-w-md mx-auto">
+            <AlertCircle className="text-gray-500 h-16 w-16 mb-6" />
+            <h2 className="text-2xl font-bold text-gray-700 mb-4">
               Product Not Found
             </h2>
-            <p className="text-yellow-600 mb-8">
+            <p className="text-gray-600 mb-8">
               The product you are looking for does not exist or has been
               removed.
             </p>
@@ -578,7 +578,7 @@ export default function ProductContent({ slug }) {
 
             {/* Rating */}
             <div className="flex items-center mb-6">
-              <div className="flex text-yellow-400 mr-3">
+              <div className="flex text-gray-400 mr-3">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
@@ -1068,7 +1068,7 @@ export default function ProductContent({ slug }) {
 
                   <div className="p-6">
                     <div className="flex items-center justify-center mb-3">
-                      <div className="flex text-yellow-400">
+                      <div className="flex text-gray-400">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}

@@ -68,7 +68,7 @@ export default function LoginPage() {
 
   return (
     <AuthRedirect>
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <Toaster position="top-center" />
 
         {/* Header with logo */}
@@ -76,7 +76,7 @@ export default function LoginPage() {
           <div className="container mx-auto px-4 py-4">
             <Link href="/" className="flex items-center justify-center">
               <div className="flex items-center space-x-2">
-                <div className="bg-yellow-500 p-2 rounded-lg">
+                <div className="bg-gray-500 p-2 rounded-lg">
                   <ShoppingBag className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold text-gray-800">
@@ -92,14 +92,14 @@ export default function LoginPage() {
             {/* Welcome Card */}
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
               {/* Header Section */}
-              <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 px-8 py-8 text-center">
+              <div className="bg-gradient-to-r from-gray-500 to-gray-600 px-8 py-8 text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
                   <Zap className="h-8 w-8 text-white" />
                 </div>
                 <h1 className="text-2xl font-bold text-white mb-2">
                   Welcome Back!
                 </h1>
-                <p className="text-yellow-100">
+                <p className="text-gray-100">
                   Sign in to continue your fitness journey
                 </p>
               </div>
@@ -124,7 +124,7 @@ export default function LoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
-                        className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:ring-yellow-500 transition-colors"
+                        className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:border-gray-500 focus:ring-gray-500 transition-colors"
                       />
                     </div>
 
@@ -138,7 +138,7 @@ export default function LoginPage() {
                         </label>
                         <Link
                           href="/forgot-password"
-                          className="text-sm text-yellow-600 hover:text-yellow-700 font-medium transition-colors"
+                          className="text-sm text-gray-600 hover:text-gray-700 font-medium transition-colors"
                         >
                           Forgot password?
                         </Link>
@@ -153,7 +153,7 @@ export default function LoginPage() {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Enter your password"
-                          className="w-full h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:ring-yellow-500 transition-colors"
+                          className="w-full h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-gray-500 focus:ring-gray-500 transition-colors"
                         />
                         <button
                           type="button"
@@ -172,7 +172,7 @@ export default function LoginPage() {
 
                   <Button
                     type="submit"
-                    className="w-full h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02]"
+                    className="w-full h-12 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02]"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
@@ -200,7 +200,7 @@ export default function LoginPage() {
                   <Link href="/register">
                     <Button
                       variant="outline"
-                      className="w-full h-12 border-2 border-yellow-200 text-yellow-600 hover:bg-yellow-50 hover:border-yellow-300 font-semibold rounded-xl transition-all duration-200"
+                      className="w-full h-12 border-2 border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 font-semibold rounded-xl transition-all duration-200"
                     >
                       Create New Account
                     </Button>
@@ -215,14 +215,14 @@ export default function LoginPage() {
                 By signing in, you agree to our{" "}
                 <Link
                   href="/terms"
-                  className="text-yellow-600 hover:text-yellow-700 font-medium"
+                  className="text-gray-600 hover:text-gray-700 font-medium"
                 >
                   Terms of Service
                 </Link>{" "}
                 and{" "}
                 <Link
                   href="/privacy"
-                  className="text-yellow-600 hover:text-yellow-700 font-medium"
+                  className="text-gray-600 hover:text-gray-700 font-medium"
                 >
                   Privacy Policy
                 </Link>

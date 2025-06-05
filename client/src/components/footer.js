@@ -33,7 +33,7 @@ export function Footer() {
 
   return (
     <footer className="bg-[#151515] text-white">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About PowerFuel */}
           <div>
@@ -178,7 +178,7 @@ export function Footer() {
               </div>
             </div>
             {/* Quick Links */}
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <h4 className="text-white font-medium mb-3">Quick Links</h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 {" "}
@@ -219,7 +219,7 @@ export function Footer() {
                   Terms & Conditions
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

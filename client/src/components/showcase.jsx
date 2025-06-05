@@ -15,7 +15,7 @@ export default function GymSupplementBanner() {
   // Colors extracted from the Being genuine nutritions logo
   const colors = {
     brown: "#5D4037", // Dark brown from mountains
-    gold: "#D68C16", // Gold/yellow from text
+    gold: "#D68C16", // Gold/gray from text
     cream: "#F5F5DC", // Cream background
     darkBrown: "#3E2723", // Darker brown for accents
   };

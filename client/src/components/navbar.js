@@ -365,11 +365,11 @@ export function Navbar() {
       <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white px-4 py-3 text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
         <div className="relative flex items-center justify-center gap-3">
-          <Zap className="h-4 w-4 text-yellow-400 animate-pulse" />
+          <Zap className="h-4 w-4 text-gray-400 animate-pulse" />
           <span className="font-semibold tracking-wide text-sm md:text-base">
             🎁 Free shipping on all orders over ₹999 | Limited Time Offer!
           </span>
-          <Zap className="h-4 w-4 text-yellow-400 animate-pulse" />
+          <Zap className="h-4 w-4 text-gray-400 animate-pulse" />
         </div>
       </div>
 

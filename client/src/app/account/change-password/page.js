@@ -224,7 +224,7 @@ export default function ChangePasswordPage() {
                         value={formData.currentPassword}
                         onChange={handleChange}
                         required
-                        className="h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-black transition-colors"
+                        className="h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl  transition-colors"
                         placeholder="Enter your current password"
                       />
                       <button
@@ -258,7 +258,7 @@ export default function ChangePasswordPage() {
                         onChange={handleChange}
                         required
                         minLength={8}
-                        className="h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-black transition-colors"
+                        className="h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl  transition-colors"
                         placeholder="Enter your new password"
                       />
                       <button
@@ -295,7 +295,7 @@ export default function ChangePasswordPage() {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         required
-                        className="h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-black transition-colors"
+                        className="h-12 px-4 pr-12 border-2 border-gray-200 rounded-xl  transition-colors"
                         placeholder="Confirm your new password"
                       />
                       <button
