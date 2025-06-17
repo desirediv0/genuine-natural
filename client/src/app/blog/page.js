@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import { useEffect, useState, Suspense } from "react";
 import { fetchApi } from "@/lib/utils";
@@ -9,7 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSearchParams } from "next/navigation";
 import CategoryFilter from "./components/CategoryFilter";
-import { BookOpen, Calendar, ArrowRight, Tag } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  BookOpen,
+  Calendar,
+  ArrowRight,
+  Tag,
+  Clock,
+  User,
+  Search,
+  TrendingUp,
+  Star,
+} from "lucide-react";
 
 // Helper function to format image URLs correctly
 const getImageUrl = (image) => {
@@ -49,17 +60,70 @@ function BlogContent() {
 
   return (
     <>
-      {/* Show current category as a title if filtering */}
-      {categorySlug && (
-        <div className="mb-8 text-center">
-          <div className="inline-flex items-center bg-black  px-6 py-3 rounded-full">
-            <Tag className="h-5 w-5 text-white  mr-2" />
-            <span className="text-white  font-semibold">
-              Category: <span className="text-white ">{categorySlug}</span>
-            </span>
-          </div>
-        </div>
-      )}
+      {/* Hero Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-16"
+      >
+        <motion.div
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center bg-black text-white px-8 py-4 rounded-full mb-6 shadow-lg"
+        >
+          <TrendingUp className="h-6 w-6 mr-3" />
+          <span className="font-bold text-lg">Latest Articles</span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6"
+        >
+          Our <span className="text-black">Blog</span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
+        >
+          Discover insights, tips, and industry knowledge to help you succeed
+        </motion.p>
+      </motion.div>
+
+      {/* Category Filter */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mb-12"
+      >
+        <CategoryFilter />
+      </motion.div>
+
+      {/* Current category indicator */}
+      <AnimatePresence>
+        {categorySlug && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="mb-12 text-center"
+          >
+            <div className="inline-flex items-center bg-gray-900 text-white px-8 py-4 rounded-full shadow-lg">
+              <Tag className="h-5 w-5 mr-3" />
+              <span className="font-semibold text-lg">
+                Category:{" "}
+                <span className="text-white font-bold">{categorySlug}</span>
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -101,19 +165,19 @@ function BlogContent() {
                 </Link>
                 <div className="p-6">
                   <div className="flex items-center text-sm text-gray-500 mb-3">
-                    <Calendar className="h-4 w-4 mr-2 text-white " />
+                    <Calendar className="h-4 w-4 mr-2 text-gray-500" />
                     <span className="mr-4">{formatDate(post.createdAt)}</span>
                     {post.categories?.length > 0 && (
                       <>
-                        <Tag className="h-4 w-4 mr-2 text-white " />
-                        <span className="bg-black  text-white  px-2 py-1 rounded-full text-xs font-medium">
+                        <Tag className="h-4 w-4 mr-2 text-gray-500" />
+                        <span className="bg-black text-white px-2 py-1 rounded-full text-xs font-medium">
                           {post.categories[0].name}
                         </span>
                       </>
                     )}
                   </div>
                   <Link href={`/blog/${post.slug}`}>
-                    <h2 className="text-xl font-bold mb-3 text-black  transition-colors line-clamp-2 text-gray-800">
+                    <h2 className="text-xl font-bold mb-3 transition-colors line-clamp-2 text-gray-800 hover:text-black">
                       {post.title}
                     </h2>
                   </Link>
@@ -123,7 +187,7 @@ function BlogContent() {
                   <Link href={`/blog/${post.slug}`}>
                     <Button
                       variant="link"
-                      className="px-0 text-white  text-black  font-semibold group"
+                      className="px-0 text-black font-semibold group"
                     >
                       Read More
                       <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -142,7 +206,7 @@ function BlogContent() {
                   variant="outline"
                   onClick={() => setPage(page - 1)}
                   disabled={page === 1}
-                  className="px-6 py-2 border-2 border-black  text-white  hover:bg-black rounded-xl"
+                  className="px-6 py-2 border-2 border-black text-black hover:bg-black hover:text-white rounded-xl"
                 >
                   Previous
                 </Button>
@@ -153,8 +217,8 @@ function BlogContent() {
                     onClick={() => setPage(index + 1)}
                     className={`px-4 py-2 rounded-xl ${
                       page === index + 1
-                        ? "bg-gradient-to-r from-black  to-black  text-white"
-                        : "border-2 border-black  text-white  hover:bg-black"
+                        ? "bg-black text-white"
+                        : "border-2 border-black text-black hover:bg-black hover:text-white"
                     }`}
                   >
                     {index + 1}
@@ -164,7 +228,7 @@ function BlogContent() {
                   variant="outline"
                   onClick={() => setPage(page + 1)}
                   disabled={page === pagination.totalPages}
-                  className="px-6 py-2 border-2 border-black  text-white  hover:bg-black rounded-xl"
+                  className="px-6 py-2 border-2 border-black text-black hover:bg-black hover:text-white rounded-xl"
                 >
                   Next
                 </Button>
@@ -174,8 +238,8 @@ function BlogContent() {
         </>
       ) : (
         <div className="text-center py-12 bg-white rounded-2xl shadow-lg border border-gray-100">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-black  rounded-full mb-6">
-            <BookOpen className="h-8 w-8 text-white " />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-full mb-6">
+            <BookOpen className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-2xl font-semibold mb-2 text-gray-800">
             No blog posts found
@@ -192,7 +256,7 @@ function BlogContent() {
           {categorySlug && (
             <Button
               onClick={() => (window.location.href = "/blog")}
-              className="bg-gradient-to-r from-black  to-black  hover:from-black  hover:to-black  text-white px-8 py-3 rounded-xl font-semibold"
+              className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-semibold"
             >
               View All Posts
             </Button>
@@ -207,23 +271,6 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-12">
-        {/* Header Section */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-black  to-black  rounded-full mb-6">
-            <BookOpen className="h-8 w-8 text-white" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-800">
-            Our Blog
-          </h1>
-          <p className="text-xl text-gray-600">
-            Latest news, tips, and insights from the world of supplements and
-            fitness
-          </p>
-        </div>
-
-        {/* Add the category filter component */}
-        <CategoryFilter />
-
         {/* Wrap the content that uses useSearchParams in Suspense */}
         <Suspense
           fallback={

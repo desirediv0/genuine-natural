@@ -6,17 +6,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchApi, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import {
   Star,
   AlertCircle,
-  ChevronDown,
-  ChevronUp,
   Eye,
   Heart,
   Filter,
   Grid3X3,
   List,
   ShoppingBag,
+  Package,
+  ArrowRight,
+  ChevronRight,
+  Sparkles,
 } from "lucide-react";
 import ProductQuickView from "@/components/ProductQuickView";
 
@@ -103,13 +106,12 @@ export default function CategoryPage() {
     if (slug) {
       fetchCategoryAndProducts();
     }
-  }, [slug, pagination.page, sortOption]); // Removed pagination.limit from dependency array
+  }, [slug, pagination.page, sortOption]);
 
   // Handle pagination
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > pagination.pages) return;
     setPagination((prev) => ({ ...prev, page: newPage }));
-    // Scroll to top when changing pages
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -127,10 +129,17 @@ export default function CategoryPage() {
   // Loading state
   if (loading && !category) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-center items-center h-64">
-            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-16">
+          <div className="flex flex-col items-center justify-center h-64">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-16 h-16 border-4 border-black border-t-transparent rounded-full mb-6"
+            />
+            <p className="text-gray-600 text-lg font-medium">
+              Loading category...
+            </p>
           </div>
         </div>
       </div>
@@ -140,386 +149,424 @@ export default function CategoryPage() {
   // Error state
   if (error && !category) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="bg-red-50 p-6 rounded-2xl border border-red-200 flex items-start max-w-2xl mx-auto">
-            <AlertCircle className="text-red-500 mr-3 mt-0.5 flex-shrink-0" />
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-16">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white p-8 rounded-2xl border border-red-200 shadow-lg flex items-start max-w-2xl mx-auto"
+          >
+            <AlertCircle className="text-red-500 mr-4 mt-1 flex-shrink-0 h-8 w-8" />
             <div>
-              <h2 className="text-lg font-semibold text-red-700 mb-1">
-                Error Loading Category
+              <h2 className="text-2xl font-bold text-red-700 mb-3">
+                Category Not Found
               </h2>
-              <p className="text-red-600">{error}</p>
+              <p className="text-red-600 mb-6">{error}</p>
+              <Link href="/products">
+                <Button className="bg-black hover:bg-gray-800 text-white">
+                  <ArrowRight className="mr-2 h-4 w-4" />
+                  Browse All Products
+                </Button>
+              </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white ">
+    <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Category header */}
-        {category && (
-          <div className="mb-10">
-            <div className="flex items-center mb-4 text-sm text-gray-600">
-              <Link
-                href="/"
-                className="hover:text-white transition-colors"
-              >
-                Home
-              </Link>
-              <span className="mx-2">•</span>
-              <Link
-                href="/products"
-                className="hover:text-white transition-colors"
-              >
-                Products
-              </Link>
-              <span className="mx-2">•</span>
-              <span className="text-black font-medium">
-                {category.name}
-              </span>
-            </div>
+        {/* Breadcrumb */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center mb-8 text-sm text-gray-500"
+        >
+          <Link
+            href="/"
+            className="hover:text-black transition-colors font-medium"
+          >
+            Home
+          </Link>
+          <ChevronRight className="h-4 w-4 mx-2" />
+          <Link
+            href="/products"
+            className="hover:text-black transition-colors font-medium"
+          >
+            Products
+          </Link>
+          <ChevronRight className="h-4 w-4 mx-2" />
+          <span className="text-black font-semibold">{category?.name}</span>
+        </motion.div>
 
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        {/* Category Header */}
+        {category && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12"
+          >
+            <div className="bg-white   border-gray-100 p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-black/5 to-transparent rounded-bl-full"></div>
+
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative">
                 <div className="flex-1">
-                  <h1 className="text-4xl font-bold mb-4 text-gray-800">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="inline-flex items-center bg-black text-white px-6 py-3 rounded-full mb-6"
+                  >
+                    <Package className="h-5 w-5 mr-2" />
+                    <span className="font-semibold">Category</span>
+                  </motion.div>
+
+                  <motion.h1
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-4xl lg:text-5xl font-bold mb-6 text-gray-900"
+                  >
                     {category.name}
-                  </h1>
+                  </motion.h1>
+
                   {category.description && (
-                    <p className="text-gray-600 text-lg max-w-2xl leading-relaxed">
+                    <motion.p
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-gray-600 text-lg max-w-2xl leading-relaxed"
+                    >
                       {category.description}
-                    </p>
+                    </motion.p>
                   )}
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="flex items-center mt-6 text-sm text-gray-500"
+                  >
+                    <ShoppingBag className="h-4 w-4 mr-2" />
+                    <span>
+                      {pagination.total || products.length} products available
+                    </span>
+                  </motion.div>
                 </div>
 
                 {category.image && (
-                  <div className="w-32 h-32 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="w-40 h-40 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 shadow-lg border border-gray-200"
+                  >
                     <Image
-                      src={getImageUrl(category.image) || "/placeholder.svg"}
+                      src={getImageUrl(category.image)}
                       alt={category.name}
-                      width={128}
-                      height={128}
-                      className="w-full h-full object-contain p-4"
+                      width={160}
+                      height={160}
+                      className="w-full h-full object-cover"
                     />
-                  </div>
+                  </motion.div>
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
-        {/* Products header with filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center text-gray-600">
-                <Filter className="h-5 w-5 mr-2 text-black" />
-                <span className="font-medium">
-                  Showing {products.length} of {pagination.total} products
-                </span>
+        {/* Filters and Controls */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8"
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-gray-600" />
+                <span className="font-semibold text-gray-900">Sort by:</span>
               </div>
+              <select
+                value={sortOption}
+                onChange={handleSortChange}
+                className="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-black focus:outline-none bg-white font-medium"
+              >
+                <option value="newest">Latest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name-asc">Name: A to Z</option>
+                <option value="name-desc">Name: Z to A</option>
+              </select>
             </div>
 
-            <div className="flex items-center space-x-4">
-              {/* View Mode Toggle */}
-              <div className="flex items-center bg-gray-100 rounded-lg p-1">
+            <div className="flex items-center gap-4">
+              <span className="text-gray-600 font-medium">View:</span>
+              <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden">
                 <button
                   onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded-md transition-colors ${
+                  className={`p-3 transition-all ${
                     viewMode === "grid"
-                      ? "bg-white text-gray-600 shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? "bg-black text-white"
+                      : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  <Grid3X3 className="h-4 w-4" />
+                  <Grid3X3 className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => setViewMode("list")}
-                  className={`p-2 rounded-md transition-colors ${
+                  className={`p-3 transition-all ${
                     viewMode === "list"
-                      ? "bg-white text-gray-600 shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? "bg-black text-white"
+                      : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  <List className="h-4 w-4" />
+                  <List className="h-5 w-5" />
                 </button>
-              </div>
-
-              {/* Sort Dropdown */}
-              <div className="flex items-center">
-                <label
-                  htmlFor="sort"
-                  className="text-sm mr-3 font-medium text-gray-700"
-                >
-                  Sort by:
-                </label>
-                <select
-                  id="sort"
-                  name="sort"
-                  className="rounded-xl border-2 border-gray-200 focus:border-black focus:ring-black px-4 py-2 text-sm"
-                  onChange={handleSortChange}
-                  value={sortOption}
-                >
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="name-asc">Name: A-Z</option>
-                  <option value="name-desc">Name: Z-A</option>
-                </select>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Products Grid */}
-        {products.length === 0 ? (
-          <div className="bg-white p-12 rounded-2xl shadow-lg border border-gray-100 text-center max-w-md mx-auto">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-6">
-              <ShoppingBag className="h-8 w-8 text-gray-600" />
-            </div>
-            <h2 className="text-2xl font-bold mb-3 text-gray-800">
-              No products found
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[...Array(8)].map((_, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse"
+              >
+                <div className="h-64 bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-4 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-8 bg-gray-200 rounded"></div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : products.length > 0 ? (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className={`grid gap-8 ${
+                viewMode === "grid"
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                  : "grid-cols-1"
+              }`}
+            >
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className={`bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-500 group ${
+                    viewMode === "list" ? "flex" : ""
+                  }`}
+                >
+                  <div
+                    className={`relative ${
+                      viewMode === "list" ? "w-80 h-64" : "h-64"
+                    } overflow-hidden`}
+                  >
+                    <Image
+                      src={getImageUrl(product.images?.[0]?.url)}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+
+                    {product.hasSale && (
+                      <div className="absolute top-4 left-4">
+                        <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-bold flex items-center">
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          SALE
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex flex-col gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleQuickView(product)}
+                          className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:text-black shadow-lg"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:text-red-500 shadow-lg"
+                        >
+                          <Heart className="h-4 w-4" />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={`p-6 ${viewMode === "list" ? "flex-1" : ""}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className="h-4 w-4"
+                            fill={
+                              i < Math.round(product.avgRating || 0)
+                                ? "currentColor"
+                                : "none"
+                            }
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        ({product.reviewCount || 0})
+                      </span>
+                    </div>
+
+                    <Link href={`/products/${product.slug}`}>
+                      <h3 className="font-bold text-lg mb-3 text-gray-900 group-hover:text-black transition-colors line-clamp-2">
+                        {product.name}
+                      </h3>
+                    </Link>
+
+                    {viewMode === "list" && product.shortDescription && (
+                      <p className="text-gray-600 mb-4 line-clamp-2">
+                        {product.shortDescription}
+                      </p>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {product.hasSale ? (
+                          <>
+                            <span className="font-bold text-xl text-black">
+                              {formatCurrency(product.basePrice)}
+                            </span>
+                            <span className="text-gray-500 line-through text-sm">
+                              {formatCurrency(product.regularPrice)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="font-bold text-xl text-gray-900">
+                            {formatCurrency(product.basePrice)}
+                          </span>
+                        )}
+                      </div>
+
+                      <Link href={`/products/${product.slug}`}>
+                        <Button
+                          size="sm"
+                          className="bg-black hover:bg-gray-800 text-white rounded-xl font-semibold group/btn"
+                        >
+                          View
+                          <ArrowRight className="ml-1 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Pagination */}
+            {pagination.pages > 1 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-center mt-16"
+              >
+                <div className="flex items-center space-x-2 bg-white rounded-2xl p-2 shadow-lg border border-gray-200">
+                  <Button
+                    variant="ghost"
+                    onClick={() => handlePageChange(pagination.page - 1)}
+                    disabled={pagination.page === 1}
+                    className="px-6 py-3 rounded-xl disabled:opacity-50 hover:bg-gray-100 font-semibold"
+                  >
+                    Previous
+                  </Button>
+
+                  {[...Array(pagination.pages)].map((_, index) => (
+                    <Button
+                      key={index}
+                      variant={
+                        pagination.page === index + 1 ? "default" : "ghost"
+                      }
+                      onClick={() => handlePageChange(index + 1)}
+                      className={`px-4 py-3 rounded-xl font-semibold transition-all ${
+                        pagination.page === index + 1
+                          ? "bg-black text-white shadow-lg"
+                          : "hover:bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {index + 1}
+                    </Button>
+                  ))}
+
+                  <Button
+                    variant="ghost"
+                    onClick={() => handlePageChange(pagination.page + 1)}
+                    disabled={pagination.page === pagination.pages}
+                    className="px-6 py-3 rounded-xl disabled:opacity-50 hover:bg-gray-100 font-semibold"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-20 bg-white rounded-2xl shadow-lg border border-gray-100"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring" }}
+              className="inline-flex items-center justify-center w-20 h-20 bg-black rounded-full mb-8"
+            >
+              <ShoppingBag className="h-10 w-10 text-white" />
+            </motion.div>
+
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">
+              No Products Found
             </h2>
-            <p className="text-gray-600 mb-8">
-              There are no products in this category yet.
+            <p className="text-gray-600 mb-8 text-lg">
+              This category doesn't have any products yet.
             </p>
+
             <Link href="/products">
-              <Button className="bg-gradient-to-r from-black to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-3 rounded-xl font-semibold">
+              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                <ArrowRight className="mr-2 h-5 w-5" />
                 Browse All Products
               </Button>
             </Link>
-          </div>
-        ) : (
-          <div
-            className={
-              viewMode === "grid"
-                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-                : "space-y-6"
-            }
-          >
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className={`bg-white overflow-hidden transition-all hover:shadow-xl shadow-lg border border-gray-100 group ${
-                  viewMode === "grid" ? "rounded-2xl" : "rounded-2xl flex"
-                }`}
-              >
-                <Link
-                  href={`/products/${product.slug}`}
-                  className={viewMode === "list" ? "flex-shrink-0" : "block"}
-                >
-                  <div
-                    className={`relative bg-gray-200 overflow-hidden ${
-                      viewMode === "grid" ? "h-64 w-full" : "h-32 w-32"
-                    }`}
-                  >
-                    <Image
-                      src={
-                        product.images[0]?.url
-                          ? getImageUrl(product.images[0].url)
-                          : "/placeholder.svg?height=300&width=400"
-                      }
-                      alt={product.name}
-                      fill
-                      className="object-contain p-4 transition-transform group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                    {product.variants[0]?.salePrice && (
-                      <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                        SALE
-                      </span>
-                    )}
-
-                    {viewMode === "grid" && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-white bg-opacity-0 group-hover:bg-opacity-70 backdrop-blur-[2px] flex justify-center py-3 translate-y-full group-hover:translate-y-0 transition-transform">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-white hover:text-white hover:bg-white rounded-full p-2"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleQuickView(product);
-                          }}
-                        >
-                          <Eye className="h-5 w-5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-white hover:text-white hover:bg-white rounded-full p-2 mx-2"
-                        >
-                          <Heart className="h-5 w-5" />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-
-                <div
-                  className={`p-6 ${
-                    viewMode === "list" ? "flex-1" : "text-center"
-                  }`}
-                >
-                  <div className="flex items-center justify-center mb-3">
-                    <div className="flex text-gray-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-4 w-4"
-                          fill={
-                            i < Math.round(product._count?.reviews / 2 || 0)
-                              ? "currentColor"
-                              : "none"
-                          }
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-500 ml-2">
-                      ({product._count?.reviews || 0})
-                    </span>
-                  </div>
-
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="hover:text-black transition-colors"
-                  >
-                    <h3 className="font-semibold text-gray-800 mb-3 line-clamp-2 text-lg">
-                      {product.name}
-                    </h3>
-                  </Link>
-
-                  <div className="flex items-center justify-center mb-3">
-                    {product.variants[0]?.salePrice ? (
-                      <div className="flex items-center">
-                        <span className="font-bold text-xl text-black">
-                          {formatCurrency(product.variants[0]?.salePrice)}
-                        </span>
-                        <span className="text-gray-500 line-through text-sm ml-2">
-                          {formatCurrency(product.variants[0]?.price)}
-                        </span>
-                      </div>
-                    ) : (
-                      <span className="font-bold text-xl text-black">
-                        {formatCurrency(
-                          product.basePrice || product.variants[0]?.price || 0
-                        )}
-                      </span>
-                    )}
-                  </div>
-
-                  {product.flavors > 1 && (
-                    <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                      {product.flavors} variants
-                    </span>
-                  )}
-
-                  {viewMode === "list" && (
-                    <div className="flex items-center space-x-2 mt-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-gray-200 text-gray-600 hover:bg-white"
-                        onClick={() => handleQuickView(product)}
-                      >
-                        <Eye className="h-4 w-4 mr-1" />
-                        Quick View
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-gray-200 text-gray-600 hover:bg-white"
-                      >
-                        <Heart className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          </motion.div>
         )}
 
-        {/* Pagination */}
-        {pagination.pages > 1 && (
-          <div className="flex justify-center items-center mt-12">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4">
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(pagination.page - 1)}
-                  disabled={pagination.page === 1}
-                  className="border-gray-200 text-gray-600 hover:bg-white"
-                >
-                  <ChevronUp className="h-4 w-4 rotate-90" />
-                </Button>
-
-                {[...Array(pagination.pages)].map((_, i) => {
-                  const page = i + 1;
-                  // Show first page, last page, and pages around the current page
-                  if (
-                    page === 1 ||
-                    page === pagination.pages ||
-                    (page >= pagination.page - 1 && page <= pagination.page + 1)
-                  ) {
-                    return (
-                      <Button
-                        key={page}
-                        variant={
-                          pagination.page === page ? "default" : "outline"
-                        }
-                        size="sm"
-                        onClick={() => handlePageChange(page)}
-                        className={`w-10 h-10 p-0 ${
-                          pagination.page === page
-                            ? "bg-gradient-to-r from-black to-gray-600 text-white"
-                            : "border-gray-200 text-gray-600 hover:bg-white"
-                        }`}
-                      >
-                        {page}
-                      </Button>
-                    );
-                  }
-
-                  // Show ellipsis for skipped pages
-                  if (
-                    (page === 2 && pagination.page > 3) ||
-                    (page === pagination.pages - 1 &&
-                      pagination.page < pagination.pages - 2)
-                  ) {
-                    return (
-                      <span key={page} className="px-2 text-gray-500">
-                        ...
-                      </span>
-                    );
-                  }
-
-                  return null;
-                })}
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(pagination.page + 1)}
-                  disabled={pagination.page === pagination.pages}
-                  className="border-gray-200 text-gray-600 hover:bg-white"
-                >
-                  <ChevronDown className="h-4 w-4 rotate-90" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Product Quick View */}
+        {/* Quick View Modal */}
         <ProductQuickView
           product={quickViewProduct}
-          open={quickViewOpen}
-          onOpenChange={setQuickViewOpen}
+          isOpen={quickViewOpen}
+          onClose={() => {
+            setQuickViewOpen(false);
+            setQuickViewProduct(null);
+          }}
         />
       </div>
     </div>

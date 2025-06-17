@@ -9,6 +9,13 @@ import {
   Mail,
   Phone,
   MapPin,
+  Clock,
+  Truck,
+  Shield,
+  Award,
+  Heart,
+  ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
@@ -32,204 +39,300 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-[#151515] text-white">
-      <div className="container mx-auto px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* About PowerFuel */}
-          <div>
-            <div className="mb-6">
-              <Image
-                src="/white-logo.png"
-                alt="PowerFuel Logo"
-                width={120}
-                height={140}
-                className="mb-4"
-              />
-            </div>
-            <p className="text-gray-300 mb-6 text-sm leading-relaxed">
-              PowerFuel is India&apos;s premium fitness nutrition brand,
-              dedicated to providing high-quality supplements and nutritional
-              products to help you achieve your fitness goals.
-            </p>
-            {/* Social media links */}
-            <div className="flex space-x-2">
-              {[
-                { icon: <Instagram size={16} />, href: "#" },
-                { icon: <Facebook size={16} />, href: "#" },
-                { icon: <Twitter size={16} />, href: "#" },
-                { icon: <Youtube size={16} />, href: "#" },
-              ].map((social, idx) => (
-                <Link
-                  key={idx}
-                  href={social.href}
-                  className="w-8 h-8 bg-gray-600 hover:bg-white flex items-center justify-center rounded text-white transition-colors duration-300"
-                >
-                  {social.icon}
-                </Link>
-              ))}
-            </div>
-          </div>
+    <footer className="bg-black text-white relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-600 to-gray-400"></div>
+      </div>
 
-          {/* Product Categories */}
-          <div>
-            {" "}
-            <h3 className="text-white font-semibold text-lg mb-2">
-              Product Categories
-            </h3>
-            <div className="w-12 h-1 bg-white mb-6"></div>
-            <ul className="space-y-3">
-              {[
-                { label: "Whey Protein", href: "/category/whey-protein" },
-                {
-                  label: "Plant-Based Protein",
-                  href: "/category/plant-protein",
-                },
-                { label: "Casein Protein", href: "/category/casein-protein" },
-                { label: "Mass Gainers", href: "/category/mass-gainers" },
-                { label: "Protein Bars", href: "/category/protein-bars" },
-                { label: "Pre-Workout", href: "/category/pre-workout" },
-                { label: "Post-Workout", href: "/category/post-workout" },
-                { label: "BCAA & EAA", href: "/category/bcaa-eaa" },
-              ].map((link, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors duration-300 text-sm flex items-center"
-                  >
-                    <span className="mr-2">›</span>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* More Products */}
-          <div>
-            {" "}
-            <h3 className="text-white font-semibold text-lg mb-2">
-              More Products
-            </h3>
-            <div className="w-12 h-1 bg-white mb-6"></div>
-            <ul className="space-y-3">
-              {[
-                { label: "Creatine & HMB", href: "/category/creatine-hmb" },
-                { label: "Glutamine", href: "/category/glutamine" },
-                { label: "Protein Foods", href: "/category/protein-foods" },
-                { label: "Weight Loss Support", href: "/category/weight-loss" },
-                { label: "Multivitamins", href: "/category/multivitamins" },
-                { label: "Omega 3 Fatty Acids", href: "/category/omega-3" },
-                { label: "Workout Accessories", href: "/category/accessories" },
-                { label: "Gym Clothing", href: "/category/clothing" },
-              ].map((link, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors duration-300 text-sm flex items-center"
-                  >
-                    <span className="mr-2">›</span>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact Us */}
-          <div>
-            {" "}
-            <h3 className="text-white font-semibold text-lg mb-2">
-              Contact Us
-            </h3>
-            <div className="w-12 h-1 bg-white mb-6"></div>
-            <div className="space-y-4 text-sm">
-              <div className="flex items-start">
-                <MapPin
-                  size={16}
-                  className="text-white mr-3 mt-1 flex-shrink-0"
+      <div className="relative container mx-auto px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* About Desire Div */}
+          <div className="lg:col-span-1">
+            <div className="mb-8">
+              <div className="relative group">
+                <Image
+                  src="/white-logo.png"
+                  alt="Desire Div Logo"
+                  width={140}
+                  height={60}
+                  className="mb-6 transform group-hover:scale-105 transition-transform duration-300"
                 />
-                <span className="text-gray-300">
-                  A-36, Sector 83, Noida - 201305, Uttar Pradesh (India)
+              </div>
+            </div>
+            <div className="space-y-6">
+              <p className="text-gray-300 text-sm leading-relaxed font-medium">
+                Desire Div is a leading Website Designing Company offering best
+                quality web design, development, and digital marketing services
+                to help your business grow online.
+              </p>
+
+              {/* Trust Indicators */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-col items-center p-3 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all">
+                  <Shield className="w-6 h-6 text-white mb-2" />
+                  <span className="text-xs font-semibold text-gray-300">
+                    SSL Secured
+                  </span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all">
+                  <Award className="w-6 h-6 text-white mb-2" />
+                  <span className="text-xs font-semibold text-gray-300">
+                    Trusted Brand
+                  </span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all">
+                  <Truck className="w-6 h-6 text-white mb-2" />
+                  <span className="text-xs font-semibold text-gray-300">
+                    Fast Delivery
+                  </span>
+                </div>
+              </div>
+
+              {/* Social media links */}
+              <div className="pt-4">
+                <h4 className="font-bold text-lg mb-4 flex items-center">
+                  <Heart className="w-5 h-5 mr-2 text-red-400" />
+                  Follow Us
+                </h4>
+                <div className="flex space-x-3">
+                  {[
+                    {
+                      icon: <Instagram size={18} />,
+                      href: "#",
+                      color: "bg-pink-600 hover:bg-pink-700",
+                    },
+                    {
+                      icon: <Facebook size={18} />,
+                      href: "#",
+                      color: "bg-blue-600 hover:bg-blue-700",
+                    },
+                    {
+                      icon: <Twitter size={18} />,
+                      href: "#",
+                      color: "bg-cyan-500 hover:bg-cyan-600",
+                    },
+                    {
+                      icon: <Youtube size={18} />,
+                      href: "#",
+                      color: "bg-red-600 hover:bg-red-700",
+                    },
+                  ].map((social, idx) => (
+                    <Link
+                      key={idx}
+                      href={social.href}
+                      className={`w-12 h-12 ${social.color} hover:scale-110 flex items-center justify-center rounded-lg text-white transition-all duration-300 shadow-lg hover:shadow-xl group`}
+                    >
+                      <div className="group-hover:scale-110 transition-transform duration-300">
+                        {social.icon}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Company */}
+          <div>
+            <div className="mb-8">
+              <h3 className="text-white font-bold text-xl mb-2 flex items-center">
+                <div className="w-1 h-6 bg-white rounded-full mr-3"></div>
+                Company
+              </h3>
+              <div className="w-16 h-1 bg-white rounded-full"></div>
+            </div>
+            <ul className="space-y-4">
+              {[
+                { label: "Home", href: "/" },
+                { label: "About Us", href: "/about" },
+                { label: "Services", href: "/services" },
+                { label: "Blog", href: "/blog" },
+                { label: "Contact", href: "/contact" },
+                { label: "Careers", href: "/careers" },
+                { label: "Portfolio", href: "/portfolio" },
+                { label: "Testimonials", href: "/testimonials" },
+              ].map((link, idx) => (
+                <li key={idx}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-300 hover:text-white transition-all duration-300 text-sm flex items-center group p-2 hover:bg-white/5 rounded-lg"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center mr-3 group-hover:bg-white/20 transition-all">
+                      <ChevronRight className="w-3 h-3" />
+                    </div>
+                    <span className="group-hover:translate-x-1 transition-transform">
+                      {link.label}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <div className="mb-8">
+              <h3 className="text-white font-bold text-xl mb-2 flex items-center">
+                <div className="w-1 h-6 bg-white rounded-full mr-3"></div>
+                Support
+              </h3>
+              <div className="w-16 h-1 bg-white rounded-full"></div>
+            </div>
+            <ul className="space-y-4">
+              {[
+                { label: "Help Center", href: "/help" },
+                { label: "FAQs", href: "/faqs" },
+                { label: "Contact Support", href: "/support" },
+                { label: "Live Chat", href: "/chat" },
+                { label: "Documentation", href: "/docs" },
+                { label: "API", href: "/api" },
+                { label: "Status", href: "/status" },
+                { label: "Community", href: "/community" },
+              ].map((link, idx) => (
+                <li key={idx}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-300 hover:text-white transition-all duration-300 text-sm flex items-center group p-2 hover:bg-white/5 rounded-lg"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center mr-3 group-hover:bg-white/20 transition-all">
+                      <ChevronRight className="w-3 h-3" />
+                    </div>
+                    <span className="group-hover:translate-x-1 transition-transform">
+                      {link.label}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Us & Newsletter */}
+          <div>
+            <div className="mb-8">
+              <h3 className="text-white font-bold text-xl mb-2 flex items-center">
+                <div className="w-1 h-6 bg-white rounded-full mr-3"></div>
+                Contact Us
+              </h3>
+              <div className="w-16 h-1 bg-white rounded-full"></div>
+            </div>
+
+            <div className="space-y-6 text-sm">
+              <div className="flex items-start group">
+                <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mr-4 group-hover:bg-white/20 transition-all flex-shrink-0">
+                  <MapPin size={18} className="text-white" />
+                </div>
+                <span className="text-gray-300 group-hover:text-white transition-colors leading-relaxed">
+                  T-16, Pocket-5, Plot no-6, Malik Builcon, Commercial Plaza
+                  Dwarka Sector-12, New Delhi, 110075
                 </span>
               </div>
 
-              <div className="flex items-center">
-                <Mail size={16} className="text-white mr-3 flex-shrink-0" />
-                <span className="text-gray-300">support@powerfuel.in</span>
-              </div>
-
-              <div className="flex items-center">
-                <Phone
-                  size={16}
-                  className="text-white mr-3 flex-shrink-0"
-                />
-                <span className="text-gray-300">+91 8800 123 456</span>
-              </div>
-
-              <div className="flex items-start">
-                {" "}
-                <div className="w-4 h-4 flex items-center justify-center mr-3 mt-1">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
+              <div className="flex items-center group">
+                <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mr-4 group-hover:bg-white/20 transition-all flex-shrink-0">
+                  <Mail size={18} className="text-white" />
                 </div>
-                <div className="text-gray-300">
-                  <div className="font-medium">Open Hours:</div>
+                <span className="text-gray-300 group-hover:text-white transition-colors">
+                  hello@desirediv.com
+                </span>
+              </div>
+
+              <div className="flex items-center group">
+                <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mr-4 group-hover:bg-white/20 transition-all flex-shrink-0">
+                  <Phone size={18} className="text-white" />
+                </div>
+                <span className="text-gray-300 group-hover:text-white transition-colors">
+                  +91 9871228880
+                </span>
+              </div>
+
+              <div className="flex items-start group">
+                <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mr-4 group-hover:bg-white/20 transition-all flex-shrink-0">
+                  <Clock size={18} className="text-white" />
+                </div>
+                <div className="text-gray-300 group-hover:text-white transition-colors">
+                  <div className="font-semibold">Business Hours:</div>
                   <div>Mon - Sat: 9:00 AM - 8:00 PM</div>
                 </div>
               </div>
             </div>
-            {/* Quick Links */}
-            {/* <div className="mt-8">
-              <h4 className="text-white font-medium mb-3">Quick Links</h4>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {" "}
-                <Link
-                  href="/about"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  About Us
-                </Link>{" "}
-                <Link
-                  href="/blog"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Blog
-                </Link>{" "}
-                <Link
-                  href="/careers"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Careers
-                </Link>{" "}
-                <Link
-                  href="/faq"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  FAQs
-                </Link>{" "}
-                <Link
-                  href="/privacy"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Privacy Policy
-                </Link>{" "}
-                <Link
-                  href="/terms"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Terms & Conditions
-                </Link>
-              </div>
-            </div> */}
+
+            {/* Newsletter Subscription */}
+            <div className="mt-8 p-6 bg-white/5 rounded-lg border border-white/10">
+              <h4 className="text-white font-bold mb-4 flex items-center">
+                <Mail className="w-5 h-5 mr-2 text-blue-400" />
+                Newsletter
+              </h4>
+              <p className="text-gray-300 text-sm mb-4">
+                Get the latest web design tips and digital marketing insights!
+              </p>
+              {subscribed ? (
+                <div className="flex items-center justify-center p-4 bg-green-600 rounded-lg">
+                  <Award className="w-5 h-5 mr-2" />
+                  <span className="font-semibold">Thanks for subscribing!</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="space-y-3">
+                  <div className="relative">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-white transition-colors"
+                      required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold py-3 rounded-lg transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl"
+                  >
+                    Subscribe Now
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Copyright */}
-      <div className="border-t border-gray-600 py-4">
-        <div className="container mx-auto px-4">
-          <p className="text-gray-400 text-center text-sm">
-            © PowerFuel 2025 | All Rights Reserved
-          </p>
+      <div className="relative border-t border-white/10 bg-gray-900">
+        <div className="container mx-auto px-8 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                <Heart className="w-4 h-4 text-black" />
+              </div>
+              <div className="text-gray-400 text-sm">
+                © 2024{" "}
+                <a
+                  href="https://desirediv.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400"
+                >
+                  Desire Div
+                </a>
+                . All Rights Reserved | Made with ❤️ in India
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 text-xs text-gray-400">
+                <Shield className="w-4 h-4 text-white" />
+                <span>SSL Secured</span>
+              </div>
+              <div className="flex items-center space-x-2 text-xs text-gray-400">
+                <Award className="w-4 h-4 text-white" />
+                <span>Trusted Brand</span>
+              </div>
+              <div className="flex items-center space-x-2 text-xs text-gray-400">
+                <Truck className="w-4 h-4 text-white" />
+                <span>Fast Delivery</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

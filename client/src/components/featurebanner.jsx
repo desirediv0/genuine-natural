@@ -1,208 +1,293 @@
-import { Dumbbell, Zap, Trophy, Star } from "lucide-react";
+"use client";
+
+import { motion } from "framer-motion";
+import { useState } from "react";
+import {
+  Trophy,
+  ArrowRight,
+  Flame,
+  BoneIcon as Muscle,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ShowcaseBanner() {
+  const [hoveredCard, setHoveredCard] = useState(null);
+
+  const benefits = [
+    {
+      id: 1,
+      icon: Flame,
+      title: "EXPLOSIVE ENERGY",
+      subtitle: "Unleash Your Inner Beast",
+      benefits: [
+        "300% More Energy",
+        "Zero Crash Formula",
+        "Instant Activation",
+        "All-Day Stamina",
+      ],
+
+      color: "from-white/20 to-white/5",
+    },
+    {
+      id: 2,
+      icon: Muscle,
+      title: "RAPID MUSCLE GROWTH",
+      subtitle: "Build Like Never Before",
+      benefits: [
+        "2x Faster Results",
+        "Pure Lean Mass",
+        "Enhanced Recovery",
+        "Visible Changes",
+      ],
+
+      color: "from-white/15 to-white/5",
+    },
+    {
+      id: 3,
+      icon: Clock,
+      title: "LIGHTNING RECOVERY",
+      subtitle: "Train Harder, Recover Faster",
+      benefits: [
+        "50% Less Soreness",
+        "Next-Day Ready",
+        "Reduced Fatigue",
+        "Peak Performance",
+      ],
+
+      color: "from-white/10 to-white/5",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800" />
+    <div className=" bg-black text-white relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <motion.div
+          className="absolute inset-0"
+          animate={{
+            background: [
+              "radial-gradient(circle at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)",
+              "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)",
+            ],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
+          }}
+        />
 
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-32 h-32 border border-white/20 rotate-45" />
-          <div className="absolute top-40 right-20 w-24 h-24 border border-white/20 rotate-12" />
-          <div className="absolute bottom-20 left-1/4 w-16 h-16 border border-white/20 rotate-45" />
-        </div>
+        {/* Floating Elements */}
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full opacity-20"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [-10, -50, -10],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: Math.random() * 4 + 3,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: Math.random() * 2,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
 
-        <div className="relative container mx-auto px-4 py-16 lg:py-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-gray-300">
-                  <Dumbbell className="w-5 h-5" />
-                  <span className="text-sm font-medium tracking-wider uppercase">
-                    Premium Supplements
-                  </span>
-                </div>
+      <div className="relative z-10 container mx-auto px-4 py-20">
+        {/* Header Section */}
+        <motion.div
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
+          <motion.div
+            className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-6 py-3 mb-8"
+            whileHover={{
+              scale: 1.05,
+              backgroundColor: "rgba(255,255,255,0.1)",
+            }}
+          >
+            <Trophy className="w-4 h-4" />
+            <span className="text-sm font-medium">
+              Transform Your Body & Mind
+            </span>
+            <Trophy className="w-4 h-4" />
+          </motion.div>
 
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                  Fuel Your
-                  <span className="block text-white/80">Fitness Journey</span>
-                </h1>
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-black leading-none mb-6"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+          >
+            <motion.span
+              className="block"
+              animate={{
+                textShadow: [
+                  "0 0 0px rgba(255,255,255,0)",
+                  "0 0 30px rgba(255,255,255,0.3)",
+                  "0 0 0px rgba(255,255,255,0)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+            >
+              UNLEASH
+            </motion.span>
+            <motion.span
+              className="block text-white/40 -mt-4"
+              animate={{ opacity: [0.4, 0.8, 0.4] }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: 1,
+              }}
+            >
+              YOUR POTENTIAL
+            </motion.span>
+          </motion.h1>
 
-                <p className="text-lg md:text-xl text-gray-300 max-w-lg">
-                  Premium quality supplements designed to maximize your
-                  performance, accelerate recovery, and help you achieve your
-                  fitness goals.
-                </p>
-              </div>
+          <motion.p
+            className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            Experience the ultimate transformation with our scientifically
+            proven benefits.
+            <br />
+            <span className="text-white font-semibold">
+              Real results. Real fast.
+            </span>
+          </motion.p>
+        </motion.div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  className="bg-white text-black hover:bg-gray-200 font-semibold px-8"
+        {/* Benefits Grid */}
+        <motion.div
+          className="grid md:grid-cols-3 gap-8 mb-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
+        >
+          {benefits.map((benefit, index) => (
+            <motion.div
+              key={benefit.id}
+              className="relative group cursor-pointer"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.9 + index * 0.2 }}
+              onHoverStart={() => setHoveredCard(benefit.id)}
+              onHoverEnd={() => setHoveredCard(null)}
+              whileHover={{ y: -15, scale: 1.02 }}
+            >
+              <div
+                className={`relative bg-gradient-to-br ${benefit.color} backdrop-blur-sm border border-white/20 rounded-3xl p-8 h-full overflow-hidden`}
+              >
+                {/* Icon */}
+                <motion.div
+                  className="w-20 h-20 mx-auto mb-6 bg-white/10 rounded-2xl flex items-center justify-center"
+                  animate={{
+                    rotate: hoveredCard === benefit.id ? 360 : 0,
+                    scale: hoveredCard === benefit.id ? 1.1 : 1,
+                  }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
                 >
-                  Shop Now
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-black"
-                >
-                  Learn More
-                </Button>
-              </div>
+                  <benefit.icon className="w-10 h-10" />
+                </motion.div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-8 pt-8 border-t border-gray-800">
-                <div className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold">50K+</div>
-                  <div className="text-sm text-gray-400">Happy Customers</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold">100%</div>
-                  <div className="text-sm text-gray-400">Natural</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold">24/7</div>
-                  <div className="text-sm text-gray-400">Support</div>
-                </div>
-              </div>
-            </div>
+                {/* Content */}
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-black mb-2">{benefit.title}</h3>
+                  <p className="text-white/60 mb-6">{benefit.subtitle}</p>
 
-            {/* Right Content - Product Showcase */}
-            <div className="relative">
-              <div className="grid grid-cols-2 gap-4">
-                {/* Main Product */}
-                <div className="col-span-2 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-4 h-4 fill-white text-white"
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-400">Best Seller</span>
-                  </div>
-                  <div className="w-full h-32 bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
-                    <Dumbbell className="w-12 h-12 text-gray-400" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Premium Whey Protein</h3>
-                  <p className="text-sm text-gray-400 mb-3">
-                    25g protein per serving
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold">$49.99</span>
-                    <Button
-                      size="sm"
-                      className="bg-white text-black hover:bg-gray-200"
-                    >
-                      Add to Cart
-                    </Button>
+                  {/* Benefits List */}
+                  <div className="space-y-3">
+                    {benefit.benefits.map((item, i) => (
+                      <motion.div
+                        key={i}
+                        className="flex items-center justify-center gap-3 text-sm"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.2 + i * 0.1 }}
+                      >
+                        <CheckCircle className="w-4 h-4 text-white/80" />
+                        <span className="text-white/90 font-medium">
+                          {item}
+                        </span>
+                      </motion.div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Secondary Products */}
-                <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-4 border border-gray-700">
-                  <div className="w-full h-20 bg-gray-700 rounded-lg mb-3 flex items-center justify-center">
-                    <Zap className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h4 className="font-medium text-sm mb-1">Pre-Workout</h4>
-                  <p className="text-xs text-gray-400 mb-2">Energy Boost</p>
-                  <span className="text-lg font-bold">$34.99</span>
-                </div>
+                {/* Hover Glow Effect */}
+                <motion.div
+                  className="absolute inset-0 bg-white/5 rounded-3xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: hoveredCard === benefit.id ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                />
 
-                <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-4 border border-gray-700">
-                  <div className="w-full h-20 bg-gray-700 rounded-lg mb-3 flex items-center justify-center">
-                    <Trophy className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h4 className="font-medium text-sm mb-1">BCAA</h4>
-                  <p className="text-xs text-gray-400 mb-2">Recovery</p>
-                  <span className="text-lg font-bold">$29.99</span>
-                </div>
+                {/* Floating Particles */}
+                <motion.div
+                  className="absolute top-4 right-4 w-2 h-2 bg-white rounded-full opacity-60"
+                  animate={{
+                    scale: [1, 1.5, 1],
+                    opacity: [0.6, 1, 0.6],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: index * 0.3,
+                  }}
+                />
               </div>
+            </motion.div>
+          ))}
+        </motion.div>
 
-              {/* Floating Elements */}
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full opacity-20" />
-              <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white rounded-full opacity-30" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      {/* <section className="py-16 bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto">
-                <Dumbbell className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold">Premium Quality</h3>
-              <p className="text-gray-400">
-                Lab-tested supplements with the highest quality ingredients for
-                optimal results.
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto">
-                <Zap className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold">Fast Results</h3>
-              <p className="text-gray-400">
-                Scientifically formulated to deliver noticeable results in
-                weeks, not months.
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto">
-                <Trophy className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold">Proven Success</h3>
-              <p className="text-gray-400">
-                Trusted by athletes and fitness enthusiasts worldwide for peak
-                performance.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-      {/* CTA Section */}
-      {/* <section className="py-16 bg-black">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-2xl mx-auto space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Ready to Transform Your Fitness?
-            </h2>
-            <p className="text-lg text-gray-300">
-              Join thousands of satisfied customers who have achieved their
-              fitness goals with our premium supplements.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* CTA Section */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.5 }}
+        >
+          <motion.div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+            <motion.div
+              whileHover={{ scale: 1.05, rotate: 1 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <Button
                 size="lg"
-                className="bg-white text-black hover:bg-gray-200 font-semibold px-8"
+                className="bg-white text-black hover:bg-white/90 font-black px-12 py-6 text-xl rounded-full shadow-2xl"
               >
-                Start Shopping
+                <Flame className="mr-3 w-6 h-6" />
+                START YOUR TRANSFORMATION
+                <ArrowRight className="ml-3 w-6 h-6" />
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-black"
-              >
-                View All Products
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section> */}
+            </motion.div>
+          </motion.div>
+
+          <motion.p
+            className="text-white/60 text-lg"
+            animate={{ opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+          >
+            Join 500,000+ athletes who transformed their lives
+          </motion.p>
+        </motion.div>
+      </div>
     </div>
   );
 }

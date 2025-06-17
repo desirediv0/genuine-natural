@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 import {
   Phone,
   Mail,
@@ -18,6 +19,9 @@ import {
   MessageCircle,
   Users,
   HeadphonesIcon,
+  Globe,
+  CheckCircle,
+  ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -86,303 +90,380 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-     {/* Header Section */}
-            <div className="text-center my-12">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-full mb-6">
-                <MessageCircle className="h-8 w-8 text-white" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Get in Touch
-              </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Have a question or need support? Our team is here to help you on
-                your fitness journey!
-              </p>
-            </div>
-      {/* Map Section */}
-      <div className="max-w-7xl mx-auto rounded-lg overflow-hidden h-[400px] relative">
-        <iframe
-          src={`https://maps.google.com/maps?q=${
-            contactInfo?.mapCoordinates?.lat || 19.076
-          },${
-            contactInfo?.mapCoordinates?.lng || 72.8777
-          }&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-          title="Power Fitness Location"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen=""
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          className="w-full h-full"
-        ></iframe>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-black text-white relative overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-gray-900/80"></div>
+        <div className="relative container mx-auto px-4 py-20 text-center">
+          <motion.div
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full mb-8"
+          >
+            <MessageCircle className="h-6 w-6 mr-3" />
+            <span className="font-bold text-lg">Let's Connect</span>
+          </motion.div>
 
-      <main className="py-12 md:py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
-           
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-5xl lg:text-7xl font-bold mb-8"
+          >
+            Get in <span className="text-white">Touch</span>
+          </motion.h1>
 
-            <div className="grid lg:grid-cols-12 gap-8">
-              {/* Contact Information - Left Side */}
-              <div className="lg:col-span-4 space-y-6">
-                {loading ? (
-                  <div className="space-y-4">
-                    <Skeleton className="h-10 w-32 mb-4" />
-                    <Skeleton className="h-20 w-full" />
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-6 w-full" />
-                  </div>
-                ) : (
-                  <>
-                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-                      <div className="flex items-center mb-8">
-                        <div className="bg-black p-3 rounded-xl mr-4">
-                          <HeadphonesIcon className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-bold text-gray-900">
-                            Contact Us
-                          </h3>
-                          <p className="text-gray-600">
-                            We&apos;re here for you
-                          </p>
-                        </div>
-                      </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
+          >
+            Have questions about our products or services? Our expert team is
+            here to help you achieve your goals
+          </motion.p>
+        </div>
+      </motion.div>
 
-                      <div className="space-y-8">
-                        <div className="flex items-start">
-                          <div className="bg-black/10 p-3 rounded-lg mr-4">
-                            <MapPin className="h-5 w-5 text-black" />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900">Address</p>
-                            <p className="text-gray-600">
-                              {contactInfo?.address ||
-                                "123 Supplement Street, Health City, 400001"}
-                            </p>
-                          </div>
-                        </div>
+      {/* Quick Stats */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="bg-white shadow-lg -mt-10 relative z-10 mx-4 rounded-2xl"
+      >
+        <div className="container mx-auto px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Users,
+                label: "24/7 Support",
+                desc: "Always here for you",
+              },
+              {
+                icon: CheckCircle,
+                label: "Expert Team",
+                desc: "Professional guidance",
+              },
+              {
+                icon: Globe,
+                label: "Global Reach",
+                desc: "Worldwide shipping",
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.1 }}
+                className="text-center group"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-2xl mb-4 group-hover:scale-110 transition-transform">
+                  <item.icon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {item.label}
+                </h3>
+                <p className="text-gray-600">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
 
-                        <div className="flex items-start">
-                          <div className="bg-black/10 p-3 rounded-lg mr-4">
-                            <Phone className="h-5 w-5 text-black" />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900">Phone</p>
-                            <p className="text-gray-600">
-                              {contactInfo?.phone || "+91 98765 43210"}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start">
-                          <div className="bg-black/10 p-3 rounded-lg mr-4">
-                            <Mail className="h-5 w-5 text-black" />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900">Email</p>
-                            <p className="text-gray-600">
-                              {contactInfo?.email || "support@powerfitness.com"}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start">
-                          <div className="bg-black/10 p-3 rounded-lg mr-4">
-                            <Clock className="h-5 w-5 text-black" />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900">Hours</p>
-                            <p className="text-gray-600">
-                              {contactInfo?.hours ||
-                                "Monday - Saturday: 10:00 AM - 7:00 PM"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Social Links */}
-                      <div className="mt-8 pt-8 border-t border-gray-100">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                          Follow Us
-                        </h4>
-                        <div className="flex space-x-4">
-                          <a
-                            href={
-                              contactInfo?.socialLinks?.facebook ||
-                              "https://facebook.com"
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-black p-3 rounded-lg text-white hover:bg-gray-800 transition-all duration-200"
-                          >
-                            <Facebook className="h-5 w-5" />
-                          </a>
-                          <a
-                            href={
-                              contactInfo?.socialLinks?.instagram ||
-                              "https://instagram.com"
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-black p-3 rounded-lg text-white hover:bg-gray-800 transition-all duration-200"
-                          >
-                            <Instagram className="h-5 w-5" />
-                          </a>
-                          <a
-                            href={
-                              contactInfo?.socialLinks?.twitter ||
-                              "https://twitter.com"
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-black p-3 rounded-lg text-white hover:bg-gray-800 transition-all duration-200"
-                          >
-                            <Twitter className="h-5 w-5" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-20">
+        <div className="grid lg:grid-cols-12 gap-12">
+          {/* Contact Information */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6 }}
+            className="lg:col-span-5 space-y-8"
+          >
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+              <div className="flex items-center mb-8">
+                <div className="bg-black p-4 rounded-2xl mr-4">
+                  <HeadphonesIcon className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold text-gray-900">
+                    Contact Information
+                  </h3>
+                  <p className="text-gray-600 text-lg">
+                    Reach out to us anytime
+                  </p>
+                </div>
               </div>
 
-              {/* Contact Form - Right Side */}
-              <div className="lg:col-span-8">
-                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-                  <div className="flex items-center mb-8">
-                    <div className="bg-black p-3 rounded-xl mr-4">
-                      <Send className="h-6 w-6 text-white" />
+              <div className="space-y-8">
+                {[
+                  {
+                    icon: MapPin,
+                    title: "Visit Our Office",
+                    content:
+                      contactInfo?.address ||
+                      "T-16, Pocket-5, Plot no-6, Malik Builcon, Commercial Plaza Dwarka Sector-12, New Delhi, 110075",
+                    color: "bg-blue-500",
+                  },
+                  {
+                    icon: Phone,
+                    title: "Call Us",
+                    content: contactInfo?.phone || "+91 9871228880",
+                    color: "bg-green-500",
+                  },
+                  {
+                    icon: Mail,
+                    title: "Email Us",
+                    content: contactInfo?.email || "hello@desirediv.com",
+                    color: "bg-red-500",
+                  },
+                  {
+                    icon: Clock,
+                    title: "Business Hours",
+                    content:
+                      contactInfo?.hours ||
+                      "Monday - Saturday: 9:00 AM - 8:00 PM",
+                    color: "bg-purple-500",
+                  },
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="flex items-start group hover:bg-gray-50 p-4 rounded-xl transition-all"
+                  >
+                    <div
+                      className={`${item.color} p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform`}
+                    >
+                      <item.icon className="h-6 w-6 text-white" />
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900">
-                        Send us a Message
-                      </h2>
-                      <p className="text-gray-600">
-                        We&apos;ll get back to you within 24 hours
+                    <div className="flex-1">
+                      <p className="font-bold text-gray-900 text-lg mb-1">
+                        {item.title}
+                      </p>
+                      <p className="text-gray-600 leading-relaxed">
+                        {item.content}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
+                ))}
+              </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-semibold text-gray-700 mb-2"
-                        >
-                          Your Name <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Enter your name"
-                          className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-black transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="email"
-                          className="block text-sm font-semibold text-gray-700 mb-2"
-                        >
-                          Email Address <span className="text-red-500">*</span>
-                        </label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Enter your email"
-                          className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-black transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <label
-                          htmlFor="phone"
-                          className="block text-sm font-semibold text-gray-700 mb-2"
-                        >
-                          Phone Number
-                        </label>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          placeholder="Enter your phone number"
-                          className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-black transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="subject"
-                          className="block text-sm font-semibold text-gray-700 mb-2"
-                        >
-                          Subject
-                        </label>
-                        <Input
-                          id="subject"
-                          name="subject"
-                          value={formData.subject}
-                          onChange={handleInputChange}
-                          placeholder="What is this regarding?"
-                          className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-black transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="message"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                      >
-                        Message <span className="text-red-500">*</span>
-                      </label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="How can we help you?"
-                        rows={6}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-black transition-colors resize-none"
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full h-12 bg-black text-white font-semibold rounded-xl hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.02]"
-                      disabled={formLoading}
+              {/* Social Media */}
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <h4 className="font-bold text-gray-900 mb-4 text-lg">
+                  Follow Us
+                </h4>
+                <div className="flex space-x-4">
+                  {[
+                    { icon: Facebook, color: "bg-blue-600 hover:bg-blue-700" },
+                    { icon: Instagram, color: "bg-pink-600 hover:bg-pink-700" },
+                    { icon: Twitter, color: "bg-cyan-500 hover:bg-cyan-600" },
+                  ].map((social, index) => (
+                    <motion.a
+                      key={index}
+                      href="#"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`${social.color} p-3 rounded-xl text-white transition-all shadow-lg hover:shadow-xl`}
                     >
-                      {formLoading ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Sending...</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center space-x-2">
-                          <Send className="h-4 w-4" />
-                          <span>Send Message</span>
-                        </div>
-                      )}
-                    </Button>
-                  </form>
+                      <social.icon className="h-6 w-6" />
+                    </motion.a>
+                  ))}
                 </div>
               </div>
             </div>
+          </motion.div>
+
+          {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 }}
+            className="lg:col-span-7"
+          >
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+              <div className="mb-8">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                  Send us a Message
+                </h3>
+                <p className="text-gray-600 text-lg">
+                  Fill out the form below and we'll get back to you as soon as
+                  possible
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <label className="block text-sm font-bold text-gray-900 mb-2">
+                      Full Name *
+                    </label>
+                    <Input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Enter your full name"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-0 text-lg"
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.0 }}
+                  >
+                    <label className="block text-sm font-bold text-gray-900 mb-2">
+                      Email Address *
+                    </label>
+                    <Input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Enter your email"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-0 text-lg"
+                    />
+                  </motion.div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.1 }}
+                  >
+                    <label className="block text-sm font-bold text-gray-900 mb-2">
+                      Phone Number
+                    </label>
+                    <Input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="Enter your phone number"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-0 text-lg"
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.2 }}
+                  >
+                    <label className="block text-sm font-bold text-gray-900 mb-2">
+                      Subject *
+                    </label>
+                    <Input
+                      type="text"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="What's this about?"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-0 text-lg"
+                    />
+                  </motion.div>
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.3 }}
+                >
+                  <label className="block text-sm font-bold text-gray-900 mb-2">
+                    Message *
+                  </label>
+                  <Textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required
+                    rows={6}
+                    placeholder="Tell us more about how we can help you..."
+                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-black focus:ring-0 resize-none text-lg"
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.4 }}
+                >
+                  <Button
+                    type="submit"
+                    disabled={formLoading}
+                    className="w-full bg-black hover:bg-gray-800 text-white py-4 px-8 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all group"
+                  >
+                    {formLoading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                        Sending Message...
+                      </>
+                    ) : (
+                      <>
+                        Send Message
+                        <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+              </form>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Map Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5 }}
+        className="container mx-auto px-4 pb-20"
+      >
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+              Find Us on Map
+            </h3>
+            <p className="text-gray-600 text-lg">
+              Visit our office for in-person consultation
+            </p>
+          </div>
+
+          <div className="rounded-2xl overflow-hidden h-[500px] relative shadow-lg">
+            <iframe
+              src={`https://maps.google.com/maps?q=${
+                contactInfo?.mapCoordinates?.lat || 28.5493
+              },${
+                contactInfo?.mapCoordinates?.lng || 77.0692
+              }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              title="Desire Div Location"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-full"
+            ></iframe>
           </div>
         </div>
-      </main>
+      </motion.div>
     </div>
   );
 }

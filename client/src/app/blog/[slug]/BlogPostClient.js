@@ -5,7 +5,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, Calendar, Tag, Clock, BookOpen } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  ChevronLeft,
+  Calendar,
+  Tag,
+  Clock,
+  BookOpen,
+  ArrowRight,
+  Share2,
+  User,
+  Eye,
+  Heart,
+  ChevronRight,
+} from "lucide-react";
 import { useState } from "react";
 
 // Helper function to format image URLs correctly
@@ -22,21 +35,24 @@ export default function BlogPostClient({ post, relatedPosts }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black">
-        <div className="container mx-auto px-4 py-12">
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto">
-            <Skeleton className="h-8 w-3/4 mb-4" />
-            <Skeleton className="h-5 w-1/2 mb-8" />
-            <Skeleton className="w-full h-[400px] mb-10 rounded-lg" />
-            <Skeleton className="h-6 w-1/3 mb-4" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-3/4 mb-8" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-5/6 mb-2" />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-6"
+            >
+              <Skeleton className="h-12 w-3/4 rounded-xl" />
+              <Skeleton className="h-6 w-1/2 rounded-lg" />
+              <Skeleton className="w-full h-[400px] rounded-2xl" />
+              <div className="space-y-4">
+                <Skeleton className="h-6 w-1/3 rounded-lg" />
+                <Skeleton className="h-4 w-full rounded" />
+                <Skeleton className="h-4 w-full rounded" />
+                <Skeleton className="h-4 w-3/4 rounded" />
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>

@@ -1,173 +1,205 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Headtext from "./ui/headtext";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  Star,
+  Truck,
+  Users,
+  Shield,
+  Award,
+  TrendingUp,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
 
 const BenefitsSec = () => {
   const benefits = [
     {
       title: "Premium Quality",
       description:
-        "Lab-tested supplements made with high-quality ingredients for maximum effectiveness.",
-      icon: (
-        <svg
-          className="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-          />
-        </svg>
-      ),
+        "Lab-tested supplements made with high-quality ingredients for maximum effectiveness and safety.",
+      icon: <Star className="w-8 h-8" />,
+      color: "bg-black",
     },
     {
       title: "Fast Delivery",
       description:
-        "Get your supplements delivered to your doorstep within 2-3 business days.",
-      icon: (
-        <svg
-          className="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-          />
-        </svg>
-      ),
+        "Get your supplements delivered to your doorstep within 2-3 business days nationwide.",
+      icon: <Truck className="w-8 h-8" />,
+      color: "bg-gray-800",
     },
     {
       title: "Expert Support",
       description:
-        "Our team of fitness experts is available to help you choose the right supplements.",
-      icon: (
-        <svg
-          className="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-          />
-        </svg>
-      ),
+        "Our team of certified fitness experts is available 24/7 to help you choose the right supplements.",
+      icon: <Users className="w-8 h-8" />,
+      color: "bg-gray-700",
     },
     {
       title: "Secure Payments",
-      description: "Shop with confidence with our 100% secure payment gateway.",
-      icon: (
-        <svg
-          className="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-          />
-        </svg>
-      ),
+      description:
+        "Shop with complete confidence using our 100% secure payment gateway with SSL encryption.",
+      icon: <Shield className="w-8 h-8" />,
+      color: "bg-gray-600",
+    },
+  ];
+
+  const stats = [
+    {
+      number: "100%",
+      label: "Quality Tested",
+      icon: <Award className="w-6 h-6" />,
+    },
+    {
+      number: "10K+",
+      label: "Happy Customers",
+      icon: <Users className="w-6 h-6" />,
+    },
+    {
+      number: "50+",
+      label: "Premium Products",
+      icon: <Star className="w-6 h-6" />,
+    },
+    {
+      number: "24/7",
+      label: "Expert Support",
+      icon: <Clock className="w-6 h-6" />,
     },
   ];
 
   return (
-    <section className="py-24 bg-slate-50 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+    <section className="py-24 bg-white relative overflow-hidden">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, black 1px, transparent 0)",
-            backgroundSize: "40px 40px",
+              "radial-gradient(circle at 2px 2px, black 1px, transparent 0)",
+            backgroundSize: "50px 50px",
           }}
-        ></div>
+        />
       </div>
+
+      {/* Floating Elements */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 bg-black/5 rounded-full"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: [-10, 10, -10],
+            opacity: [0.1, 0.3, 0.1],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: Math.random() * 4 + 3,
+            repeat: Number.POSITIVE_INFINITY,
+            delay: Math.random() * 2,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-20">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold text-black mb-6"
-          >
-            Why Choose Us
-          </motion.h2>
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center gap-2 mb-8"
+            className="inline-flex items-center gap-2 bg-black/5 backdrop-blur-sm border border-black/10 rounded-full px-6 py-3 mb-8"
           >
-            <div className="w-12 h-1 bg-black rounded-full"></div>
-            <div className="w-3 h-3 bg-black rounded-full"></div>
-            <div className="w-12 h-1 bg-black rounded-full"></div>
+            <CheckCircle className="w-4 h-4 text-black" />
+            <span className="text-sm font-medium text-black">
+              Why Choose Our Supplements
+            </span>
+            <CheckCircle className="w-4 h-4 text-black" />
           </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-5xl md:text-6xl lg:text-7xl font-black text-black mb-6 leading-tight"
+          >
+            <motion.span
+              animate={{
+                textShadow: [
+                  "0 0 0px rgba(0,0,0,0)",
+                  "0 0 20px rgba(0,0,0,0.1)",
+                  "0 0 0px rgba(0,0,0,0)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+            >
+              TRUSTED BY
+            </motion.span>
+            <span className="block text-black/40 -mt-2">CHAMPIONS</span>
+          </motion.h2>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center gap-3 mb-8"
+          >
+            <div className="w-16 h-1 bg-black rounded-full" />
+            <div className="w-4 h-4 bg-black rounded-full" />
+            <div className="w-16 h-1 bg-black rounded-full" />
+          </motion.div>
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="text-gray-600 max-w-2xl mx-auto text-lg"
+            className="text-black/70 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed"
           >
-            We&apos;re committed to providing you with the best fitness
+            We're committed to providing you with the highest quality fitness
             supplements
+            <br />
+            <span className="font-semibold text-black">
+              backed by science and trusted by professionals.
+            </span>
           </motion.p>
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
           {/* Left Side - Benefits Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group"
+                className="group cursor-pointer"
+                whileHover={{ y: -5, scale: 1.02 }}
               >
-                <div className="p-6 bg-white border-2 border-black rounded-2xl transition-all duration-300 hover:shadow-[8px_8px_0_0_#000] hover:-translate-x-1 hover:-translate-y-1">
-                  <div className="flex items-start space-x-4">
+                <div className="p-6 bg-white border-2 border-black rounded-2xl transition-all duration-300 hover:shadow-[8px_8px_0_0_#000] hover:-translate-x-1 hover:-translate-y-1 h-full">
+                  <div className="flex flex-col space-y-4">
                     <motion.div
-                      className="text-black p-3 rounded-xl bg-gray-100 group-hover:bg-black group-hover:text-white transition-all duration-300"
-                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className={`${benefit.color} text-white p-4 rounded-xl w-fit group-hover:scale-110 transition-all duration-300`}
+                      whileHover={{ rotate: 5 }}
                     >
                       {benefit.icon}
                     </motion.div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2 text-black">
+                      <h3 className="text-xl font-bold mb-3 text-black group-hover:text-black transition-colors">
                         {benefit.title}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed text-sm">
+                      <p className="text-black/70 leading-relaxed text-sm group-hover:text-black/80 transition-colors">
                         {benefit.description}
                       </p>
                     </div>
@@ -179,87 +211,122 @@ const BenefitsSec = () => {
 
           {/* Right Side - Image and Content */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden border-2 border-black relative transform hover:-translate-x-2 hover:-translate-y-2 transition-transform duration-300 shadow-[8px_8px_0_0_#000]">
-              <div className="absolute inset-0 bg-black/60 z-10" />
+            <motion.div
+              className="aspect-[4/3] rounded-2xl overflow-hidden border-2 border-black relative transform transition-transform duration-300 shadow-[8px_8px_0_0_#000]"
+              whileHover={{ x: -4, y: -4, scale: 1.02 }}
+            >
+              <div className="absolute inset-0 bg-black/70 z-10" />
               <Image
                 width={1000}
                 height={1000}
                 src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?q=80&w=1000"
-                alt="Fitness supplements"
+                alt="Premium fitness supplements"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 z-20 p-8 flex flex-col justify-center">
-                <h3 className="text-3xl font-bold text-white mb-4">
+                <motion.h3
+                  className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
                   The Highest Quality for Your Fitness Journey
-                </h3>
-                <p className="text-gray-200 mb-6">
+                </motion.h3>
+                <motion.p
+                  className="text-gray-200 mb-6 text-lg leading-relaxed"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
                   We carefully source and formulate each product to ensure you
                   get the best results for your fitness goals.
-                </p>
+                </motion.p>
                 <Link href="/about">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.05, x: 5 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-8 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-all duration-300 inline-flex items-center group w-fit"
+                    className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 inline-flex items-center group w-fit shadow-lg"
                   >
-                    Learn More
-                    <svg
-                      className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    Learn More About Us
+                    <motion.div
+                      className="ml-2"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Number.POSITIVE_INFINITY,
+                      }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
+                      <TrendingUp className="w-5 h-5" />
+                    </motion.div>
                   </motion.button>
                 </Link>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
 
-        {/* Stats Section */}
-        <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { number: "100%", label: "Quality Tested" },
-            { number: "1000+", label: "Happy Customers" },
-            { number: "50+", label: "Products" },
-            { number: "24/7", label: "Customer Support" },
-          ].map((stat, index) => (
+        {/* Enhanced Stats Section */}
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          {stats.map((stat, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="p-6 bg-white border-2 border-black rounded-2xl transition-all duration-300 hover:shadow-[4px_4px_0_0_#000] hover:-translate-x-1 hover:-translate-y-1 group"
+              className="p-6 bg-white border-2 border-black rounded-2xl transition-all duration-300 hover:shadow-[6px_6px_0_0_#000] hover:-translate-x-1 hover:-translate-y-1 group cursor-pointer"
+              whileHover={{ scale: 1.05 }}
             >
+              <div className="flex items-center justify-between mb-4">
+                <motion.div
+                  className="text-black/60 group-hover:text-black transition-colors"
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{
+                    duration: 4,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: index * 0.5,
+                  }}
+                >
+                  {stat.icon}
+                </motion.div>
+              </div>
               <motion.h4
-                className="text-4xl font-bold text-black mb-2"
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                viewport={{ once: true }}
+                className="text-4xl md:text-5xl font-black text-black mb-2 group-hover:scale-110 transition-transform origin-left"
+                animate={{
+                  textShadow: [
+                    "0 0 0px rgba(0,0,0,0)",
+                    "0 0 10px rgba(0,0,0,0.1)",
+                    "0 0 0px rgba(0,0,0,0)",
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  delay: index * 0.3,
+                }}
               >
                 {stat.number}
               </motion.h4>
-              <p className="text-gray-600 uppercase tracking-wide text-sm font-medium group-hover:text-black transition-colors">
+              <p className="text-black/60 uppercase tracking-wide text-sm font-bold group-hover:text-black transition-colors">
                 {stat.label}
               </p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

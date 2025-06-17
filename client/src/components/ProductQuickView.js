@@ -18,8 +18,6 @@ import {
   ShoppingCart,
   CheckCircle,
   AlertCircle,
-  Heart,
-  Share2,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 
@@ -311,25 +309,25 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
   const getPriceDisplay = () => {
     // Show loading state while initial data is being fetched
     if (initialLoading || loading) {
-      return <div className="h-8 w-32 bg-gray-200 animate-pulse rounded"></div>;
+      return <div className="h-6 w-24 bg-gray-200 animate-pulse rounded"></div>;
     }
 
     // If we have a selected variant, show its price
     if (selectedVariant) {
       if (selectedVariant.salePrice && selectedVariant.salePrice > 0) {
         return (
-          <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-[#F47C20]">
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-red-600">
               {formatCurrency(selectedVariant.salePrice)}
             </span>
-            <span className="text-xl text-gray-500 line-through">
+            <span className="text-lg text-gray-500 line-through">
               {formatCurrency(selectedVariant.price)}
             </span>
           </div>
         );
       }
       return (
-        <span className="text-3xl font-bold text-[#2C3E50]">
+        <span className="text-2xl font-bold text-gray-900">
           {formatCurrency(selectedVariant.price || 0)}
         </span>
       );
@@ -339,18 +337,18 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     if (productDetails) {
       if (productDetails.hasSale && productDetails.basePrice > 0) {
         return (
-          <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-[#F47C20]">
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-red-600">
               {formatCurrency(productDetails.basePrice)}
             </span>
-            <span className="text-xl text-gray-500 line-through">
+            <span className="text-lg text-gray-500 line-through">
               {formatCurrency(productDetails.regularPrice || 0)}
             </span>
           </div>
         );
       }
       return (
-        <span className="text-3xl font-bold text-[#2C3E50]">
+        <span className="text-2xl font-bold text-gray-900">
           {formatCurrency(productDetails.basePrice || 0)}
         </span>
       );
@@ -360,18 +358,18 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     if (product) {
       if (product.hasSale && product.basePrice > 0) {
         return (
-          <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-[#F47C20]">
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-red-600">
               {formatCurrency(product.basePrice)}
             </span>
-            <span className="text-xl text-gray-500 line-through">
+            <span className="text-lg text-gray-500 line-through">
               {formatCurrency(product.regularPrice || 0)}
             </span>
           </div>
         );
       }
       return (
-        <span className="text-3xl font-bold text-[#2C3E50]">
+        <span className="text-2xl font-bold text-gray-900">
           {formatCurrency(product.basePrice || 0)}
         </span>
       );
@@ -387,51 +385,35 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-[1100px] w-full max-h-[90vh] md:max-h-[95vh] overflow-y-auto p-0 bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-2xl">
+      <DialogContent className="sm:max-w-[90vw] md:max-w-[800px] lg:max-w-[900px] w-full max-h-[85vh] overflow-y-auto p-0 bg-white rounded-lg shadow-xl">
         {/* Header */}
-        <DialogHeader className="px-4 sm:px-6 md:px-8 py-4 md:py-6 bg-black text-white sticky top-0 z-10">
+        <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 bg-black text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-light tracking-wider line-clamp-1">
+            <DialogTitle className="text-lg sm:text-xl md:text-2xl font-medium tracking-wide line-clamp-1">
               {displayProduct.name}
             </DialogTitle>
-            {/* <div className="flex items-center space-x-2 sm:space-x-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-10 h-10 sm:w-12 sm:h-12 p-0 hover:bg-white/10 rounded-full transition-all duration-300 group"
-              >
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-white group-hover:text-white transition-colors duration-300" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-10 h-10 sm:w-12 sm:h-12 p-0 hover:bg-white/10 rounded-full transition-all duration-300 group"
-              >
-                <Share2 className="h-5 w-5 sm:h-6 sm:w-6 text-white group-hover:text-white transition-colors duration-300" />
-              </Button>
-            </div> */}
           </div>
         </DialogHeader>
 
         {loading && !productDetails ? (
-          <div className="py-16 md:py-32 flex justify-center">
-            <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <div className="py-12 flex justify-center">
+            <div className="w-8 h-8 border-3 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 p-4 sm:p-6 md:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 p-4 sm:p-6">
             {/* Product Image */}
             <div className="relative">
-              <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-none overflow-hidden bg-gray-50 transition-shadow duration-300 group">
+              <div className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] rounded-lg overflow-hidden bg-gray-50 group">
                 <Image
                   src={imgSrc || "/placeholder.svg"}
                   alt={displayProduct.name}
                   fill
-                  className="object-contain p-4 sm:p-6 md:p-8 transform group-hover:scale-105 transition-transform duration-500"
+                  className="object-contain p-3 sm:p-4 transform group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 60vw, 50vw"
                   onError={() => setImgSrc("/product-placeholder.jpg")}
                 />
                 {displayProduct.hasSale && (
-                  <div className="absolute top-4 sm:top-6 left-4 sm:left-6 bg-black text-white text-xs sm:text-sm font-light tracking-wider px-4 sm:px-6 py-2 sm:py-3">
+                  <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded">
                     SALE
                   </div>
                 )}
@@ -439,46 +421,44 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
             </div>
 
             {/* Product Info */}
-            <div className="flex flex-col space-y-6 md:space-y-8">
+            <div className="flex flex-col space-y-4">
               {/* Success Message */}
               {success && (
-                <div className="p-3 md:p-4 bg-green-50 border-l-4 border-green-900 text-green-900 text-xs sm:text-sm flex items-center">
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 flex-shrink-0" />
-                  <span className="font-light tracking-wide">
-                    Item added to cart successfully!
-                  </span>
+                <div className="p-3 bg-green-50 border border-green-200 text-green-800 text-sm flex items-center rounded-md">
+                  <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>Item added to cart successfully!</span>
                 </div>
               )}
 
               {/* Error message */}
               {error && (
-                <div className="p-3 md:p-4 bg-red-50 border-l-4 border-red-900 text-red-900 text-xs sm:text-sm flex items-center">
-                  <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 flex-shrink-0" />
-                  <span className="font-light tracking-wide">{error}</span>
+                <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-sm flex items-center rounded-md">
+                  <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>{error}</span>
                 </div>
               )}
 
               {/* Price */}
-              <div className="border-b border-gray-200 pb-4 md:pb-6">
+              <div className="border-b border-gray-200 pb-3">
                 {getPriceDisplay()}
               </div>
 
               {/* Rating */}
               {displayProduct.avgRating > 0 && (
-                <div className="flex items-center space-x-3 md:space-x-4 p-3 md:p-4">
+                <div className="flex items-center space-x-2">
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 ${
+                        className={`h-4 w-4 ${
                           star <= Math.round(displayProduct.avgRating || 0)
-                            ? "text-black fill-black"
+                            ? "text-yellow-400 fill-yellow-400"
                             : "text-gray-200"
-                        } transform hover:scale-110 transition-transform duration-200`}
+                        }`}
                       />
                     ))}
                   </div>
-                  <span className="text-xs sm:text-sm text-gray-600 font-light tracking-wide">
+                  <span className="text-sm text-gray-600">
                     {displayProduct.avgRating?.toFixed(1)} (
                     {displayProduct.reviewCount || 0} reviews)
                   </span>
@@ -486,85 +466,91 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
               )}
 
               {/* Flavor selection */}
-              {productDetails?.flavorOptions && productDetails.flavorOptions.length > 0 && (
-                <div className="space-y-3 md:space-y-4">
-                  <label className="block text-xs sm:text-sm font-medium text-gray-900 tracking-wide uppercase">
-                    Choose Flavor
-                  </label>
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
-                    {productDetails.flavorOptions.map((flavor) => {
-                      const availableWeightIds = getAvailableWeightsForFlavor(flavor.id);
-                      const isAvailable = availableWeightIds.length > 0;
+              {productDetails?.flavorOptions &&
+                productDetails.flavorOptions.length > 0 && (
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-900">
+                      Choose Flavor
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {productDetails.flavorOptions.map((flavor) => {
+                        const availableWeightIds = getAvailableWeightsForFlavor(
+                          flavor.id
+                        );
+                        const isAvailable = availableWeightIds.length > 0;
 
-                      return (
-                        <button
-                          key={flavor.id}
-                          type="button"
-                          onClick={() => handleFlavorChange(flavor)}
-                          disabled={!isAvailable}
-                          className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-xs sm:text-sm font-light tracking-wider transition-all duration-300 ${
-                            selectedFlavor?.id === flavor.id
-                              ? "bg-black text-white"
-                              : isAvailable
-                              ? "border border-black hover:bg-black hover:text-white"
-                              : "border border-gray-200 text-gray-400 cursor-not-allowed"
-                          }`}
-                        >
-                          {flavor.name}
-                        </button>
-                      );
-                    })}
+                        return (
+                          <button
+                            key={flavor.id}
+                            type="button"
+                            onClick={() => handleFlavorChange(flavor)}
+                            disabled={!isAvailable}
+                            className={`px-3 py-2 text-sm border rounded-md transition-colors ${
+                              selectedFlavor?.id === flavor.id
+                                ? "bg-black text-white border-black"
+                                : isAvailable
+                                ? "border-gray-300 hover:border-black"
+                                : "border-gray-200 text-gray-400 cursor-not-allowed"
+                            }`}
+                          >
+                            {flavor.name}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Weight selection */}
-              {productDetails?.weightOptions && productDetails.weightOptions.length > 0 && (
-                <div className="space-y-3 md:space-y-4">
-                  <label className="block text-xs sm:text-sm font-medium text-gray-900 tracking-wide uppercase">
-                    Choose Weight
-                  </label>
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
-                    {productDetails.weightOptions.map((weight) => {
-                      const availableFlavorIds = getAvailableFlavorsForWeight(weight.id);
-                      const isAvailable = selectedFlavor
-                        ? availableCombinations.some(
-                            (combo) =>
-                              combo.flavorId === selectedFlavor.id &&
-                              combo.weightId === weight.id
-                          )
-                        : availableFlavorIds.length > 0;
+              {productDetails?.weightOptions &&
+                productDetails.weightOptions.length > 0 && (
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-900">
+                      Choose Weight
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {productDetails.weightOptions.map((weight) => {
+                        const availableFlavorIds = getAvailableFlavorsForWeight(
+                          weight.id
+                        );
+                        const isAvailable = selectedFlavor
+                          ? availableCombinations.some(
+                              (combo) =>
+                                combo.flavorId === selectedFlavor.id &&
+                                combo.weightId === weight.id
+                            )
+                          : availableFlavorIds.length > 0;
 
-                      return (
-                        <button
-                          key={weight.id}
-                          type="button"
-                          onClick={() => handleWeightChange(weight)}
-                          disabled={!isAvailable}
-                          className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-xs sm:text-sm font-light tracking-wider transition-all duration-300 ${
-                            selectedWeight?.id === weight.id
-                              ? "bg-black text-white"
-                              : isAvailable
-                              ? "border border-black hover:bg-black hover:text-white"
-                              : "border border-gray-200 text-gray-400 cursor-not-allowed"
-                          }`}
-                        >
-                          {weight.value} {weight.unit}
-                        </button>
-                      );
-                    })}
+                        return (
+                          <button
+                            key={weight.id}
+                            type="button"
+                            onClick={() => handleWeightChange(weight)}
+                            disabled={!isAvailable}
+                            className={`px-3 py-2 text-sm border rounded-md transition-colors ${
+                              selectedWeight?.id === weight.id
+                                ? "bg-black text-white border-black"
+                                : isAvailable
+                                ? "border-gray-300 hover:border-black"
+                                : "border-gray-200 text-gray-400 cursor-not-allowed"
+                            }`}
+                          >
+                            {weight.value} {weight.unit}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Stock Availability */}
               {selectedVariant && (
-                <div className="p-3 md:p-4 border-l-4 border-gray-900 bg-gray-50">
+                <div className="p-2 bg-gray-50 rounded-md border-l-4 border-gray-400">
                   <span
-                    className={`text-xs sm:text-sm font-light tracking-wide ${
+                    className={`text-sm ${
                       selectedVariant.quantity > 0
-                        ? "text-gray-900"
-                        : "text-red-900"
+                        ? "text-green-700"
+                        : "text-red-700"
                     }`}
                   >
                     {selectedVariant.quantity > 0
@@ -575,25 +561,25 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
               )}
 
               {/* Quantity */}
-              <div className="space-y-3 md:space-y-4">
-                <label className="block text-xs sm:text-sm font-medium text-gray-900 tracking-wide uppercase">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-900">
                   Quantity
                 </label>
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center border border-black">
+                <div className="flex items-center">
+                  <div className="flex items-center border border-gray-300 rounded-md">
                     <button
                       onClick={() => handleQuantityChange(-1)}
-                      className="p-2 sm:p-3 md:p-4 hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="p-2 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={quantity <= 1 || loading}
                     >
-                      <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <Minus className="h-4 w-4" />
                     </button>
-                    <span className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 font-light text-gray-900 min-w-[3rem] sm:min-w-[4rem] text-center border-x border-black">
+                    <span className="px-4 py-2 min-w-[3rem] text-center border-x border-gray-300">
                       {quantity}
                     </span>
                     <button
                       onClick={() => handleQuantityChange(1)}
-                      className="p-2 sm:p-3 md:p-4 hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="p-2 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={
                         loading ||
                         (selectedVariant &&
@@ -601,17 +587,17 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                           quantity >= selectedVariant.quantity)
                       }
                     >
-                      <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <Plus className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4 pt-4 md:pt-6">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <Button
                   onClick={handleAddToCart}
-                  className="w-full sm:flex-1 py-3 sm:py-4 md:py-6 bg-black text-white text-sm sm:text-base md:text-lg font-light tracking-wider hover:bg-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={
                     loading ||
                     addingToCart ||
@@ -623,23 +609,26 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                 >
                   {addingToCart ? (
                     <>
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 sm:mr-3"></div>
-                      Adding to Cart...
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Adding...
                     </>
                   ) : (
                     <>
-                      <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
+                      <ShoppingCart className="h-4 w-4 mr-2" />
                       Add to Cart
                     </>
                   )}
                 </Button>
 
-                <Link href={`/products/${displayProduct.slug}`} className="w-full sm:flex-1">
+                <Link
+                  href={`/products/${displayProduct.slug}`}
+                  className="flex-1"
+                >
                   <Button
                     variant="outline"
-                    className="w-full py-3 sm:py-4 md:py-6 border border-black text-black hover:bg-black hover:text-white text-sm sm:text-base md:text-lg font-light tracking-wider transition-all duration-300"
+                    className="w-full border-black text-black hover:bg-black hover:text-white"
                   >
-                    View Full Details
+                    View Details
                   </Button>
                 </Link>
               </div>
