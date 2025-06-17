@@ -54,7 +54,7 @@ const Hero = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-20 min-h-screen flex items-center">
+      <div className="relative z-20 py-16 min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <AnimatePresence>
             <motion.div
