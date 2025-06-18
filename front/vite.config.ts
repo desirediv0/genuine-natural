@@ -13,19 +13,19 @@ export default defineConfig({
   },
   // Add the preview configuration for production builds
   preview: {
-    port: 4173,
+    port: 4177,
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.genuinenutrition.com",
-      "www.admin.genuinenutrition.com",
+      "admin.beinggenuinenutrition.com",
+      "www.admin.beinggenuinenutrition.com",
     ],
   },
   // Add server configuration for development
   server: {
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.genuinenutrition.com",
-      "www.admin.genuinenutrition.com",
+      "admin.beinggenuinenutrition.com",
+      "www.admin.beinggenuinenutrition.com",
     ],
   },
 });
