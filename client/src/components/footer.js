@@ -257,48 +257,13 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Newsletter Subscription */}
-            <div className="mt-8 p-6 bg-white/5 rounded-lg border border-white/10">
-              <h4 className="text-white font-bold mb-4 flex items-center">
-                <Mail className="w-5 h-5 mr-2 text-blue-400" />
-                Newsletter
-              </h4>
-              <p className="text-gray-300 text-sm mb-4">
-                Get the latest web design tips and digital marketing insights!
-              </p>
-              {subscribed ? (
-                <div className="flex items-center justify-center p-4 bg-green-600 rounded-lg">
-                  <Award className="w-5 h-5 mr-2" />
-                  <span className="font-semibold">Thanks for subscribing!</span>
-                </div>
-              ) : (
-                <form onSubmit={handleSubscribe} className="space-y-3">
-                  <div className="relative">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-white transition-colors"
-                      required
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full bg-white hover:bg-gray-100 text-black font-semibold py-3 rounded-lg transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl"
-                  >
-                    Subscribe Now
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </form>
-              )}
-            </div>
+          
           </div>
         </div>
       </div>
 
       {/* Copyright */}
-      <div className="relative border-t border-white/10 bg-gray-900">
+      <div className="relative border-t border-white/10 bg-black">
         <div className="container mx-auto px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">

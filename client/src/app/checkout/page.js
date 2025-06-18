@@ -95,9 +95,9 @@ export default function CheckoutPage() {
     }
   };
 
-  useEffect(() => {
-    fetchAddresses();
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   fetchAddresses();
+  // }, [isAuthenticated]);
 
   // Fetch Razorpay key
   useEffect(() => {
@@ -344,19 +344,27 @@ export default function CheckoutPage() {
             <div className="relative z-10">
               <div className="relative flex justify-center mb-8">
                 <div className="h-32 w-32 bg-black rounded-full flex items-center justify-center mx-auto animate-bounce">
-                  <PartyPopper className={`h-16 w-16 text-white ${confettiCannon ? "animate-pulse" : ""}`} />
+                  <PartyPopper
+                    className={`h-16 w-16 text-white ${
+                      confettiCannon ? "animate-pulse" : ""
+                    }`}
+                  />
                 </div>
               </div>
 
               <div className="text-center space-y-6">
                 <div>
-                  <h1 className="text-5xl font-bold mb-2 text-black">Success</h1>
+                  <h1 className="text-5xl font-bold mb-2 text-black">
+                    Success
+                  </h1>
                   <p className="text-xl text-gray-600">Order Confirmed</p>
                 </div>
 
                 {orderNumber && (
                   <div className="inline-flex items-center px-6 py-3 bg-black text-white rounded-full">
-                    <span className="text-lg font-medium">Order #{orderNumber}</span>
+                    <span className="text-lg font-medium">
+                      Order #{orderNumber}
+                    </span>
                   </div>
                 )}
 
@@ -366,7 +374,8 @@ export default function CheckoutPage() {
                 </div>
 
                 <p className="text-gray-600 max-w-md mx-auto">
-                  Thank you for your purchase! We've sent you an email with order details and tracking information.
+                  Thank you for your purchase! We&apos;ve sent you an email
+                  with order details and tracking information.
                 </p>
 
                 <div className="flex items-center justify-center space-x-2 text-gray-600 bg-gray-50 p-4 rounded-2xl">
@@ -382,7 +391,10 @@ export default function CheckoutPage() {
                     </Button>
                   </Link>
                   <Link href="/products">
-                    <Button variant="outline" className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 px-8 py-6 rounded-xl text-lg">
+                    <Button
+                      variant="outline"
+                      className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 px-8 py-6 rounded-xl text-lg"
+                    >
                       <Gift className="mr-2 h-5 w-5" />
                       Shop More
                     </Button>

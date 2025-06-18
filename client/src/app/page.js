@@ -153,7 +153,7 @@ const TestimonialsSection = () => {
           </motion.div>
 
           <motion.h2
-            className="text-5xl md:text-6xl lg:text-7xl font-black text-black mb-6 leading-tight"
+            className="text-3xl md:text-4xl lg:text-5xl font-black text-black mb-6 leading-tight"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -169,9 +169,9 @@ const TestimonialsSection = () => {
               }}
               transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
             >
-              REAL PEOPLE
+              REAL PEOPLE REAL RESULTS
             </motion.span>
-            <span className="block text-black/40 -mt-2">REAL RESULTS</span>
+         
           </motion.h2>
 
           <motion.div
@@ -306,7 +306,7 @@ const TestimonialsSection = () => {
                   viewport={{ once: true }}
                   transition={{ delay: 1 + index * 0.2, duration: 0.8 }}
                 >
-                  "{testimonial.quote}"
+                  {testimonial.quote}
                 </motion.p>
 
                 {/* Bottom Design Element */}

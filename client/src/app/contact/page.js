@@ -106,7 +106,7 @@ export default function ContactPage() {
             className="inline-flex items-center bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full mb-8"
           >
             <MessageCircle className="h-6 w-6 mr-3" />
-            <span className="font-bold text-lg">Let's Connect</span>
+            <span className="font-bold text-lg">Let&apos;s Connect</span>
           </motion.div>
 
           <motion.h1
@@ -295,8 +295,8 @@ export default function ContactPage() {
                   Send us a Message
                 </h3>
                 <p className="text-gray-600 text-lg">
-                  Fill out the form below and we'll get back to you as soon as
-                  possible
+                  Fill out the form below and we&apos;ll get back to you as
+                  soon as possible
                 </p>
               </div>
 

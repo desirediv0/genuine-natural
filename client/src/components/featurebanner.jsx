@@ -104,7 +104,7 @@ export default function ShowcaseBanner() {
         ))}
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
         {/* Header Section */}
         <motion.div
           className="text-center mb-20"
@@ -127,7 +127,7 @@ export default function ShowcaseBanner() {
           </motion.div>
 
           <motion.h1
-            className="text-5xl md:text-7xl lg:text-8xl font-black leading-none mb-6"
+            className="text-3xl md:text-4xl lg:text-5xl font-black leading-none mb-6"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
@@ -159,7 +159,7 @@ export default function ShowcaseBanner() {
           </motion.h1>
 
           <motion.p
-            className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
@@ -167,7 +167,7 @@ export default function ShowcaseBanner() {
             Experience the ultimate transformation with our scientifically
             proven benefits.
             <br />
-            <span className="text-white font-semibold">
+            <span className="text-white text-lg font-semibold">
               Real results. Real fast.
             </span>
           </motion.p>
@@ -269,8 +269,8 @@ export default function ShowcaseBanner() {
               whileTap={{ scale: 0.95 }}
             >
               <Button
-                size="lg"
-                className="bg-white text-black hover:bg-white/90 font-black px-12 py-6 text-xl rounded-full shadow-2xl"
+                size="sm"
+                className="bg-white text-black hover:bg-white/90 font-black px-6 py-4 text-xl rounded-full shadow-2xl"
               >
                 <Flame className="mr-3 w-6 h-6" />
                 START YOUR TRANSFORMATION

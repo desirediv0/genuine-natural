@@ -106,7 +106,7 @@ const BenefitsSec = () => {
         />
       ))}
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-20">
           <motion.div
@@ -128,7 +128,7 @@ const BenefitsSec = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             viewport={{ once: true }}
-            className="text-5xl md:text-6xl lg:text-7xl font-black text-black mb-6 leading-tight"
+            className="text-4xl md:text-4xl lg:text-5xl font-black text-black mb-6 leading-tight"
           >
             <motion.span
               animate={{
@@ -140,9 +140,9 @@ const BenefitsSec = () => {
               }}
               transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
             >
-              TRUSTED BY
+              TRUSTED BY CHAMPIONS
             </motion.span>
-            <span className="block text-black/40 -mt-2">CHAMPIONS</span>
+          
           </motion.h2>
 
           <motion.div
@@ -164,8 +164,8 @@ const BenefitsSec = () => {
             viewport={{ once: true }}
             className="text-black/70 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed"
           >
-            We're committed to providing you with the highest quality fitness
-            supplements
+            We&apos;re committed to providing you with the highest quality
+            fitness supplements
             <br />
             <span className="font-semibold text-black">
               backed by science and trusted by professionals.

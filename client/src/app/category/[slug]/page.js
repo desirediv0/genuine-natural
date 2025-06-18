@@ -106,7 +106,7 @@ export default function CategoryPage() {
     if (slug) {
       fetchCategoryAndProducts();
     }
-  }, [slug, pagination.page, sortOption]);
+  });
 
   // Handle pagination
   const handlePageChange = (newPage) => {
@@ -547,7 +547,7 @@ export default function CategoryPage() {
               No Products Found
             </h2>
             <p className="text-gray-600 mb-8 text-lg">
-              This category doesn't have any products yet.
+              This category doesn&apos;t have any products yet.
             </p>
 
             <Link href="/products">
