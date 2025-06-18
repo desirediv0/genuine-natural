@@ -570,8 +570,7 @@ export function Navbar() {
               >
                 <Link href="/" className="flex items-center group">
                   <motion.div
-                    whileHover={{ rotate: 5 }}
-                    transition={{ duration: 0.3 }}
+                 
                     className="relative"
                   >
                     <Image
