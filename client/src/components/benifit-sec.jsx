@@ -175,7 +175,7 @@ const BenefitsSec = () => {
             viewport={{ once: true }}
             className="text-gray-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed"
           >
-            We're committed to providing you with the highest quality nutrition supplements
+            We&apos;re committed to providing you with the highest quality nutrition supplements
             <br />
             <span className="font-semibold text-gray-900">backed by science and trusted by professionals.</span>
           </motion.p>

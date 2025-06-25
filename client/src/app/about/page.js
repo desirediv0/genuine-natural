@@ -171,7 +171,7 @@ export default function AboutPage() {
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
-              We're not just another supplement brand. We're your partners in achieving optimal health through
+              We&apos;re not just another supplement brand. We&apos;re your partners in achieving optimal health through
               science-backed, premium quality nutrition products.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -243,7 +243,7 @@ export default function AboutPage() {
                   </p>
                   <p>
                     Today, Being Genuine Nutrition stands as a testament to what happens when passion meets purpose.
-                    We've helped over 50,000 individuals achieve their health and fitness goals with products they can
+                    We&apos;ve helped over 50,000 individuals achieve their health and fitness goals with products they can
                     trust.
                   </p>
                 </div>
@@ -307,7 +307,7 @@ export default function AboutPage() {
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-black">What Drives Us Forward</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Our values aren't just words on a wall. They're the foundation of every decision we make and every
+                Our values aren&apos;t just words on a wall. They&apos;re the foundation of every decision we make and every
                 product we create.
               </p>
             </motion.div>
@@ -416,7 +416,7 @@ export default function AboutPage() {
                           <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                         ))}
                       </div>
-                      <p className="text-gray-700 mb-6 leading-relaxed">"{testimonial.content}"</p>
+                      <p className="text-gray-700 mb-6 leading-relaxed">&quot;{testimonial.content}&quot;</p>
                       <div className="flex items-center">
                         <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
                           <Image
