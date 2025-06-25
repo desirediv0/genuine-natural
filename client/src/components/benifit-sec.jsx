@@ -1,106 +1,126 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
+import { motion } from "framer-motion"
+import Link from "next/link"
+import Image from "next/image"
 import {
-  Star,
+  Shield,
   Truck,
   Users,
-  Shield,
   Award,
-  TrendingUp,
+  Heart,
+  Leaf,
   Clock,
   CheckCircle,
-} from "lucide-react";
+  Star,
+  Phone,
+  ArrowRight,
+  Target,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 const BenefitsSec = () => {
   const benefits = [
     {
       title: "Premium Quality",
       description:
-        "Lab-tested supplements made with high-quality ingredients for maximum effectiveness and safety.",
-      icon: <Star className="w-8 h-8" />,
-      color: "bg-black",
-    },
-    {
-      title: "Fast Delivery",
-      description:
-        "Get your supplements delivered to your doorstep within 2-3 business days nationwide.",
-      icon: <Truck className="w-8 h-8" />,
-      color: "bg-gray-800",
-    },
-    {
-      title: "Expert Support",
-      description:
-        "Our team of certified fitness experts is available 24/7 to help you choose the right supplements.",
-      icon: <Users className="w-8 h-8" />,
-      color: "bg-gray-700",
-    },
-    {
-      title: "Secure Payments",
-      description:
-        "Shop with complete confidence using our 100% secure payment gateway with SSL encryption.",
+        "Third-party tested supplements with ISO 22000 certification. Every product meets the highest purity and potency standards.",
       icon: <Shield className="w-8 h-8" />,
-      color: "bg-gray-600",
+      color: "bg-black",
+      hoverColor: "hover:bg-black/80",
     },
-  ];
+    {
+      title: "Fast & Free Delivery",
+      description:
+        "Free shipping on orders above ₹999. Get your wellness essentials delivered within 2-3 business days across India.",
+      icon: <Truck className="w-8 h-8" />,
+      color: "bg-black",
+      hoverColor: "hover:bg-black/80",
+    },
+    {
+      title: "Expert Guidance",
+      description:
+        "Our certified nutritionists provide personalized recommendations and 24/7 support for your wellness journey.",
+      icon: <Users className="w-8 h-8" />,
+      color: "bg-black",
+      hoverColor: "hover:bg-black/80",
+    },
+    {
+      title: "100% Secure",
+      description:
+        "Shop with confidence using our SSL-encrypted payment gateway. Your data and transactions are completely secure.",
+      icon: <Award className="w-8 h-8" />,
+      color: "bg-black",
+      hoverColor: "hover:bg-black/80",
+    },
+  ]
 
   const stats = [
     {
-      number: "100%",
-      label: "Quality Tested",
-      icon: <Award className="w-6 h-6" />,
-    },
-    {
-      number: "10K+",
+      number: "50K+",
       label: "Happy Customers",
-      icon: <Users className="w-6 h-6" />,
+      icon: <Heart className="w-6 h-6" />,
+      color: "text-red-500",
     },
     {
-      number: "50+",
+      number: "100+",
       label: "Premium Products",
-      icon: <Star className="w-6 h-6" />,
+      icon: <Leaf className="w-6 h-6" />,
+      color: "text-green-500",
     },
     {
-      number: "24/7",
-      label: "Expert Support",
-      icon: <Clock className="w-6 h-6" />,
+      number: "99.5%",
+      label: "Satisfaction Rate",
+      icon: <Star className="w-6 h-6" />,
+      color: "text-yellow-500",
     },
-  ];
+    {
+      number: "8+",
+      label: "Years Trusted",
+      icon: <Clock className="w-6 h-6" />,
+      color: "text-blue-500",
+    },
+  ]
+
+  const certifications = [
+    { name: "ISO 22000", desc: "Food Safety" },
+    { name: "GMP", desc: "Good Manufacturing" },
+    { name: "FSSAI", desc: "Licensed" },
+    { name: "Lab Tested", desc: "Third Party" },
+  ]
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
       {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
+      <div className="absolute inset-0 opacity-[0.03]">
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 2px 2px, black 1px, transparent 0)",
-            backgroundSize: "50px 50px",
+            backgroundImage: "radial-gradient(circle at 2px 2px, #3B82F6 1px, transparent 0)",
+            backgroundSize: "60px 60px",
           }}
         />
       </div>
 
       {/* Floating Elements */}
-      {[...Array(8)].map((_, i) => (
+      {[...Array(12)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-black/5 rounded-full"
+          className="absolute w-2 h-2 bg-black/30 rounded-full"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
           }}
           animate={{
-            y: [-10, 10, -10],
-            opacity: [0.1, 0.3, 0.1],
-            scale: [1, 1.2, 1],
+            y: [-20, 20, -20],
+            opacity: [0.2, 0.6, 0.2],
+            scale: [1, 1.5, 1],
           }}
           transition={{
-            duration: Math.random() * 4 + 3,
+            duration: Math.random() * 6 + 4,
             repeat: Number.POSITIVE_INFINITY,
-            delay: Math.random() * 2,
+            delay: Math.random() * 3,
             ease: "easeInOut",
           }}
         />
@@ -114,13 +134,12 @@ const BenefitsSec = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 bg-black/5 backdrop-blur-sm border border-black/10 rounded-full px-6 py-3 mb-8"
           >
-            <CheckCircle className="w-4 h-4 text-black" />
-            <span className="text-sm font-medium text-black">
-              Why Choose Our Supplements
-            </span>
-            <CheckCircle className="w-4 h-4 text-black" />
+            <Badge className="mb-6 bg-black/10 text-black border-black/50 hover:bg-black/20 transition-colors">
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Why Choose Being Genuine Nutrition
+              <Heart className="w-4 h-4 ml-2" />
+            </Badge>
           </motion.div>
 
           <motion.h2
@@ -128,21 +147,13 @@ const BenefitsSec = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-4xl lg:text-5xl font-black text-black mb-6 leading-tight"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight"
           >
-            <motion.span
-              animate={{
-                textShadow: [
-                  "0 0 0px rgba(0,0,0,0)",
-                  "0 0 20px rgba(0,0,0,0.1)",
-                  "0 0 0px rgba(0,0,0,0)",
-                ],
-              }}
-              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
-            >
-              TRUSTED BY CHAMPIONS
-            </motion.span>
-          
+            <span className="text-gray-900">Trusted by Health</span>
+            <br />
+            <span className="text-transparent bg-clip-text bg-black">
+              Enthusiasts Nationwide
+            </span>
           </motion.h2>
 
           <motion.div
@@ -162,14 +173,11 @@ const BenefitsSec = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="text-black/70 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed"
+            className="text-gray-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed"
           >
-            We&apos;re committed to providing you with the highest quality
-            fitness supplements
+            We're committed to providing you with the highest quality nutrition supplements
             <br />
-            <span className="font-semibold text-black">
-              backed by science and trusted by professionals.
-            </span>
+            <span className="font-semibold text-gray-900">backed by science and trusted by professionals.</span>
           </motion.p>
         </div>
 
@@ -185,21 +193,21 @@ const BenefitsSec = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className="group cursor-pointer"
-                whileHover={{ y: -5, scale: 1.02 }}
+                whileHover={{ y: -8, scale: 1.02 }}
               >
-                <div className="p-6 bg-white border-2 border-black rounded-2xl transition-all duration-300 hover:shadow-[8px_8px_0_0_#000] hover:-translate-x-1 hover:-translate-y-1 h-full">
+                <div className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 h-full group-hover:border-gray-200">
                   <div className="flex flex-col space-y-4">
                     <motion.div
-                      className={`${benefit.color} text-white p-4 rounded-xl w-fit group-hover:scale-110 transition-all duration-300`}
-                      whileHover={{ rotate: 5 }}
+                      className={`${benefit.color} ${benefit.hoverColor} text-white p-4 rounded-xl w-fit transition-all duration-300`}
+                      whileHover={{ rotate: 5, scale: 1.1 }}
                     >
                       {benefit.icon}
                     </motion.div>
                     <div>
-                      <h3 className="text-xl font-bold mb-3 text-black group-hover:text-black transition-colors">
+                      <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-gray-800 transition-colors">
                         {benefit.title}
                       </h3>
-                      <p className="text-black/70 leading-relaxed text-sm group-hover:text-black/80 transition-colors">
+                      <p className="text-gray-600 leading-relaxed text-sm group-hover:text-gray-700 transition-colors">
                         {benefit.description}
                       </p>
                     </div>
@@ -218,64 +226,65 @@ const BenefitsSec = () => {
             className="relative"
           >
             <motion.div
-              className="aspect-[4/3] rounded-2xl overflow-hidden border-2 border-black relative transform transition-transform duration-300 shadow-[8px_8px_0_0_#000]"
-              whileHover={{ x: -4, y: -4, scale: 1.02 }}
+              className="aspect-[4/3] rounded-2xl overflow-hidden relative shadow-2xl"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
             >
-              <div className="absolute inset-0 bg-black/70 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
               <Image
-                width={1000}
-                height={1000}
+                width={600}
+                height={450}
                 src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?q=80&w=1000"
-                alt="Premium fitness supplements"
+                alt="Premium nutrition supplements and healthy lifestyle"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 z-20 p-8 flex flex-col justify-center">
+
+
+              <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
                 <motion.h3
-                  className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight"
+                  className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
                 >
-                  The Highest Quality for Your Fitness Journey
+                  Science-Backed Nutrition for Your Wellness Journey
                 </motion.h3>
                 <motion.p
-                  className="text-gray-200 mb-6 text-lg leading-relaxed"
+                  className="text-gray-200 mb-6 text-base leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                   viewport={{ once: true }}
                 >
-                  We carefully source and formulate each product to ensure you
-                  get the best results for your fitness goals.
+                  Every product is carefully formulated with premium ingredients and rigorously tested to ensure maximum
+                  effectiveness and safety.
                 </motion.p>
-                <Link href="/about">
-                  <motion.button
-                    whileHover={{ scale: 1.05, x: 5 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 inline-flex items-center group w-fit shadow-lg"
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  viewport={{ once: true }}
+                >
+                  <Button
+                    size="lg"
+                    className="bg-white text-gray-900 hover:bg-gray-100 font-semibold shadow-lg"
+                    asChild
                   >
-                    Learn More About Us
-                    <motion.div
-                      className="ml-2"
-                      animate={{ x: [0, 5, 0] }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Number.POSITIVE_INFINITY,
-                      }}
-                    >
-                      <TrendingUp className="w-5 h-5" />
-                    </motion.div>
-                  </motion.button>
-                </Link>
+                    <Link href="/about" className="flex items-center">
+                      Learn More About Us
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Link>
+                  </Button>
+                </motion.div>
               </div>
             </motion.div>
           </motion.div>
         </div>
 
-        {/* Enhanced Stats Section */}
+        {/* Stats Section */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -288,12 +297,12 @@ const BenefitsSec = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="p-6 bg-white border-2 border-black rounded-2xl transition-all duration-300 hover:shadow-[6px_6px_0_0_#000] hover:-translate-x-1 hover:-translate-y-1 group cursor-pointer"
-              whileHover={{ scale: 1.05 }}
+              className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer"
+              whileHover={{ scale: 1.05, y: -5 }}
             >
               <div className="flex items-center justify-between mb-4">
                 <motion.div
-                  className="text-black/60 group-hover:text-black transition-colors"
+                  className={`group-hover:scale-110 transition-transform`}
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{
                     duration: 4,
@@ -305,13 +314,9 @@ const BenefitsSec = () => {
                 </motion.div>
               </div>
               <motion.h4
-                className="text-4xl md:text-5xl font-black text-black mb-2 group-hover:scale-110 transition-transform origin-left"
+                className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 group-hover:scale-110 transition-transform origin-left"
                 animate={{
-                  textShadow: [
-                    "0 0 0px rgba(0,0,0,0)",
-                    "0 0 10px rgba(0,0,0,0.1)",
-                    "0 0 0px rgba(0,0,0,0)",
-                  ],
+                  textShadow: ["0 0 0px rgba(0,0,0,0)", "0 0 10px rgba(0,0,0,0.1)", "0 0 0px rgba(0,0,0,0)"],
                 }}
                 transition={{
                   duration: 3,
@@ -321,15 +326,86 @@ const BenefitsSec = () => {
               >
                 {stat.number}
               </motion.h4>
-              <p className="text-black/60 uppercase tracking-wide text-sm font-bold group-hover:text-black transition-colors">
+              <p className="text-gray-600 uppercase tracking-wide text-sm font-semibold group-hover:text-gray-800 transition-colors">
                 {stat.label}
               </p>
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Certifications Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+        >
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Quality Certifications</h3>
+            <p className="text-gray-600">Trusted certifications that guarantee our commitment to quality and safety</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {certifications.map((cert, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <CheckCircle className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="font-bold text-gray-900 mb-1">{cert.name}</h4>
+                <p className="text-sm text-gray-600">{cert.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mt-16"
+        >
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Ready to Start Your Wellness Journey?</h3>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Join thousands of satisfied customers who trust Being Genuine Nutrition for their health and fitness goals.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              size="lg"
+              className="bg-black hover:from-blue-600 hover:to-green-600 text-white font-semibold"
+              asChild
+            >
+              <Link href="/products" className="flex items-center">
+                <Target className="w-5 h-5 mr-2" />
+                Shop Now
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold"
+              asChild
+            >
+              <Link href="/contact" className="flex items-center">
+                <Phone className="w-5 h-5 mr-2" />
+                Get Expert Advice
+              </Link>
+            </Button>
+          </div>
+        </motion.div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default BenefitsSec;
+export default BenefitsSec

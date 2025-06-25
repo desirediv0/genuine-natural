@@ -214,13 +214,13 @@ export default function ContactPage() {
                   {
                     icon: Phone,
                     title: "Call Us",
-                    content: contactInfo?.phone || "+91 9871228880",
+                    content: contactInfo?.phone || "+91 8053980008 ",
                     color: "bg-green-500",
                   },
                   {
                     icon: Mail,
                     title: "Email Us",
-                    content: contactInfo?.email || "hello@desirediv.com",
+                    content: contactInfo?.email || "support.genuinenutrition@gmail.com",
                     color: "bg-red-500",
                   },
                   {
@@ -447,11 +447,9 @@ export default function ContactPage() {
 
           <div className="rounded-2xl overflow-hidden h-[500px] relative shadow-lg">
             <iframe
-              src={`https://maps.google.com/maps?q=${
-                contactInfo?.mapCoordinates?.lat || 28.5493
-              },${
-                contactInfo?.mapCoordinates?.lng || 77.0692
-              }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              src={`https://maps.google.com/maps?q=${contactInfo?.mapCoordinates?.lat || 28.5493
+                },${contactInfo?.mapCoordinates?.lng || 77.0692
+                }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
               title="Desire Div Location"
               width="100%"
               height="100%"

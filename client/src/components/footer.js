@@ -34,7 +34,7 @@ export function Footer() {
             <div className="mb-8">
               <div className="relative group">
                 <Image
-                  src="/white-logo.png"
+                  src="/logo.png"
                   alt="Desire Div Logo"
                   width={140}
                   height={60}
@@ -44,9 +44,7 @@ export function Footer() {
             </div>
             <div className="space-y-6">
               <p className="text-gray-300 text-sm leading-relaxed font-medium">
-                Desire Div is a leading Website Designing Company offering best
-                quality web design, development, and digital marketing services
-                to help your business grow online.
+                Genuine Nutrition is your trusted partner in health and wellness, offering a wide range of high-quality nutritional products designed to support your fitness journey and overall well-being. Our commitment to quality and transparency ensures that you receive only the best ingredients, backed by science and crafted with care.
               </p>
 
               {/* Trust Indicators */}
@@ -215,7 +213,7 @@ export function Footer() {
                   <Mail size={18} className="text-white" />
                 </div>
                 <span className="text-gray-300 group-hover:text-white transition-colors">
-                  hello@desirediv.com
+                  support.genuinenutrition@gmail.com
                 </span>
               </div>
 
@@ -224,7 +222,7 @@ export function Footer() {
                   <Phone size={18} className="text-white" />
                 </div>
                 <span className="text-gray-300 group-hover:text-white transition-colors">
-                  +91 9871228880
+                  +91 8053980008
                 </span>
               </div>
 
@@ -252,8 +250,8 @@ export function Footer() {
               <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
                 <Heart className="w-4 h-4 text-black" />
               </div>
-              <div className="text-gray-400 text-sm">
-                © 2024{" "}
+              {/* <div className="text-gray-400 text-sm">
+                © 2025{" "}
                 <a
                   href="https://desirediv.com"
                   target="_blank"
@@ -261,6 +259,18 @@ export function Footer() {
                   className="text-blue-400"
                 >
                   Desire Div
+                </a>
+                . All Rights Reserved | Made with ❤️ in India
+              </div> */}
+              <div className="text-gray-400 text-sm">
+                © 2025{" "}
+                <a
+                  href="https://genuinenutrition.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:underline"
+                >
+                  Being Genuine Nutrition
                 </a>
                 . All Rights Reserved | Made with ❤️ in India
               </div>
