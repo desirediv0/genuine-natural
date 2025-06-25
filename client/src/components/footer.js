@@ -15,28 +15,10 @@ import {
   Award,
   Heart,
   ChevronRight,
-  ArrowRight,
 } from "lucide-react";
-import { useState } from "react";
 import Image from "next/image";
 
 export function Footer() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email) {
-      console.log("Subscribing email:", email);
-      setSubscribed(true);
-      setEmail("");
-
-      // Reset after 5 seconds
-      setTimeout(() => {
-        setSubscribed(false);
-      }, 5000);
-    }
-  };
 
   return (
     <footer className="bg-black text-white relative overflow-hidden">
@@ -257,7 +239,7 @@ export function Footer() {
               </div>
             </div>
 
-          
+
           </div>
         </div>
       </div>
