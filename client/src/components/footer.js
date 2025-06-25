@@ -34,8 +34,8 @@ export function Footer() {
             <div className="mb-8">
               <div className="relative group">
                 <Image
-                  src="/logo.png"
-                  alt="Desire Div Logo"
+                  src="/white-logo.png"
+                  alt="Being Genuine Nutrition Logo"
                   width={140}
                   height={60}
                   className="mb-6 transform group-hover:scale-105 transition-transform duration-300"

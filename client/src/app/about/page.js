@@ -73,65 +73,35 @@ export default function AboutPage() {
       icon: Shield,
       title: "Premium Quality",
       description: "Every product undergoes rigorous testing and quality control to ensure maximum potency and purity.",
-      color: "bg-blue-500",
+      color: "bg-black",
     },
     {
       icon: Leaf,
       title: "Natural & Pure",
       description:
         "We source only the finest natural ingredients, free from harmful chemicals and artificial additives.",
-      color: "bg-green-500",
+      color: "bg-black",
     },
     {
       icon: Target,
       title: "Science-Backed",
       description: "Our formulations are based on the latest scientific research and clinical studies.",
-      color: "bg-purple-500",
+      color: "bg-black",
     },
     {
       icon: Heart,
       title: "Customer-Centric",
       description: "Your health and satisfaction are our top priorities. We're here to support your wellness journey.",
-      color: "bg-red-500",
+      color: "bg-black",
     },
   ]
 
-  const team = [
-    {
-      name: "Dr. Rahul Sharma",
-      role: "Founder & CEO",
-      image: "/placeholder.svg?height=300&width=300",
-      bio: "15+ years in nutrition science with a PhD in Biochemistry from IIT Delhi.",
-      linkedin: "#",
-    },
-    {
-      name: "Dr. Priya Patel",
-      role: "Chief Nutritionist",
-      image: "/placeholder.svg?height=300&width=300",
-      bio: "Certified sports nutritionist with expertise in supplement formulation.",
-      linkedin: "#",
-    },
-    {
-      name: "Arjun Kapoor",
-      role: "Head of Quality",
-      image: "/placeholder.svg?height=300&width=300",
-      bio: "Former quality control manager at leading pharmaceutical companies.",
-      linkedin: "#",
-    },
-    {
-      name: "Meera Singh",
-      role: "Customer Success",
-      image: "/placeholder.svg?height=300&width=300",
-      bio: "Dedicated to ensuring every customer achieves their health goals.",
-      linkedin: "#",
-    },
-  ]
 
   const testimonials = [
     {
       name: "Vikash Kumar",
       role: "Fitness Enthusiast",
-      image: "/placeholder.svg?height=60&width=60",
+      image: "/user.jpg",
       content:
         "Being Genuine Nutrition has transformed my fitness journey. The quality is unmatched and results speak for themselves.",
       rating: 5,
@@ -139,7 +109,7 @@ export default function AboutPage() {
     {
       name: "Sneha Reddy",
       role: "Professional Athlete",
-      image: "/placeholder.svg?height=60&width=60",
+      image: "/user.jpg",
       content:
         "As a professional athlete, I trust only BGN for my nutritional needs. Their products are pure and effective.",
       rating: 5,
@@ -147,7 +117,7 @@ export default function AboutPage() {
     {
       name: "Amit Gupta",
       role: "Gym Owner",
-      image: "/placeholder.svg?height=60&width=60",
+      image: "/user.jpg",
       content:
         "I recommend BGN to all my clients. The transparency and quality are exactly what the fitness community needs.",
       rating: 5,

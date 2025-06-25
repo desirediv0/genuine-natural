@@ -366,43 +366,7 @@ const BenefitsSec = () => {
           </div>
         </motion.div>
 
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mt-16"
-        >
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Ready to Start Your Wellness Journey?</h3>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who trust Being Genuine Nutrition for their health and fitness goals.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-black hover:from-blue-600 hover:to-green-600 text-white font-semibold"
-              asChild
-            >
-              <Link href="/products" className="flex items-center">
-                <Target className="w-5 h-5 mr-2" />
-                Shop Now
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold"
-              asChild
-            >
-              <Link href="/contact" className="flex items-center">
-                <Phone className="w-5 h-5 mr-2" />
-                Get Expert Advice
-              </Link>
-            </Button>
-          </div>
-        </motion.div>
+
       </div>
     </section>
   )
