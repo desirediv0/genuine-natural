@@ -220,16 +220,10 @@ export default function ContactPage() {
                   {
                     icon: Mail,
                     title: "Email Us",
-                    content: contactInfo?.email || "support.genuinenutrition@gmail.com",
-                    color: "bg-red-500",
-                  },
-                  {
-                    icon: Clock,
-                    title: "Business Hours",
                     content:
-                      contactInfo?.hours ||
-                      "Monday - Saturday: 9:00 AM - 8:00 PM",
-                    color: "bg-purple-500",
+                      contactInfo?.email ||
+                      "support.genuinenutrition@gmail.com",
+                    color: "bg-red-500",
                   },
                 ].map((item, index) => (
                   <motion.div
@@ -295,8 +289,8 @@ export default function ContactPage() {
                   Send us a Message
                 </h3>
                 <p className="text-gray-600 text-lg">
-                  Fill out the form below and we&apos;ll get back to you as
-                  soon as possible
+                  Fill out the form below and we&apos;ll get back to you as soon
+                  as possible
                 </p>
               </div>
 
@@ -447,9 +441,11 @@ export default function ContactPage() {
 
           <div className="rounded-2xl overflow-hidden h-[500px] relative shadow-lg">
             <iframe
-              src={`https://maps.google.com/maps?q=${contactInfo?.mapCoordinates?.lat || 28.5493
-                },${contactInfo?.mapCoordinates?.lng || 77.0692
-                }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              src={`https://maps.google.com/maps?q=${
+                contactInfo?.mapCoordinates?.lat || 28.5493
+              },${
+                contactInfo?.mapCoordinates?.lng || 77.0692
+              }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
               title="Desire Div Location"
               width="100%"
               height="100%"

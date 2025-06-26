@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Play, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 
 const Hero = () => {
   const containerVariants = {
@@ -154,8 +154,7 @@ const Hero = () => {
                     whileTap="tap"
                     className="group inline-flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/20 transition-all duration-300"
                   >
-                    <Play className="w-5 h-5" />
-                    <span>Watch Story</span>
+                    <span>Learn More</span>
                   </motion.button>
                 </Link>
               </motion.div>

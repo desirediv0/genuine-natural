@@ -100,51 +100,126 @@ export const getProductsByCategory = asyncHandler(async (req, res) => {
     },
   });
 
-  // Get paginated products
-  const products = await prisma.product.findMany({
-    where: {
-      categories: {
-        some: {
-          category: {
-            id: {
-              in: categoryIds,
+  // Get products - handle price sorting separately
+  let products;
+
+  if (sort === "price") {
+    // For price sorting, fetch all products first, then sort manually
+    products = await prisma.product.findMany({
+      where: {
+        categories: {
+          some: {
+            category: {
+              id: {
+                in: categoryIds,
+              },
             },
           },
         },
+        isActive: true,
       },
-      isActive: true,
-    },
-    include: {
-      images: {
-        where: { isPrimary: true },
-        take: 1,
-      },
-      categories: {
-        include: {
-          category: true,
+      include: {
+        images: {
+          where: { isPrimary: true },
+          take: 1,
         },
-        take: 1,
-      },
-      variants: {
-        where: { isActive: true },
-        include: {
-          flavor: true,
-          weight: true,
+        categories: {
+          include: {
+            category: true,
+          },
+          take: 1,
         },
-        take: 1, // Get at least one variant for display
-      },
-      _count: {
-        select: {
-          reviews: true,
+        variants: {
+          where: { isActive: true },
+          include: {
+            flavor: true,
+            weight: true,
+          },
+          orderBy: {
+            price: "asc", // Get the cheapest variant first
+          },
+        },
+        _count: {
+          select: {
+            reviews: true,
+          },
         },
       },
-    },
-    orderBy: {
-      [sort]: order,
-    },
-    skip: (parseInt(page) - 1) * parseInt(limit),
-    take: parseInt(limit),
-  });
+    });
+
+    // Sort by minimum price
+    products = products.sort((a, b) => {
+      const aPrice =
+        a.variants.length > 0
+          ? Math.min(
+              ...a.variants.map((v) => parseFloat(v.salePrice || v.price))
+            )
+          : 0;
+      const bPrice =
+        b.variants.length > 0
+          ? Math.min(
+              ...b.variants.map((v) => parseFloat(v.salePrice || v.price))
+            )
+          : 0;
+
+      return order === "desc" ? bPrice - aPrice : aPrice - bPrice;
+    });
+
+    // Apply pagination after sorting
+    const startIndex = (parseInt(page) - 1) * parseInt(limit);
+    products = products.slice(startIndex, startIndex + parseInt(limit));
+  } else {
+    // For other fields, use normal Prisma ordering
+    const validSortFields = ["name", "createdAt", "updatedAt", "featured"];
+    const sortField = validSortFields.includes(sort) ? sort : "createdAt";
+
+    products = await prisma.product.findMany({
+      where: {
+        categories: {
+          some: {
+            category: {
+              id: {
+                in: categoryIds,
+              },
+            },
+          },
+        },
+        isActive: true,
+      },
+      include: {
+        images: {
+          where: { isPrimary: true },
+          take: 1,
+        },
+        categories: {
+          include: {
+            category: true,
+          },
+          take: 1,
+        },
+        variants: {
+          where: { isActive: true },
+          include: {
+            flavor: true,
+            weight: true,
+          },
+          orderBy: {
+            price: "asc", // Get the cheapest variant first
+          },
+        },
+        _count: {
+          select: {
+            reviews: true,
+          },
+        },
+      },
+      orderBy: {
+        [sortField]: order,
+      },
+      skip: (parseInt(page) - 1) * parseInt(limit),
+      take: parseInt(limit),
+    });
+  }
 
   // Format the response
   const formattedProducts = products.map((product) => {

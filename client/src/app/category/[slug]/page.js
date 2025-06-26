@@ -25,7 +25,7 @@ import ProductQuickView from "@/components/ProductQuickView";
 
 // Helper function to format image URLs correctly
 const getImageUrl = (image) => {
-  if (!image) return "/placeholder.svg?height=300&width=400";
+  if (!image) return "/placeholder.jpg";
   if (image.startsWith("http")) return image;
   return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
 };
@@ -106,7 +106,7 @@ export default function CategoryPage() {
     if (slug) {
       fetchCategoryAndProducts();
     }
-  });
+  }, [slug, sortOption, pagination.page, pagination.limit]);
 
   // Handle pagination
   const handlePageChange = (newPage) => {
@@ -264,7 +264,7 @@ export default function CategoryPage() {
                     className="w-40 h-40 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 shadow-lg border border-gray-200"
                   >
                     <Image
-                      src={getImageUrl(category.image)}
+                      src={getImageUrl(category.image) || "/placeholder.jpg"}
                       alt={category.name}
                       width={160}
                       height={160}
@@ -376,7 +376,7 @@ export default function CategoryPage() {
                 >
                   <div
                     className={`relative ${
-                      viewMode === "list" ? "w-80 h-64" : "h-64"
+                      viewMode === "list" ? "w-80 h-80" : "h-80"
                     } overflow-hidden`}
                   >
                     <Image
@@ -395,26 +395,6 @@ export default function CategoryPage() {
                         </div>
                       </div>
                     )}
-
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="flex flex-col gap-2">
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleQuickView(product)}
-                          className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:text-black shadow-lg"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-700 hover:text-red-500 shadow-lg"
-                        >
-                          <Heart className="h-4 w-4" />
-                        </motion.button>
-                      </div>
-                    </div>
                   </div>
 
                   <div className={`p-6 ${viewMode === "list" ? "flex-1" : ""}`}>

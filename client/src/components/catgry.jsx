@@ -37,7 +37,7 @@ const CircularCategoryCard = ({ category, index }) => {
           <Image
             width={800}
             height={800}
-            src={category.image || "/placeholder.svg?height=400&width=400"}
+            src={category.image || "/placeholder.jpg"}
             alt={category.name}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
           />
@@ -151,7 +151,6 @@ const FeaturedCategoriesCarousel = ({ categories }) => {
                 <CircularCategoryCard category={category} index={index} />
               </Link>
             </CarouselItem>
-            
           ))}
         </CarouselContent>
 
@@ -202,7 +201,7 @@ const FeaturedCategoriesSection = () => {
   }, []);
 
   return (
-    <section className="mt-36 py-16 overflow-hidden">
+    <section className="mt-20 py-16 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 relative">
           <motion.div
