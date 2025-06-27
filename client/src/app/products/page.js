@@ -349,7 +349,6 @@ function ProductsContent() {
   };
 
   const handleAddToCart = async (product) => {
-
     console.log(product);
     try {
       if (!product || !product.variants || product.variants.length === 0) {
@@ -914,6 +913,14 @@ function ProductsContent() {
                           {product.flavors} variants
                         </p>
                       )}
+
+                      {(!product.flavors || product.flavors === 0) &&
+                        product.variants &&
+                        product.variants.length > 1 && (
+                          <p className="text-xs text-gray-500 text-center mb-4">
+                            {product.variants.length} variants
+                          </p>
+                        )}
 
                       {/* <Button
                         className="w-full bg-black hover:bg-gray-900 text-white font-semibold py-3 rounded-none transition-colors duration-300"

@@ -73,7 +73,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
           const productData = response.data.product;
           setProductDetails(productData);
 
-          // Update image if available
+          // Update image if available - prioritize product images initially
           if (productData.images && productData.images.length > 0) {
             setImgSrc(
               productData.images[0].url ||
@@ -94,7 +94,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
             setAvailableCombinations(combinations);
 
-            // Set default selections
+            // Set default selections based on available options
             if (productData.flavorOptions?.length > 0) {
               const firstFlavor = productData.flavorOptions[0];
               setSelectedFlavor(firstFlavor);
@@ -104,7 +104,11 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                 (combo) => combo.flavorId === firstFlavor.id
               );
 
-              if (matchingVariant && productData.weightOptions) {
+              if (
+                matchingVariant &&
+                productData.weightOptions &&
+                productData.weightOptions.length > 0
+              ) {
                 const matchingWeight = productData.weightOptions.find(
                   (weight) => weight.id === matchingVariant.weightId
                 );
@@ -113,10 +117,28 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                   setSelectedWeight(matchingWeight);
                   setSelectedVariant(matchingVariant.variant);
                 }
+              } else if (matchingVariant) {
+                // Flavor selected but no weight options or no matching weight
+                setSelectedVariant(matchingVariant.variant);
+              }
+            } else if (productData.weightOptions?.length > 0) {
+              // Only weight options available, no flavors
+              const firstWeight = productData.weightOptions[0];
+              setSelectedWeight(firstWeight);
+
+              const matchingVariant = combinations.find(
+                (combo) => combo.weightId === firstWeight.id
+              );
+
+              if (matchingVariant) {
+                setSelectedVariant(matchingVariant.variant);
               }
             } else if (productData.variants.length > 0) {
-              // If no flavor/weight options but variants exist, use the first variant
-              setSelectedVariant(productData.variants[0]);
+              // No flavor or weight options, just set first active variant
+              const firstActiveVariant = productData.variants.find(
+                (v) => v.isActive && v.quantity > 0
+              );
+              setSelectedVariant(firstActiveVariant || productData.variants[0]);
             }
           }
         } else {
@@ -133,6 +155,33 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
     fetchProductDetails();
   }, [product, open]);
+
+  // Update image when selectedVariant changes
+  useEffect(() => {
+    if (
+      selectedVariant &&
+      selectedVariant.images &&
+      selectedVariant.images.length > 0
+    ) {
+      const primaryImage =
+        selectedVariant.images.find((img) => img.isPrimary) ||
+        selectedVariant.images[0];
+      setImgSrc(primaryImage.url || "/product-placeholder.jpg");
+    } else if (
+      productDetails &&
+      productDetails.images &&
+      productDetails.images.length > 0
+    ) {
+      // Fallback to product images if no variant images
+      const primaryImage =
+        productDetails.images.find((img) => img.isPrimary) ||
+        productDetails.images[0];
+      setImgSrc(primaryImage.url || "/product-placeholder.jpg");
+    } else if (product && product.image) {
+      // Fallback to basic product image
+      setImgSrc(product.image);
+    }
+  }, [selectedVariant, productDetails, product]);
 
   // Get available weights for a specific flavor
   const getAvailableWeightsForFlavor = (flavorId) => {
@@ -203,8 +252,19 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
         }
       }
     } else {
-      setSelectedWeight(null);
-      setSelectedVariant(null);
+      // No weight options or no available weights for this flavor
+      // Try to find a variant with just this flavor
+      const matchingVariant = availableCombinations.find(
+        (combo) => combo.flavorId === flavor.id
+      );
+
+      if (matchingVariant) {
+        setSelectedVariant(matchingVariant.variant);
+        // Clear weight selection if no weight options
+        if (!productDetails?.weightOptions?.length) {
+          setSelectedWeight(null);
+        }
+      }
     }
   };
 
@@ -252,8 +312,19 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
         }
       }
     } else {
-      setSelectedFlavor(null);
-      setSelectedVariant(null);
+      // No flavor options or no available flavors for this weight
+      // Try to find a variant with just this weight
+      const matchingVariant = availableCombinations.find(
+        (combo) => combo.weightId === weight.id
+      );
+
+      if (matchingVariant) {
+        setSelectedVariant(matchingVariant.variant);
+        // Clear flavor selection if no flavor options
+        if (!productDetails?.flavorOptions?.length) {
+          setSelectedFlavor(null);
+        }
+      }
     }
   };
 
@@ -559,6 +630,16 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                   </span>
                 </div>
               )}
+
+              {!selectedVariant &&
+                productDetails?.variants &&
+                productDetails.variants.length > 0 && (
+                  <div className="p-2 bg-yellow-50 rounded-md border-l-4 border-yellow-400">
+                    <span className="text-sm text-yellow-700">
+                      Please select a variant to check availability
+                    </span>
+                  </div>
+                )}
 
               {/* Quantity */}
               <div className="space-y-2">

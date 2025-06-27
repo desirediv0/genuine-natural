@@ -72,6 +72,7 @@ export default function ProductContent({ slug }) {
 
           setAvailableCombinations(combinations);
 
+          // Set default selections based on available options
           if (
             productData.flavorOptions &&
             productData.flavorOptions.length > 0
@@ -83,7 +84,11 @@ export default function ProductContent({ slug }) {
               (combo) => combo.flavorId === firstFlavor.id
             );
 
-            if (matchingVariant && productData.weightOptions) {
+            if (
+              matchingVariant &&
+              productData.weightOptions &&
+              productData.weightOptions.length > 0
+            ) {
               const matchingWeight = productData.weightOptions.find(
                 (weight) => weight.id === matchingVariant.weightId
               );
@@ -91,10 +96,53 @@ export default function ProductContent({ slug }) {
               if (matchingWeight) {
                 setSelectedWeight(matchingWeight);
                 setSelectedVariant(matchingVariant.variant);
+                // Update main image when variant changes
+                if (
+                  matchingVariant.variant.images &&
+                  matchingVariant.variant.images.length > 0
+                ) {
+                  const primaryImage =
+                    matchingVariant.variant.images.find(
+                      (img) => img.isPrimary
+                    ) || matchingVariant.variant.images[0];
+                  setMainImage(primaryImage);
+                }
+              }
+            } else if (matchingVariant) {
+              // Flavor selected but no weight options or no matching weight
+              setSelectedVariant(matchingVariant.variant);
+              // Update main image when variant changes
+              if (
+                matchingVariant.variant.images &&
+                matchingVariant.variant.images.length > 0
+              ) {
+                const primaryImage =
+                  matchingVariant.variant.images.find((img) => img.isPrimary) ||
+                  matchingVariant.variant.images[0];
+                setMainImage(primaryImage);
               }
             }
+          } else if (
+            productData.weightOptions &&
+            productData.weightOptions.length > 0
+          ) {
+            // Only weight options available, no flavors
+            const firstWeight = productData.weightOptions[0];
+            setSelectedWeight(firstWeight);
+
+            const matchingVariant = combinations.find(
+              (combo) => combo.weightId === firstWeight.id
+            );
+
+            if (matchingVariant) {
+              setSelectedVariant(matchingVariant.variant);
+            }
           } else if (productData.variants.length > 0) {
-            setSelectedVariant(productData.variants[0]);
+            // No flavor or weight options, just set first active variant
+            const firstActiveVariant = productData.variants.find(
+              (v) => v.isActive && v.quantity > 0
+            );
+            setSelectedVariant(firstActiveVariant || productData.variants[0]);
           }
         }
       } catch (err) {
@@ -139,6 +187,7 @@ export default function ProductContent({ slug }) {
     const availableWeightIds = getAvailableWeightsForFlavor(flavor.id);
 
     if (product?.weightOptions?.length > 0 && availableWeightIds.length > 0) {
+      // There are weight options and this flavor has available weights
       if (selectedWeight && availableWeightIds.includes(selectedWeight.id)) {
         const matchingVariant = availableCombinations.find(
           (combo) =>
@@ -168,8 +217,19 @@ export default function ProductContent({ slug }) {
         }
       }
     } else {
-      setSelectedWeight(null);
-      setSelectedVariant(null);
+      // No weight options or no available weights for this flavor
+      // Try to find a variant with just this flavor
+      const matchingVariant = availableCombinations.find(
+        (combo) => combo.flavorId === flavor.id
+      );
+
+      if (matchingVariant) {
+        setSelectedVariant(matchingVariant.variant);
+        // Clear weight selection if no weight options
+        if (!product?.weightOptions?.length) {
+          setSelectedWeight(null);
+        }
+      }
     }
   };
 
@@ -179,6 +239,7 @@ export default function ProductContent({ slug }) {
     const availableFlavorIds = getAvailableFlavorsForWeight(weight.id);
 
     if (product?.flavorOptions?.length > 0 && availableFlavorIds.length > 0) {
+      // There are flavor options and this weight has available flavors
       if (selectedFlavor && availableFlavorIds.includes(selectedFlavor.id)) {
         const matchingVariant = availableCombinations.find(
           (combo) =>
@@ -208,10 +269,40 @@ export default function ProductContent({ slug }) {
         }
       }
     } else {
-      setSelectedFlavor(null);
-      setSelectedVariant(null);
+      // No flavor options or no available flavors for this weight
+      // Try to find a variant with just this weight
+      const matchingVariant = availableCombinations.find(
+        (combo) => combo.weightId === weight.id
+      );
+
+      if (matchingVariant) {
+        setSelectedVariant(matchingVariant.variant);
+        // Clear flavor selection if no flavor options
+        if (!product?.flavorOptions?.length) {
+          setSelectedFlavor(null);
+        }
+      }
     }
   };
+
+  // Update main image when selectedVariant changes
+  useEffect(() => {
+    if (
+      selectedVariant &&
+      selectedVariant.images &&
+      selectedVariant.images.length > 0
+    ) {
+      const primaryImage =
+        selectedVariant.images.find((img) => img.isPrimary) ||
+        selectedVariant.images[0];
+      setMainImage(primaryImage);
+    } else if (product && product.images && product.images.length > 0) {
+      // Fallback to product images if no variant images
+      const primaryImage =
+        product.images.find((img) => img.isPrimary) || product.images[0];
+      setMainImage(primaryImage);
+    }
+  }, [selectedVariant, product]);
 
   useEffect(() => {
     const checkWishlistStatus = async () => {
@@ -287,7 +378,15 @@ export default function ProductContent({ slug }) {
   };
 
   const renderImages = () => {
-    if (!product || !product.images || product.images.length === 0) {
+    // Get current images to display - variant images if available, otherwise product images
+    const currentImages =
+      selectedVariant &&
+      selectedVariant.images &&
+      selectedVariant.images.length > 0
+        ? selectedVariant.images
+        : product?.images || [];
+
+    if (!currentImages || currentImages.length === 0) {
       return (
         <div className="relative aspect-square w-full bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
           <Image
@@ -301,11 +400,11 @@ export default function ProductContent({ slug }) {
       );
     }
 
-    if (product.images.length === 1) {
+    if (currentImages.length === 1) {
       return (
         <div className="relative aspect-square w-full bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
           <Image
-            src={getImageUrl(product.images[0].url) || "/placeholder.svg"}
+            src={getImageUrl(currentImages[0].url) || "/placeholder.svg"}
             alt={product?.name || "Product"}
             fill
             className="object-contain p-6"
@@ -315,11 +414,16 @@ export default function ProductContent({ slug }) {
       );
     }
 
+    // Find primary image or use first image
+    const primaryImage =
+      currentImages.find((img) => img.isPrimary) || currentImages[0];
+    const displayImage = mainImage || primaryImage;
+
     return (
       <div className="space-y-6">
         <div className="relative aspect-square w-full bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
           <Image
-            src={getImageUrl(mainImage?.url || product.images[0].url)}
+            src={getImageUrl(displayImage?.url || currentImages[0].url)}
             alt={product?.name || "Product"}
             fill
             className="object-contain p-6"
@@ -328,11 +432,11 @@ export default function ProductContent({ slug }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {product.images.map((image, index) => (
+          {currentImages.map((image, index) => (
             <div
-              key={index}
+              key={`${selectedVariant?.id || "product"}-${image.id || index}`}
               className={`relative aspect-square w-full bg-gray-50 rounded-lg overflow-hidden cursor-pointer border-3 transition-all hover:shadow-md ${
-                mainImage?.url === image.url
+                displayImage?.url === image.url
                   ? "border-[#000] shadow-lg"
                   : "border-transparent hover:border-gray-300"
               }`}
@@ -712,6 +816,16 @@ export default function ProductContent({ slug }) {
                   <span className="font-medium">Out of stock</span>
                 </div>
               )}
+              {!selectedVariant &&
+                product.variants &&
+                product.variants.length > 0 && (
+                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-700 flex items-center">
+                    <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" />
+                    <span className="font-medium">
+                      Please select a variant to check availability
+                    </span>
+                  </div>
+                )}
             </div>
 
             {/* Quantity Selector */}
