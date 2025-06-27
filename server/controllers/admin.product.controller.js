@@ -2692,7 +2692,9 @@ export const uploadVariantImage = asyncHandler(async (req, res, next) => {
 
     res
       .status(201)
-      .json(new ApiResponse(201, null, "Variant image uploaded successfully"));
+      .json(
+        new ApiResponsive(201, null, "Variant image uploaded successfully")
+      );
   } catch (error) {
     console.error("Error uploading variant image:", error);
     throw new ApiError(500, "Failed to upload variant image");

@@ -170,9 +170,12 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     } else if (
       productDetails &&
       productDetails.images &&
-      productDetails.images.length > 0
+      productDetails.images.length > 0 &&
+      (!productDetails.variants ||
+        productDetails.variants.length === 0 ||
+        !productDetails.variants.some((v) => v.images && v.images.length > 0))
     ) {
-      // Fallback to product images if no variant images
+      // Only use product images if no variants have images
       const primaryImage =
         productDetails.images.find((img) => img.isPrimary) ||
         productDetails.images[0];
@@ -180,6 +183,9 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     } else if (product && product.image) {
       // Fallback to basic product image
       setImgSrc(product.image);
+    } else {
+      // Final fallback
+      setImgSrc("/product-placeholder.jpg");
     }
   }, [selectedVariant, productDetails, product]);
 

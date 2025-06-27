@@ -128,8 +128,38 @@ export function ProductForm({
 
   // Handle image drop for upload
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    console.log(
+      `📸 Files dropped/selected: ${acceptedFiles.length}`,
+      acceptedFiles
+    );
+
+    if (acceptedFiles.length === 0) {
+      toast.error("No valid files selected");
+      return;
+    }
+
+    // Validate files
+    const validFiles = acceptedFiles.filter((file) => {
+      const isValidType = file.type.startsWith("image/");
+      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB
+
+      if (!isValidType) {
+        toast.error(`${file.name} is not a valid image file`);
+        return false;
+      }
+      if (!isValidSize) {
+        toast.error(`${file.name} is too large. Maximum size is 10MB`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) {
+      return;
+    }
+
     // Create local previews for the UI
-    const newPreviews = acceptedFiles.map((file) => ({
+    const newPreviews = validFiles.map((file) => ({
       url: URL.createObjectURL(file),
       isPrimary: false,
     }));
@@ -139,20 +169,33 @@ export function ProductForm({
       if (prev.length === 0 && newPreviews.length > 0) {
         newPreviews[0].isPrimary = true;
       }
-      return [...prev, ...acceptedFiles];
+      console.log(
+        `📸 Total files after addition: ${prev.length + validFiles.length}`
+      );
+      return [...prev, ...validFiles];
     });
 
     setImagePreviews((prev) => [...prev, ...newPreviews]);
+
+    toast.success(`${validFiles.length} image(s) added successfully`);
   }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       "image/jpeg": [],
       "image/png": [],
       "image/webp": [],
+      "image/gif": [],
     },
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 10 * 1024 * 1024, // 10MB
+    multiple: true,
+    onDropRejected: (rejectedFiles) => {
+      rejectedFiles.forEach((file) => {
+        const errors = file.errors.map((e) => e.message).join(", ");
+        toast.error(`${file.file.name}: ${errors}`);
+      });
+    },
   });
 
   // Remove image from preview and files
@@ -552,16 +595,35 @@ export function ProductForm({
     const existingImages = newVariantImages.get(variantId) || [];
     const newFiles = Array.from(files);
 
+    // Validate image files
+    const validFiles = newFiles.filter((file) => {
+      const isValidType = file.type.startsWith("image/");
+      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
+      if (!isValidType) {
+        toast.error(`${file.name} is not a valid image file`);
+        return false;
+      }
+      if (!isValidSize) {
+        toast.error(`${file.name} is too large. Maximum size is 10MB`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
     // Add new files to existing images
-    newVariantImages.set(variantId, [...existingImages, ...newFiles]);
+    newVariantImages.set(variantId, [...existingImages, ...validFiles]);
     setVariantImages(newVariantImages);
 
     // Set first image as primary if no images existed before
-    if (existingImages.length === 0 && newFiles.length > 0) {
+    if (existingImages.length === 0 && validFiles.length > 0) {
       const newPrimaryMap = new Map(variantPrimaryImageIndex);
       newPrimaryMap.set(variantId, 0);
       setVariantPrimaryImageIndex(newPrimaryMap);
     }
+
+    toast.success(`${validFiles.length} image(s) added successfully`);
   };
 
   // Remove variant image
@@ -759,23 +821,43 @@ export function ProductForm({
         formData.append("variants", JSON.stringify(processedVariants));
       }
 
-      // Add images
-      if (imageFiles.length > 0) {
+      // Add images (only for non-variant products)
+      if (!hasVariants && imageFiles.length > 0) {
+        console.log(
+          `📸 Submitting ${imageFiles.length} images for simple product:`,
+          imageFiles
+        );
+
         // Add primary image index
         const primaryIndex = imagePreviews.findIndex(
           (img) => img.isPrimary === true
         );
         if (primaryIndex >= 0) {
           formData.append("primaryImageIndex", String(primaryIndex));
+          console.log(`📸 Primary image index: ${primaryIndex}`);
         } else {
           // Default to first image as primary if none is marked
           formData.append("primaryImageIndex", "0");
+          console.log(`📸 Default primary image index: 0`);
         }
 
-        // Append each image file
-        imageFiles.forEach((file) => {
-          formData.append(`images`, file);
+        // Append each image file with proper field name for multer
+        imageFiles.forEach((file, index) => {
+          formData.append("images", file);
+          console.log(
+            `📸 Added image ${index + 1}: ${file.name} (${file.size} bytes)`
+          );
         });
+
+        // Also log the FormData contents
+        console.log(
+          `📸 FormData contents:`,
+          Object.fromEntries(formData.entries())
+        );
+      } else if (hasVariants) {
+        console.log(
+          `📸 Skipping product images for variant product - will use variant-specific images`
+        );
       }
 
       let response;
@@ -793,43 +875,66 @@ export function ProductForm({
           response.data.data?.product?.variants
         ) {
           const productVariants = response.data.data.product.variants;
+          console.log(
+            `📸 Processing variant images for ${productVariants.length} variants`
+          );
+
+          let uploadPromises = [];
 
           for (const variant of productVariants) {
             // Also check if any key in variantImages Map matches this variant's flavor+weight
             for (const [mapKey, mapImages] of variantImages.entries()) {
-              // Check if this variant matches by flavorId and weightId
+              // Check if this variant matches by ID or by flavorId and weightId
               const matchingVariant = variants.find(
                 (v) =>
-                  v.id === mapKey &&
-                  v.flavorId === variant.flavorId &&
-                  v.weightId === variant.weightId
+                  v.id === mapKey ||
+                  (v.flavorId === variant.flavorId &&
+                    v.weightId === variant.weightId)
               );
 
               if (matchingVariant && mapImages && mapImages.length > 0) {
-                try {
-                  for (let i = 0; i < mapImages.length; i++) {
-                    // Check if this image is set as primary for this variant
-                    const primaryIndex =
-                      variantPrimaryImageIndex.get(mapKey) || 0;
-                    const isPrimary = i === primaryIndex;
-                    await products.uploadVariantImage(
-                      variant.id,
-                      mapImages[i],
-                      isPrimary
-                    );
-                  }
-                  toast.success(
-                    `Uploaded ${mapImages.length} image(s) for ${variant.flavor?.name || "variant"}`
-                  );
-                } catch (error) {
-                  console.error(
-                    `Failed to upload images for variant ${variant.id}:`,
-                    error
-                  );
-                  toast.error(`Failed to upload images for some variants`);
+                console.log(
+                  `📸 Found ${mapImages.length} images for variant ${variant.id} (${variant.flavor?.name || "N/A"} - ${variant.weight?.value || "N/A"}${variant.weight?.unit || ""})`
+                );
+
+                // Upload each image for this variant
+                for (let i = 0; i < mapImages.length; i++) {
+                  const primaryIndex =
+                    variantPrimaryImageIndex.get(mapKey) || 0;
+                  const isPrimary = i === primaryIndex;
+
+                  const uploadPromise = products
+                    .uploadVariantImage(variant.id, mapImages[i], isPrimary)
+                    .then(() => {
+                      console.log(
+                        `📸 Uploaded image ${i + 1}/${mapImages.length} for variant ${variant.id} (isPrimary: ${isPrimary})`
+                      );
+                    })
+                    .catch((error) => {
+                      console.error(
+                        `❌ Failed to upload image ${i + 1} for variant ${variant.id}:`,
+                        error
+                      );
+                      throw error;
+                    });
+
+                  uploadPromises.push(uploadPromise);
                 }
                 break;
               }
+            }
+          }
+
+          // Wait for all uploads to complete
+          if (uploadPromises.length > 0) {
+            try {
+              await Promise.all(uploadPromises);
+              toast.success(
+                `Successfully uploaded ${uploadPromises.length} variant image(s)`
+              );
+            } catch (error) {
+              console.error("Some variant image uploads failed:", error);
+              toast.error("Failed to upload some variant images");
             }
           }
         }
@@ -1215,85 +1320,127 @@ export function ProductForm({
             </div>
           </div>
 
-          {/* Product Images - Dropzone */}
-          <div className="space-y-4 rounded-lg border p-4 bg-gray-50">
-            <h2 className="text-xl font-semibold border-b pb-2">
-              Product Images
-            </h2>
-            <div className="space-y-2">
-              <div className="flex flex-col gap-1">
-                <p className="text-sm font-medium">Upload Images</p>
-                <p className="text-xs text-muted-foreground">
-                  Drag and drop images here, or click to select files. The first
-                  image will be the primary image.
-                </p>
-              </div>
-              <div
-                {...getRootProps()}
-                className="border-2 border-dashed rounded-md p-8 cursor-pointer hover:bg-muted/50 transition-colors text-center bg-white"
-              >
-                <input {...getInputProps()} />
-                <ImageIcon className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-muted-foreground">
-                  Drop images here, or click to select files
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Maximum size: 5MB per image
-                </p>
+          {/* Product Images - Dropzone - Only show when variants are NOT enabled */}
+          {!hasVariants && (
+            <div className="space-y-4 rounded-lg border p-4 bg-gray-50">
+              <h2 className="text-xl font-semibold border-b pb-2">
+                Product Images
+              </h2>
+              <div className="space-y-2">
+                <div className="flex flex-col gap-1">
+                  <p className="text-sm font-medium">Upload Images</p>
+                  <p className="text-xs text-muted-foreground">
+                    Drag and drop images here, or click to select files. The
+                    first image will be the primary image.
+                  </p>
+                </div>
+                <div
+                  {...getRootProps()}
+                  className={`border-2 border-dashed rounded-md p-8 cursor-pointer transition-colors text-center bg-white ${
+                    isDragActive
+                      ? "border-blue-400 bg-blue-50"
+                      : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                  }`}
+                >
+                  <input {...getInputProps()} />
+                  <ImageIcon className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
+                  {isDragActive ? (
+                    <p className="text-blue-600 font-medium">
+                      Drop the images here...
+                    </p>
+                  ) : (
+                    <>
+                      <p className="text-muted-foreground">
+                        Drop multiple images here, or click to select files
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Supports JPEG, PNG, WebP, GIF • Maximum size: 10MB per
+                        image
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                {/* Fallback file input */}
+                <div className="mt-2">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    multiple
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        const files = Array.from(e.target.files);
+                        onDrop(files);
+                        // Clear the input so the same file can be selected again
+                        e.target.value = "";
+                      }
+                    }}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Alternative: Use this input if drag and drop doesn't work
+                  </p>
+                </div>
+
+                {/* Manual File Input as Fallback */}
               </div>
 
-              {/* Manual File Input as Fallback */}
-            </div>
-
-            {/* Image previews */}
-            {imagePreviews.length > 0 && (
-              <div className="mt-4">
-                <Label className="mb-3 block">Product Images</Label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {imagePreviews.map((preview, index) => (
-                    <div key={index} className="relative group">
-                      <div
-                        className={`relative h-32 rounded-md overflow-hidden border-2 ${preview.isPrimary ? "border-primary" : "border-transparent"}`}
-                      >
-                        <img
-                          src={preview.url}
-                          alt={`Product preview ${index + 1}`}
-                          className="h-full w-full object-cover"
-                        />
-                        {preview.isPrimary && (
-                          <span className="absolute top-2 left-2 bg-primary text-white text-xs py-1 px-2 rounded-full">
-                            Primary
-                          </span>
-                        )}
-                      </div>
-                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 flex space-x-1">
-                        {!preview.isPrimary && (
+              {/* Image previews */}
+              {imagePreviews.length > 0 && (
+                <div className="mt-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>Product Images</Label>
+                    <Badge variant="outline" className="text-xs">
+                      {imagePreviews.length} image
+                      {imagePreviews.length !== 1 ? "s" : ""}
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {imagePreviews.map((preview, index) => (
+                      <div key={index} className="relative group">
+                        <div
+                          className={`relative h-32 rounded-md overflow-hidden border-2 ${preview.isPrimary ? "border-primary" : "border-transparent"}`}
+                        >
+                          <img
+                            src={preview.url}
+                            alt={`Product preview ${index + 1}`}
+                            className="h-full w-full object-cover"
+                          />
+                          {preview.isPrimary && (
+                            <span className="absolute top-2 left-2 bg-primary text-white text-xs py-1 px-2 rounded-full">
+                              Primary
+                            </span>
+                          )}
+                        </div>
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 flex space-x-1">
+                          {!preview.isPrimary && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-7 w-7 bg-white hover:bg-primary hover:text-white"
+                              onClick={() => setPrimaryImage(index)}
+                            >
+                              <Star className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Button
                             type="button"
                             variant="outline"
                             size="icon"
-                            className="h-7 w-7 bg-white hover:bg-primary hover:text-white"
-                            onClick={() => setPrimaryImage(index)}
+                            className="h-7 w-7 bg-white hover:bg-destructive hover:text-white"
+                            onClick={() => removeImage(index)}
                           >
-                            <Star className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
-                        )}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7 bg-white hover:bg-destructive hover:text-white"
-                          onClick={() => removeImage(index)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           {/* SEO Section */}
           <div className="space-y-4 rounded-lg border p-4 bg-gray-50">
@@ -1349,9 +1496,21 @@ export function ProductForm({
           {/* Variants Configuration */}
           {hasVariants && (
             <div className="space-y-4 rounded-lg border p-4 bg-gray-50">
-              <h2 className="text-xl font-semibold border-b pb-2">
-                Variants Configuration
-              </h2>
+              <div className="flex items-center justify-between border-b pb-2">
+                <h2 className="text-xl font-semibold">
+                  Variants Configuration
+                </h2>
+                <Badge variant="secondary" className="text-xs">
+                  Using variant-specific images
+                </Badge>
+              </div>
+
+              <div className="bg-green-50 border border-green-200 rounded-md p-3">
+                <p className="text-sm text-green-700">
+                  <strong>✓ Variant Mode:</strong> Each variant can have its own
+                  images. Upload images for each variant below in the table.
+                </p>
+              </div>
 
               <div className="space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -1546,20 +1705,53 @@ export function ProductForm({
                                     <div className="mb-4">
                                       <input
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
                                         multiple
-                                        onChange={(e) =>
+                                        onChange={(e) => {
                                           handleVariantImageUpload(
                                             variant.id,
                                             e.target.files
-                                          )
-                                        }
-                                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                          );
+                                          // Clear the input so same files can be selected again
+                                          e.target.value = "";
+                                        }}
+                                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                                       />
+                                      <p className="text-xs text-gray-500 mt-1">
+                                        Select multiple images for this variant
+                                        • JPEG, PNG, WebP, GIF • Max 10MB each
+                                      </p>
                                     </div>
 
                                     {/* Display Images */}
                                     <div className="space-y-4">
+                                      {/* Image Count Badge */}
+                                      {((variant.images &&
+                                        variant.images.length > 0) ||
+                                        (variantImages.get(variant.id) &&
+                                          variantImages.get(variant.id)!
+                                            .length > 0)) && (
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-sm font-medium text-gray-700">
+                                            Images
+                                          </span>
+                                          <Badge
+                                            variant="outline"
+                                            className="text-xs"
+                                          >
+                                            {(variant.images?.length || 0) +
+                                              (variantImages.get(variant.id)
+                                                ?.length || 0)}{" "}
+                                            image
+                                            {(variant.images?.length || 0) +
+                                              (variantImages.get(variant.id)
+                                                ?.length || 0) !==
+                                            1
+                                              ? "s"
+                                              : ""}
+                                          </Badge>
+                                        </div>
+                                      )}
                                       {/* Existing Server Images */}
                                       {variant.images &&
                                         variant.images.length > 0 && (

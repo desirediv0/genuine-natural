@@ -378,13 +378,36 @@ export default function ProductContent({ slug }) {
   };
 
   const renderImages = () => {
-    // Get current images to display - variant images if available, otherwise product images
-    const currentImages =
+    // Get current images to display - prioritize variant images
+    let currentImages = [];
+
+    if (
       selectedVariant &&
       selectedVariant.images &&
       selectedVariant.images.length > 0
-        ? selectedVariant.images
-        : product?.images || [];
+    ) {
+      // Use variant images if available
+      currentImages = selectedVariant.images;
+    } else if (
+      product?.images &&
+      product.images.length > 0 &&
+      (!product?.variants ||
+        product.variants.length === 0 ||
+        !product.variants.some((v) => v.images && v.images.length > 0))
+    ) {
+      // Only use product images if no variants have images
+      currentImages = product.images;
+    } else {
+      // If variants exist but selected variant has no images, try to find any variant with images
+      if (product?.variants && product.variants.length > 0) {
+        const variantWithImages = product.variants.find(
+          (v) => v.images && v.images.length > 0
+        );
+        if (variantWithImages) {
+          currentImages = variantWithImages.images;
+        }
+      }
+    }
 
     if (!currentImages || currentImages.length === 0) {
       return (
