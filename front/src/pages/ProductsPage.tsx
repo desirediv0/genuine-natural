@@ -264,27 +264,27 @@ export function ProductForm({
               primaryCategoryId: primaryCategory?.id || "",
               sku:
                 productData.variants?.length === 1 &&
-                !productData.variants[0].flavorId &&
-                !productData.variants[0].weightId
+                  !productData.variants[0].flavorId &&
+                  !productData.variants[0].weightId
                   ? productData.variants[0].sku
                   : "",
               price:
                 productData.variants?.length === 1 &&
-                !productData.variants[0].flavorId &&
-                !productData.variants[0].weightId
+                  !productData.variants[0].flavorId &&
+                  !productData.variants[0].weightId
                   ? productData.variants[0].price.toString()
                   : "",
               salePrice:
                 productData.variants?.length === 1 &&
-                !productData.variants[0].flavorId &&
-                !productData.variants[0].weightId &&
-                productData.variants[0].salePrice
+                  !productData.variants[0].flavorId &&
+                  !productData.variants[0].weightId &&
+                  productData.variants[0].salePrice
                   ? productData.variants[0].salePrice.toString()
                   : "",
               quantity:
                 productData.variants?.length === 1 &&
-                !productData.variants[0].flavorId &&
-                !productData.variants[0].weightId
+                  !productData.variants[0].flavorId &&
+                  !productData.variants[0].weightId
                   ? productData.variants[0].quantity
                   : 0,
               isSupplement: productData.isSupplement || false,
@@ -725,11 +725,7 @@ export function ProductForm({
           const productVariants = response.data.data.product.variants;
 
           for (const variant of productVariants) {
-            // Try multiple keys to find variant images
-            const possibleKeys = [
-              variant.id, // New database ID
-              `${variant.flavorId}-${variant.weightId}`, // Flavor-Weight combo
-            ];
+
 
             // Also check if any key in variantImages Map matches this variant's flavor+weight
             for (const [mapKey, mapImages] of variantImages.entries()) {
@@ -1841,11 +1837,10 @@ const CategorySelector = ({
               onClick={() => {
                 onSetPrimaryCategory(categoryId);
               }}
-              className={`text-xs px-2 py-1 rounded-full ${
-                isPrimary
+              className={`text-xs px-2 py-1 rounded-full ${isPrimary
                   ? "bg-indigo-100 text-indigo-700"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
+                }`}
             >
               {isPrimary ? "Primary" : "Set as Primary"}
             </button>
@@ -1887,11 +1882,10 @@ const CategorySelector = ({
                       onClick={() => {
                         onSetPrimaryCategory(childId);
                       }}
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        isChildPrimary
+                      className={`text-xs px-2 py-1 rounded-full ${isChildPrimary
                           ? "bg-indigo-100 text-indigo-700"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
+                        }`}
                     >
                       {isChildPrimary ? "Primary" : "Set as Primary"}
                     </button>
@@ -2152,7 +2146,7 @@ function ProductsList() {
       console.error("Error marking product as inactive:", error);
       toast.error(
         error.message ||
-          "An error occurred while marking the product as inactive"
+        "An error occurred while marking the product as inactive"
       );
     }
   };
@@ -2190,7 +2184,7 @@ function ProductsList() {
       } else {
         toast.error(
           response.data.message ||
-            `Failed to ${currentStatus ? "deactivate" : "activate"} product`
+          `Failed to ${currentStatus ? "deactivate" : "activate"} product`
         );
       }
     } catch (error: any) {
@@ -2200,7 +2194,7 @@ function ProductsList() {
       );
       toast.error(
         error.message ||
-          `An error occurred while ${currentStatus ? "deactivating" : "activating"} the product`
+        `An error occurred while ${currentStatus ? "deactivating" : "activating"} the product`
       );
     }
   };
@@ -2445,7 +2439,7 @@ function ProductsList() {
                         <td className="px-4 py-3">
                           <div className="flex flex-wrap gap-1">
                             {product.categories &&
-                            product.categories.length > 0 ? (
+                              product.categories.length > 0 ? (
                               product.categories.map((category: any) => {
                                 // Check if this is a child category
                                 const isChild = category.parentId !== null;
@@ -2494,11 +2488,10 @@ function ProductsList() {
                         </td>
                         <td className="px-4 py-3 text-sm">
                           <span
-                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                              product.isActive
+                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${product.isActive
                                 ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500"
                                 : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500"
-                            }`}
+                              }`}
                           >
                             {product.isActive ? "Active" : "Inactive"}
                           </span>
