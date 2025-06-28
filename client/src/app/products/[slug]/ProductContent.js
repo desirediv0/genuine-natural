@@ -57,8 +57,8 @@ export default function ProductContent({ slug }) {
         setProduct(productData);
         setRelatedProducts(response.data.relatedProducts || []);
 
-        if (productData.images && productData.images.length > 0) {
-          setMainImage(productData.images[0]);
+        if (productData.image) {
+          setMainImage({ url: productData.image });
         }
 
         if (productData.variants && productData.variants.length > 0) {
@@ -296,11 +296,9 @@ export default function ProductContent({ slug }) {
         selectedVariant.images.find((img) => img.isPrimary) ||
         selectedVariant.images[0];
       setMainImage(primaryImage);
-    } else if (product && product.images && product.images.length > 0) {
-      // Fallback to product images if no variant images
-      const primaryImage =
-        product.images.find((img) => img.isPrimary) || product.images[0];
-      setMainImage(primaryImage);
+    } else if (product && product.image) {
+      // Fallback to product image if no variant images
+      setMainImage({ url: product.image });
     }
   }, [selectedVariant, product]);
 
@@ -389,14 +387,13 @@ export default function ProductContent({ slug }) {
       // Use variant images if available
       currentImages = selectedVariant.images;
     } else if (
-      product?.images &&
-      product.images.length > 0 &&
+      product?.image &&
       (!product?.variants ||
         product.variants.length === 0 ||
         !product.variants.some((v) => v.images && v.images.length > 0))
     ) {
-      // Only use product images if no variants have images
-      currentImages = product.images;
+      // Only use product image if no variants have images
+      currentImages = [{ url: product.image }];
     } else {
       // If variants exist but selected variant has no images, try to find any variant with images
       if (product?.variants && product.variants.length > 0) {
@@ -427,7 +424,7 @@ export default function ProductContent({ slug }) {
       return (
         <div className="relative aspect-square w-full bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
           <Image
-            src={getImageUrl(currentImages[0].url) || "/placeholder.svg"}
+            src={getImageUrl(currentImages[0].url) || "/placeholder.jpg"}
             alt={product?.name || "Product"}
             fill
             className="object-contain p-6"
@@ -466,7 +463,7 @@ export default function ProductContent({ slug }) {
               onClick={() => setMainImage(image)}
             >
               <Image
-                src={getImageUrl(image.url) || "/placeholder.svg"}
+                src={getImageUrl(image.url) || "/placeholder.jpg"}
                 alt={`${product.name} - Image ${index + 1}`}
                 fill
                 className="object-contain p-2"

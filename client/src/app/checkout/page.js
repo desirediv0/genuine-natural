@@ -95,9 +95,9 @@ export default function CheckoutPage() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchAddresses();
-  // }, [isAuthenticated]);
+  useEffect(() => {
+    fetchAddresses();
+  }, [isAuthenticated]);
 
   // Fetch Razorpay key
   useEffect(() => {
@@ -374,8 +374,8 @@ export default function CheckoutPage() {
                 </div>
 
                 <p className="text-gray-600 max-w-md mx-auto">
-                  Thank you for your purchase! We&apos;ve sent you an email
-                  with order details and tracking information.
+                  Thank you for your purchase! We&apos;ve sent you an email with
+                  order details and tracking information.
                 </p>
 
                 <div className="flex items-center justify-center space-x-2 text-gray-600 bg-gray-50 p-4 rounded-2xl">
@@ -431,7 +431,9 @@ export default function CheckoutPage() {
             <div className="mb-8 p-6 bg-red-50 rounded-2xl flex items-start">
               <AlertCircle className="text-red-500 mt-1 mr-4 flex-shrink-0 h-6 w-6" />
               <div>
-                <p className="text-lg font-semibold text-red-700">Payment Failed</p>
+                <p className="text-lg font-semibold text-red-700">
+                  Payment Failed
+                </p>
                 <p className="text-red-600 mt-1">{error}</p>
               </div>
             </div>
@@ -481,7 +483,11 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${showAddressForm ? "mt-8" : ""}`}>
+                  <div
+                    className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
+                      showAddressForm ? "mt-8" : ""
+                    }`}
+                  >
                     {addresses.map((address) => (
                       <div
                         key={address.id}
@@ -493,7 +499,9 @@ export default function CheckoutPage() {
                         onClick={() => handleAddressSelect(address.id)}
                       >
                         <div className="flex justify-between items-start mb-4">
-                          <span className="text-lg font-bold text-black">{address.name}</span>
+                          <span className="text-lg font-bold text-black">
+                            {address.name}
+                          </span>
                           {address.isDefault && (
                             <span className="px-3 py-1 bg-black text-white text-sm font-medium rounded-full">
                               Default
@@ -555,7 +563,9 @@ export default function CheckoutPage() {
                           className="h-5 w-5 text-black border-gray-300 focus:ring-black"
                         />
                         <label htmlFor="razorpay" className="ml-3">
-                          <span className="text-lg font-bold text-black">Pay Online</span>
+                          <span className="text-lg font-bold text-black">
+                            Pay Online
+                          </span>
                           <span className="ml-3 px-3 py-1 bg-black text-white text-xs font-medium rounded-full">
                             Recommended
                           </span>
@@ -574,12 +584,15 @@ export default function CheckoutPage() {
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-8 sticky top-8">
-                <h2 className="text-2xl font-bold mb-8 text-black">Order Summary</h2>
+                <h2 className="text-2xl font-bold mb-8 text-black">
+                  Order Summary
+                </h2>
 
                 <div className="space-y-6">
                   <div>
                     <p className="text-base font-medium text-gray-600 mb-4">
-                      {cart.totalQuantity} {cart.totalQuantity === 1 ? 'Item' : 'Items'} in Cart
+                      {cart.totalQuantity}{" "}
+                      {cart.totalQuantity === 1 ? "Item" : "Items"} in Cart
                     </p>
                     <div className="max-h-[300px] overflow-y-auto space-y-4 pr-2">
                       {cart.items?.map((item) => (
@@ -587,7 +600,7 @@ export default function CheckoutPage() {
                           <div className="h-16 w-16 bg-gray-50 rounded-xl flex-shrink-0 relative">
                             {item.product.image && (
                               <Image
-                                src={item.product.image || "/placeholder.svg"}
+                                src={item.product.image || "/placeholder.jpg"}
                                 alt={item.product.name}
                                 fill
                                 className="object-contain p-2"
@@ -637,7 +650,9 @@ export default function CheckoutPage() {
 
                     <div className="border-t border-gray-100 pt-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-black">Total</span>
+                        <span className="text-lg font-bold text-black">
+                          Total
+                        </span>
                         <span className="text-2xl font-bold text-black">
                           {formatCurrency(totals.subtotal - totals.discount)}
                         </span>

@@ -18,9 +18,9 @@ export async function generateMetadata({ params }) {
       description =
         product.metaDescription || product.description || description;
 
-      // Get the first image from product images
-      if (product.images && product.images.length > 0) {
-        image = product.images[0].url;
+      // Get the product image
+      if (product.image) {
+        image = product.image;
       }
     }
   } catch (error) {

@@ -380,7 +380,7 @@ export default function CategoryPage() {
                     } overflow-hidden`}
                   >
                     <Image
-                      src={getImageUrl(product.images?.[0]?.url)}
+                      src={getImageUrl(product.image)}
                       alt={product.name}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

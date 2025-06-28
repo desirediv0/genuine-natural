@@ -7,6 +7,25 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ClientOnly } from "@/components/client-only";
 import { fetchApi } from "@/lib/utils";
+
+// Helper function to format image URLs correctly
+const getImageUrl = (images) => {
+  // Handle both single image and images array
+  if (!images) return "/placeholder.jpg";
+
+  if (typeof images === "string") {
+    if (images.startsWith("http")) return images;
+    return `https://desirediv-storage.blr1.digitaloceanspaces.com/${images}`;
+  }
+
+  if (Array.isArray(images) && images.length > 0) {
+    const firstImage = images[0];
+    if (firstImage.startsWith("http")) return firstImage;
+    return `https://desirediv-storage.blr1.digitaloceanspaces.com/${firstImage}`;
+  }
+
+  return "/placeholder.jpg";
+};
 import Image from "next/image";
 import {
   Eye,
@@ -203,10 +222,7 @@ export default function WishlistPage() {
                     <Link href={`/products/${product.slug}`}>
                       <div className="relative h-48 sm:h-56 md:h-64 w-full bg-gray-50 overflow-hidden">
                         <Image
-                          src={
-                            product.images[0] ||
-                            "/placeholder.svg?height=300&width=400"
-                          }
+                          src={getImageUrl(product.images)}
                           alt={product.name}
                           fill
                           className="object-contain p-4 transition-transform group-hover:scale-105"
@@ -291,6 +307,14 @@ export default function WishlistPage() {
                           {product.name}
                         </h3>
                       </Link>
+
+                      {product.price && (
+                        <div className="text-center mb-2 sm:mb-3">
+                          <span className="font-bold text-lg text-black">
+                            ₹{Number(product.price).toLocaleString()}
+                          </span>
+                        </div>
+                      )}
 
                       {product.flavors > 1 && (
                         <span className="text-xs text-gray-500 bg-gray-100 px-2 sm:px-3 py-1 rounded-full mb-3 sm:mb-4 inline-block">

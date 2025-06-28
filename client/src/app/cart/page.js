@@ -23,6 +23,13 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
 
+// Helper function to format image URLs correctly
+const getImageUrl = (image) => {
+  if (!image) return "/placeholder.jpg";
+  if (image.startsWith("http")) return image;
+  return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
+};
+
 const CartItem = React.memo(
   ({ item, onUpdateQuantity, onRemove, isLoading }) => {
     return (
@@ -31,7 +38,7 @@ const CartItem = React.memo(
           <div className="md:col-span-6 flex items-center space-x-6">
             <div className="relative h-24 w-24 bg-gradient-to-tr from-gray-50 to-gray-100 rounded-2xl overflow-hidden flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
               <Image
-                src={item.product.image || "/placeholder.svg"}
+                src={getImageUrl(item.product.image)}
                 alt={item.product.name}
                 fill
                 className="object-contain p-3"
@@ -231,7 +238,7 @@ export default function CartPage() {
     }
   }, [isAuthenticated, router, totals]);
 
-  if (loading && !cart.items.length) {
+  if (loading && !cart.items?.length) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <div className="container mx-auto px-4 py-8">
@@ -244,7 +251,7 @@ export default function CartPage() {
     );
   }
 
-  if ((!cart.items || cart.items.length === 0) && !error) {
+  if ((!cart?.items || cart.items.length === 0) && !loading && !error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <div className="container mx-auto px-4 py-12">
@@ -302,15 +309,21 @@ export default function CartPage() {
             </div>
 
             <div className="space-y-6">
-              {cart.items.map((item) => (
-                <CartItem
-                  key={item.id}
-                  item={item}
-                  onUpdateQuantity={handleQuantityChange}
-                  onRemove={handleRemoveItem}
-                  isLoading={cartItemsLoading[item.id]}
-                />
-              ))}
+              {cart?.items && cart.items.length > 0 ? (
+                cart.items.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    onUpdateQuantity={handleQuantityChange}
+                    onRemove={handleRemoveItem}
+                    isLoading={cartItemsLoading[item.id]}
+                  />
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No items in cart</p>
+                </div>
+              )}
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-gray-100 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 shadow-sm">
@@ -331,7 +344,7 @@ export default function CartPage() {
                 {loading ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin " />
                 ) : null}
-                Clear Cart 
+                Clear Cart
               </Button>
             </div>
           </div>

@@ -73,13 +73,9 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
           const productData = response.data.product;
           setProductDetails(productData);
 
-          // Update image if available - prioritize product images initially
-          if (productData.images && productData.images.length > 0) {
-            setImgSrc(
-              productData.images[0].url ||
-                productData.image ||
-                "/product-placeholder.jpg"
-            );
+          // Update image if available - use product image
+          if (productData.image) {
+            setImgSrc(productData.image || "/product-placeholder.jpg");
           }
 
           // Extract all available combinations from variants
@@ -169,17 +165,13 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
       setImgSrc(primaryImage.url || "/product-placeholder.jpg");
     } else if (
       productDetails &&
-      productDetails.images &&
-      productDetails.images.length > 0 &&
+      productDetails.image &&
       (!productDetails.variants ||
         productDetails.variants.length === 0 ||
         !productDetails.variants.some((v) => v.images && v.images.length > 0))
     ) {
-      // Only use product images if no variants have images
-      const primaryImage =
-        productDetails.images.find((img) => img.isPrimary) ||
-        productDetails.images[0];
-      setImgSrc(primaryImage.url || "/product-placeholder.jpg");
+      // Only use product image if no variants have images
+      setImgSrc(productDetails.image || "/product-placeholder.jpg");
     } else if (product && product.image) {
       // Fallback to basic product image
       setImgSrc(product.image);
@@ -482,7 +474,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
             <div className="relative">
               <div className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] rounded-lg overflow-hidden bg-gray-50 group">
                 <Image
-                  src={imgSrc || "/placeholder.svg"}
+                  src={imgSrc || "/placeholder.jpg"}
                   alt={displayProduct.name}
                   fill
                   className="object-contain p-3 sm:p-4 transform group-hover:scale-105 transition-transform duration-300"
@@ -536,7 +528,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                     ))}
                   </div>
                   <span className="text-sm text-gray-600">
-                    {displayProduct.avgRating?.toFixed(1)} (
+                    {displayProduct.avgRating ? Number(displayProduct.avgRating).toFixed(1) : '0.0'} (
                     {displayProduct.reviewCount || 0} reviews)
                   </span>
                 </div>

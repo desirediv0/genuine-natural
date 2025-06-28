@@ -16,9 +16,7 @@ import {
   ChevronRight,
   AlertCircle,
   Search,
-  Heart,
   Eye,
-  ShoppingCart,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import ProductQuickView from "@/components/ProductQuickView";
@@ -582,7 +580,7 @@ function ProductsContent() {
                       {flavor.image && (
                         <div className="w-4 h-4 rounded-full overflow-hidden mr-2">
                           <Image
-                            src={flavor.image || "/placeholder.svg"}
+                            src={flavor.image || "/placeholder.jpg"}
                             alt={flavor.name}
                             width={16}
                             height={16}

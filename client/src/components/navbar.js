@@ -600,7 +600,6 @@ export function Navbar() {
                       className="px-4 py-2 font-semibold text-gray-700 hover:text-black transition-all duration-200 relative group rounded-lg"
                     >
                       <span className="relative z-10">{item.label}</span>
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
                     </Link>
                   </motion.div>
                 ))}
@@ -633,7 +632,6 @@ export function Navbar() {
                     >
                       <ChevronDown className="ml-2 h-4 w-4" />
                     </motion.div>
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
                   </motion.button>
 
                   <AnimatePresence>

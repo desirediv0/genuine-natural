@@ -8,6 +8,39 @@ import { Button } from "@/components/ui/button";
 import { ClientOnly } from "@/components/client-only";
 import { fetchApi, formatCurrency, formatDate } from "@/lib/utils";
 import Image from "next/image";
+
+// Helper function to format image URLs correctly
+const getImageUrl = (image) => {
+  if (!image) return "/placeholder.jpg";
+
+  // Handle array of images (take first one)
+  if (Array.isArray(image)) {
+    if (image.length === 0) return "/placeholder.jpg";
+    const firstImage = image[0];
+    if (typeof firstImage === "string") {
+      return firstImage.startsWith("http")
+        ? firstImage
+        : `https://desirediv-storage.blr1.digitaloceanspaces.com/${firstImage}`;
+    }
+    return firstImage.url || "/placeholder.jpg";
+  }
+
+  // Handle single image
+  if (typeof image === "string") {
+    return image.startsWith("http")
+      ? image
+      : `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
+  }
+
+  // Handle image object
+  if (image && image.url) {
+    return image.url.startsWith("http")
+      ? image.url
+      : `https://desirediv-storage.blr1.digitaloceanspaces.com/${image.url}`;
+  }
+
+  return "/placeholder.jpg";
+};
 import {
   ArrowLeft,
   Package,
@@ -233,33 +266,17 @@ export default function OrderDetailsPage({ params }) {
           <div>
             <Link
               href="/account/orders"
-              className="inline-flex items-center text-gray-100 text-sm  hover:text-white  mb-2 font-medium transition-colors group"
+              className="inline-flex items-center text-gray-800 text-sm  hover:text-gray-500 mb-2 font-medium transition-colors group"
             >
               <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1  transition-transform" />
               Back to Orders
             </Link>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-100">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
               Order Details
             </h1>
           </div>
 
           <div className="flex items-center space-x-3 mt-4 md:mt-0">
-            <Button
-              variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Invoice
-            </Button>
-
-            <Button
-              variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all"
-            >
-              <Share2 className="h-4 w-4 mr-2" />
-              Share
-            </Button>
-
             {canCancel && !showCancelForm && (
               <Button
                 onClick={() => setShowCancelForm(true)}
@@ -345,24 +362,6 @@ export default function OrderDetailsPage({ params }) {
                         {order.items.length} item
                         {order.items.length !== 1 ? "s" : ""}
                       </p>
-                    </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="mb-6">
-                    <div className="flex justify-between text-xs text-gray-500 mb-2">
-                      <span>Order Progress</span>
-                      <span>{getProgressPercentage(order.status)}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full transition-all duration-500 ${
-                          getStatusInfo(order.status).progressColor
-                        }`}
-                        style={{
-                          width: `${getProgressPercentage(order.status)}%`,
-                        }}
-                      ></div>
                     </div>
                   </div>
 
@@ -476,16 +475,20 @@ export default function OrderDetailsPage({ params }) {
                           className="flex items-center p-4 border border-gray-100 rounded-xl hover:border-black  hover:shadow-sm transition-all"
                         >
                           <Link
-                            href={`/products/${item.slug}`}
+                            href={`/products/${
+                              item.product?.slug || item.slug
+                            }`}
                             className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden mr-4"
                           >
-                            {item.image ? (
+                            {item.product?.image || item.image ? (
                               <Image
                                 width={64}
                                 height={64}
-                                src={item.image || "/placeholder.svg"}
-                                alt={item.name}
-                                className="w-full h-full object-cover"
+                                src={getImageUrl(
+                                  item.product?.image || item.image
+                                )}
+                                alt={item.product?.name || item.name}
+                                className="w-full h-full object-contain p-1"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
@@ -495,19 +498,34 @@ export default function OrderDetailsPage({ params }) {
                           </Link>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-semibold text-gray-900 mb-1">
-                              {item.name}
+                              {item.product?.name || item.name}
                             </h4>
                             <div className="text-sm text-gray-500 mb-2">
-                              {(item.flavor || item.weight) && (
+                              {(item.variant?.flavor?.name ||
+                                item.flavor ||
+                                item.variant?.weight?.value ||
+                                item.weight) && (
                                 <p>
-                                  {item.flavor && (
-                                    <span>Flavor: {item.flavor}</span>
+                                  {(item.variant?.flavor?.name ||
+                                    item.flavor) && (
+                                    <span>
+                                      Flavor:{" "}
+                                      {item.variant?.flavor?.name ||
+                                        item.flavor}
+                                    </span>
                                   )}
-                                  {item.flavor && item.weight && (
-                                    <span> • </span>
-                                  )}
-                                  {item.weight && (
-                                    <span>Weight: {item.weight}</span>
+                                  {(item.variant?.flavor?.name ||
+                                    item.flavor) &&
+                                    (item.variant?.weight?.value ||
+                                      item.weight) && <span> • </span>}
+                                  {(item.variant?.weight?.value ||
+                                    item.weight) && (
+                                    <span>
+                                      Weight:{" "}
+                                      {item.variant?.weight?.value
+                                        ? `${item.variant.weight.value}${item.variant.weight.unit}`
+                                        : item.weight}
+                                    </span>
                                   )}
                                 </p>
                               )}

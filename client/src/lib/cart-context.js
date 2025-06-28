@@ -39,10 +39,27 @@ export function CartProvider({ children }) {
       const res = await fetchApi("/cart", {
         credentials: "include",
       });
-      setCart(res.data);
-      return res.data;
+
+      if (res.success && res.data) {
+        // Ensure we have the proper cart structure
+        const cartData = {
+          items: res.data.items || [],
+          subtotal: res.data.subtotal || 0,
+          itemCount: res.data.itemCount || res.data.items?.length || 0,
+          totalQuantity:
+            res.data.totalQuantity ||
+            res.data.items?.reduce((sum, item) => sum + item.quantity, 0) ||
+            0,
+        };
+        setCart(cartData);
+        return cartData;
+      } else {
+        setCart({ items: [], subtotal: 0, itemCount: 0, totalQuantity: 0 });
+      }
     } catch (err) {
+      console.error("Error fetching cart:", err);
       setError(err.message);
+      setCart({ items: [], subtotal: 0, itemCount: 0, totalQuantity: 0 });
     } finally {
       setLoading(false);
     }
@@ -74,7 +91,7 @@ export function CartProvider({ children }) {
       });
 
       // Update cart immediately to show updated counter in the UI
-      const updatedCart = await fetchCart();
+      await fetchCart();
 
       // Provide visual feedback (could be improved with toast notification)
       if (typeof window !== "undefined") {
@@ -118,9 +135,8 @@ export function CartProvider({ children }) {
       });
 
       // Update cart locally to avoid full reload
-      setCart((prevCart) => ({
-        ...prevCart,
-        items: prevCart.items.map((item) =>
+      setCart((prevCart) => {
+        const updatedItems = prevCart.items.map((item) =>
           item.id === cartItemId
             ? {
                 ...item,
@@ -128,23 +144,27 @@ export function CartProvider({ children }) {
                 subtotal: (parseFloat(item.price) * quantity).toFixed(2),
               }
             : item
-        ),
-        // Recalculate the cart totals
-        subtotal: prevCart.items
-          .reduce((sum, item) => {
-            const itemPrice = parseFloat(item.price);
-            const itemQuantity =
-              item.id === cartItemId ? quantity : item.quantity;
-            return sum + itemPrice * itemQuantity;
-          }, 0)
-          .toFixed(2),
-        totalQuantity: prevCart.items.reduce((sum, item) => {
-          return sum + (item.id === cartItemId ? quantity : item.quantity);
-        }, 0),
-      }));
+        );
+
+        const newSubtotal = updatedItems.reduce((sum, item) => {
+          return sum + parseFloat(item.subtotal);
+        }, 0);
+
+        const newTotalQuantity = updatedItems.reduce((sum, item) => {
+          return sum + item.quantity;
+        }, 0);
+
+        return {
+          ...prevCart,
+          items: updatedItems,
+          subtotal: newSubtotal.toFixed(2),
+          totalQuantity: newTotalQuantity,
+          itemCount: updatedItems.length,
+        };
+      });
 
       // Fetch the updated cart in the background to ensure consistency
-      fetchCart();
+      setTimeout(() => fetchCart(), 500);
       return res.data;
     } catch (err) {
       setError(err.message);
@@ -170,20 +190,28 @@ export function CartProvider({ children }) {
         );
         if (!itemToRemove) return prevCart;
 
-        const itemQuantity = itemToRemove.quantity;
-        const itemSubtotal = parseFloat(itemToRemove.subtotal);
+        const remainingItems = prevCart.items.filter(
+          (item) => item.id !== cartItemId
+        );
+        const newSubtotal = remainingItems.reduce((sum, item) => {
+          return sum + parseFloat(item.subtotal);
+        }, 0);
+
+        const newTotalQuantity = remainingItems.reduce((sum, item) => {
+          return sum + item.quantity;
+        }, 0);
 
         return {
           ...prevCart,
-          items: prevCart.items.filter((item) => item.id !== cartItemId),
-          itemCount: prevCart.itemCount - 1,
-          totalQuantity: prevCart.totalQuantity - itemQuantity,
-          subtotal: (parseFloat(prevCart.subtotal) - itemSubtotal).toFixed(2),
+          items: remainingItems,
+          itemCount: remainingItems.length,
+          totalQuantity: newTotalQuantity,
+          subtotal: newSubtotal.toFixed(2),
         };
       });
 
       // Fetch the updated cart in the background to ensure consistency
-      fetchCart();
+      setTimeout(() => fetchCart(), 500);
       return res.data;
     } catch (err) {
       setError(err.message);

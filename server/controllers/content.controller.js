@@ -381,7 +381,7 @@ const getContactInfo = asyncHandler(async (req, res) => {
     const contactInfo = {
       address: "123 Supplement Street, Health City, 400001",
       phone: "+91 98765 43210",
-      email: "support@GenuineNutrition.com",
+      email: "support@beinggenuinenutrition",
       hours: "Monday - Saturday: 10:00 AM - 7:00 PM",
       mapCoordinates: {
         lat: 19.076,
