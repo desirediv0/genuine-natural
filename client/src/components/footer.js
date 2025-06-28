@@ -34,8 +34,8 @@ export function Footer() {
                 <Image
                   src="/logo.png"
                   alt="Being Genuine Nutrition Logo"
-                  width={200}
-                  height={200}
+                  width={250}
+                  height={250}
                   className="mb-6 transform group-hover:scale-105 transition-transform duration-300 invert"
                 />
               </div>
