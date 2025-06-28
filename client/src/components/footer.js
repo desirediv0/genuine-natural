@@ -35,7 +35,7 @@ export function Footer() {
                   src="/logo.png"
                   alt="Being Genuine Nutrition Logo"
                   width={200}
-                  height={100}
+                  height={200}
                   className="mb-6 transform group-hover:scale-105 transition-transform duration-300 invert"
                 />
               </div>
@@ -165,8 +165,7 @@ export function Footer() {
                   <MapPin size={18} className="text-white" />
                 </div>
                 <span className="text-gray-300 group-hover:text-white transition-colors leading-relaxed">
-                  T-16, Pocket-5, Plot no-6, Malik Builcon, Commercial Plaza
-                  Dwarka Sector-12, New Delhi, 110075
+                  Gurgaon, Haryana, India
                 </span>
               </div>
 

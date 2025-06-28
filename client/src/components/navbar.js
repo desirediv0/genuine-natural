@@ -573,8 +573,8 @@ export function Navbar() {
                     <Image
                       src="/logo.png"
                       alt="being genuine nutrition"
-                      width={100}
-                      height={100}
+                      width={200}
+                      height={200}
                       className="h-10 w-auto "
                     />
                   </motion.div>
