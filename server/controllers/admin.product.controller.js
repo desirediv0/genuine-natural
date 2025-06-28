@@ -522,7 +522,7 @@ export const createProduct = asyncHandler(async (req, res, next) => {
           );
         }
 
-        await prisma.productVariant.create({
+        const createdVariant = await prisma.productVariant.create({
           data: {
             productId: newProduct.id,
             sku: variantSku,
@@ -534,6 +534,9 @@ export const createProduct = asyncHandler(async (req, res, next) => {
             isActive: variant.isActive !== undefined ? variant.isActive : true,
           },
         });
+
+        // Store variant ID for later use in image processing
+        variant._dbId = createdVariant.id;
       }
 
       // If we don't have any variants and it's not a variant product, create a default variant
@@ -660,6 +663,62 @@ export const createProduct = asyncHandler(async (req, res, next) => {
         });
       }
 
+      // Process variant images if any
+      if (variants.length > 0 && req.files) {
+        console.log("🔍 Processing variant images...");
+
+        // Group files by variant index
+        const variantImageFiles = {};
+        req.files.forEach((file) => {
+          // Check if this is a variant image file
+          const variantMatch = file.fieldname.match(/^variantImages_(\d+)$/);
+          if (variantMatch) {
+            const variantIndex = parseInt(variantMatch[1]);
+            if (!variantImageFiles[variantIndex]) {
+              variantImageFiles[variantIndex] = [];
+            }
+            variantImageFiles[variantIndex].push(file);
+          }
+        });
+
+        // Upload images for each variant
+        for (const variantIndex in variantImageFiles) {
+          const files = variantImageFiles[variantIndex];
+          const variant = variants[parseInt(variantIndex)];
+
+          if (variant && variant._dbId) {
+            console.log(
+              `📸 Uploading ${files.length} images for variant ${variant._dbId}`
+            );
+
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              try {
+                const imageUrl = await processAndUploadImage(
+                  file,
+                  `products/${newProduct.id}/variants/${variant._dbId}`
+                );
+
+                await prisma.productVariantImage.create({
+                  data: {
+                    variantId: variant._dbId,
+                    url: imageUrl,
+                    alt: `${variant.name || newProduct.name} - Variant Image ${
+                      i + 1
+                    }`,
+                    isPrimary: i === 0, // First image is primary
+                  },
+                });
+
+                console.log(`✅ Variant image uploaded: ${imageUrl}`);
+              } catch (error) {
+                console.error(`❌ Error uploading variant image:`, error);
+              }
+            }
+          }
+        }
+      }
+
       // Return product with relations
       return await prisma.product.findUnique({
         where: { id: newProduct.id },
@@ -674,6 +733,7 @@ export const createProduct = asyncHandler(async (req, res, next) => {
             include: {
               flavor: true,
               weight: true,
+              images: true,
             },
           },
         },
@@ -710,6 +770,12 @@ export const createProduct = asyncHandler(async (req, res, next) => {
                   : null,
               }
             : null,
+          images: variant.images
+            ? variant.images.map((image) => ({
+                ...image,
+                url: getFileUrl(image.url),
+              }))
+            : [],
         })),
         // Include message when variants couldn't be deleted due to orders
         _message:
