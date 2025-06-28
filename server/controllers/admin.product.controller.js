@@ -850,7 +850,15 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
         },
       },
       images: true,
-      variants: true,
+      variants: {
+        include: {
+          flavor: true,
+          weight: true,
+          images: true,
+        },
+      },
+      reviews: true,
+      orderItems: true,
     },
   });
 
@@ -1771,7 +1779,11 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
     where: { id: productId },
     include: {
       images: true,
-      variants: true,
+      variants: {
+        include: {
+          images: true, // Include variant images
+        },
+      },
       reviews: true,
       orderItems: true,
     },
@@ -1801,7 +1813,32 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
     await prisma.$transaction(async (tx) => {
       // Delete all product images from S3
       for (const image of product.images) {
-        await deleteFromS3(image.url);
+        try {
+          await deleteFromS3(image.url);
+          console.log(`Deleted product image from S3: ${image.url}`);
+        } catch (error) {
+          console.error(
+            `Failed to delete product image from S3: ${image.url}`,
+            error
+          );
+        }
+      }
+
+      // Delete all variant images from S3
+      for (const variant of product.variants) {
+        if (variant.images && variant.images.length > 0) {
+          for (const variantImage of variant.images) {
+            try {
+              await deleteFromS3(variantImage.url);
+              console.log(`Deleted variant image from S3: ${variantImage.url}`);
+            } catch (error) {
+              console.error(
+                `Failed to delete variant image from S3: ${variantImage.url}`,
+                error
+              );
+            }
+          }
+        }
       }
 
       // If force deleting a product with orders, handle the order items
@@ -2257,6 +2294,7 @@ export const deleteProductVariant = asyncHandler(async (req, res, next) => {
   const variant = await prisma.productVariant.findUnique({
     where: { id: variantId },
     include: {
+      images: true, // Include variant images
       product: {
         select: {
           id: true,
@@ -2295,6 +2333,21 @@ export const deleteProductVariant = asyncHandler(async (req, res, next) => {
   // Delete variant with transaction if needed
   if (variant.orderItems.length > 0 && force === "true") {
     await prisma.$transaction(async (tx) => {
+      // Delete variant images from S3 first
+      if (variant.images && variant.images.length > 0) {
+        for (const variantImage of variant.images) {
+          try {
+            await deleteFromS3(variantImage.url);
+            console.log(`Deleted variant image from S3: ${variantImage.url}`);
+          } catch (error) {
+            console.error(
+              `Failed to delete variant image from S3: ${variantImage.url}`,
+              error
+            );
+          }
+        }
+      }
+
       // Delete order items associated with this variant
       await tx.orderItem.deleteMany({
         where: { variantId },
@@ -2306,6 +2359,21 @@ export const deleteProductVariant = asyncHandler(async (req, res, next) => {
       });
     });
   } else {
+    // Delete variant images from S3 first
+    if (variant.images && variant.images.length > 0) {
+      for (const variantImage of variant.images) {
+        try {
+          await deleteFromS3(variantImage.url);
+          console.log(`Deleted variant image from S3: ${variantImage.url}`);
+        } catch (error) {
+          console.error(
+            `Failed to delete variant image from S3: ${variantImage.url}`,
+            error
+          );
+        }
+      }
+    }
+
     // Just delete the variant if no orders
     await prisma.productVariant.delete({
       where: { id: variantId },
