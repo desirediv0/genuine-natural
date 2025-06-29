@@ -55,7 +55,12 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
     if (product) {
       // Set initial image when product changes
-      setImgSrc(product.image || "/product-placeholder.jpg");
+      setImgSrc(
+        product.image ||
+          product.variants?.[0]?.images?.find((img) => img.isPrimary)?.url ||
+          product.variants?.[0]?.images?.[0]?.url ||
+          "/placeholder.jpg"
+      );
     }
   }, [product, open]);
 
@@ -175,6 +180,15 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     } else if (product && product.image) {
       // Fallback to basic product image
       setImgSrc(product.image);
+    } else if (
+      product &&
+      product.variants?.[0]?.images?.find((img) => img.isPrimary)?.url
+    ) {
+      // Fallback to first variant's primary image
+      setImgSrc(product.variants[0].images.find((img) => img.isPrimary).url);
+    } else if (product && product.variants?.[0]?.images?.[0]?.url) {
+      // Fallback to first variant's first image
+      setImgSrc(product.variants[0].images[0].url);
     } else {
       // Final fallback
       setImgSrc("/product-placeholder.jpg");
@@ -528,8 +542,10 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                     ))}
                   </div>
                   <span className="text-sm text-gray-600">
-                    {displayProduct.avgRating ? Number(displayProduct.avgRating).toFixed(1) : '0.0'} (
-                    {displayProduct.reviewCount || 0} reviews)
+                    {displayProduct.avgRating
+                      ? Number(displayProduct.avgRating).toFixed(1)
+                      : "0.0"}{" "}
+                    ({displayProduct.reviewCount || 0} reviews)
                   </span>
                 </div>
               )}

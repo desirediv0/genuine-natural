@@ -1187,7 +1187,14 @@ export default function ProductContent({ slug }) {
                 >
                   <div className="relative h-64 w-full bg-white overflow-hidden">
                     <Image
-                      src={product.image || "/product-placeholder.jpg"}
+                      src={
+                        product.image ||
+                        product.variants?.[0]?.images?.find(
+                          (img) => img.isPrimary
+                        )?.url ||
+                        product.variants?.[0]?.images?.[0]?.url ||
+                        "/product-placeholder.jpg"
+                      }
                       alt={product.name}
                       fill
                       className="object-contain p-4 transition-transform group-hover:scale-105"

@@ -824,7 +824,14 @@ function ProductsContent() {
                     <div className="relative h-64 w-full bg-gray-50 overflow-hidden">
                       <Link href={`/products/${product.slug}`}>
                         <Image
-                          src={product.image || "/product-placeholder.jpg"}
+                          src={
+                            product.image ||
+                            product.variants?.[0]?.images?.find(
+                              (img) => img.isPrimary
+                            )?.url ||
+                            product.variants?.[0]?.images?.[0]?.url ||
+                            "/placeholder.jpg"
+                          }
                           alt={product.name}
                           fill
                           className="object-contain p-4 transition-transform group-hover:scale-105"
