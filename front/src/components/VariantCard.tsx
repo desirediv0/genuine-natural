@@ -554,7 +554,7 @@ export default function VariantCard({
   };
 
   return (
-    <Card className="p-4 border-l-4 border-l-blue-500 bg-white max-h-[500px] overflow-hidden flex flex-col gap-4">
+    <Card className="p-4 border-l-4 border-l-blue-500 bg-white flex flex-col gap-4">
       {/* Variant Header */}
       <div className="flex items-center justify-between flex-shrink-0">
         <div className="flex-1">
@@ -655,7 +655,7 @@ export default function VariantCard({
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="space-y-4 flex-1 overflow-y-auto">
+        <div className="space-y-4 flex-1">
           {/* Variant Details */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
@@ -770,7 +770,7 @@ export default function VariantCard({
 
             {/* Images Grid */}
             {hasImages && (
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
                 {currentImages.map((image, imageIndex) => (
                   <div
                     key={
