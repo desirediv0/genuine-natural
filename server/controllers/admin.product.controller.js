@@ -2976,20 +2976,19 @@ export const uploadVariantImage = asyncHandler(async (req, res, next) => {
           }
 
           // Determine if this should be primary
-          const shouldBePrimary =
-            isPrimary === "true" ||
-            isPrimary === true ||
-            currentVariant.images.length === 0;
+          // Priority 1: Explicit request to make it primary (isPrimary = true)
+          // Priority 2: If no existing images and no explicit isPrimary value sent (undefined/null)
+          const explicitlyPrimary = isPrimary === "true" || isPrimary === true;
+          const explicitlyNotPrimary =
+            isPrimary === "false" || isPrimary === false;
+          const isFirstImageEver = currentVariant.images.length === 0;
+          const noPrimarySpecified =
+            isPrimary === undefined || isPrimary === null || isPrimary === "";
 
-          console.log(
-            `📸 Uploading image for variant ${variantId} (attempt ${retryCount + 1
-            }):`,
-            {
-              currentImageCount: currentVariant.images.length,
-              shouldBePrimary,
-              requestedOrder: order,
-            }
-          );
+          // Only set as primary if explicitly requested, OR if it's the first image and no explicit value was sent
+          const shouldBePrimary =
+            explicitlyPrimary ||
+            (isFirstImageEver && noPrimarySpecified && !explicitlyNotPrimary);
 
           // Determine the correct order first
           let imageOrder;
@@ -3042,12 +3041,6 @@ export const uploadVariantImage = asyncHandler(async (req, res, next) => {
               isPrimary: shouldBePrimary,
               order: imageOrder,
             },
-          });
-
-          console.log(`✅ Created image:`, {
-            id: createdImage.id,
-            order: createdImage.order,
-            isPrimary: createdImage.isPrimary,
           });
 
           return createdImage;

@@ -129,8 +129,17 @@ export default function VariantCard({
         if (isEditMode && isRealVariantId) {
           for (let i = 0; i < validFiles.length; i++) {
             const file = validFiles[i];
+            // Only set as primary if there are NO existing images AND it's the first file
             const isPrimary = currentImages.length === 0 && i === 0;
             const order = currentImages.length + i; // Append to end
+
+            console.log(`📸 Uploading image ${i + 1}/${validFiles.length}:`, {
+              fileName: file.name,
+              isPrimary,
+              existingImagesCount: currentImages.length,
+              targetOrder: order,
+              variantId: variant.id,
+            });
 
             try {
               const response = await products.uploadVariantImage(
@@ -139,13 +148,21 @@ export default function VariantCard({
                 isPrimary
               );
 
+              console.log(`📸 Upload response for ${file.name}:`, {
+                success: response.data.success,
+                uploadedImage: response.data.data?.image,
+                sentIsPrimary: isPrimary,
+                receivedIsPrimary: response.data.data?.image?.isPrimary,
+              });
+
               if (response.data.success) {
                 const uploadedImage = response.data.data?.image;
                 if (uploadedImage) {
+                  // FIXED: Don't override with frontend isPrimary, trust backend response
                   newImages.push({
                     url: uploadedImage.url,
                     id: uploadedImage.id,
-                    isPrimary: uploadedImage.isPrimary || isPrimary,
+                    isPrimary: uploadedImage.isPrimary, // Use only server response
                     order: uploadedImage.order || order,
                     isNew: false,
                   });
@@ -375,8 +392,10 @@ export default function VariantCard({
       const isRealVariantId =
         variant.id &&
         typeof variant.id === "string" &&
-        !variant.id.includes("-") &&
-        variant.id.length > 10;
+        variant.id.length >= 30 && // Real UUIDs are longer
+        !variant.id.startsWith("new-") &&
+        !variant.id.startsWith("temp-") &&
+        !variant.id.startsWith("field");
 
       // If it's an existing image with ID and real variant, delete from server immediately
       if (imageToRemove.id && isEditMode && isRealVariantId) {
@@ -502,9 +521,15 @@ export default function VariantCard({
       order: i,
     }));
 
-    // Handle primary image logic - if we moved the primary image away from position 0
-    if (draggedImage.isPrimary && dropIndex !== 0) {
-      // Set the image now at position 0 as primary
+    // Handle primary image logic
+    if (dropIndex === 0) {
+      // If we dropped an image at position 0, make it primary
+      reorderedImages[0].isPrimary = true;
+      reorderedImages.forEach((img, i) => {
+        if (i !== 0) img.isPrimary = false;
+      });
+    } else if (draggedImage.isPrimary && dropIndex !== 0) {
+      // If primary image was moved away from position 0, make the image at position 0 primary
       reorderedImages[0].isPrimary = true;
       reorderedImages.forEach((img, i) => {
         if (i !== 0) img.isPrimary = false;
@@ -518,8 +543,10 @@ export default function VariantCard({
     const isRealVariantId =
       variant.id &&
       typeof variant.id === "string" &&
-      !variant.id.includes("-") &&
-      variant.id.length > 10;
+      variant.id.length >= 30 && // Real UUIDs are longer
+      !variant.id.startsWith("new-") &&
+      !variant.id.startsWith("temp-") &&
+      !variant.id.startsWith("field");
 
     if (isEditMode && isRealVariantId) {
       try {
@@ -530,15 +557,30 @@ export default function VariantCard({
             order: i,
           }));
 
+        console.log(`🔄 Reordering images for variant ${variant.id}:`, {
+          imageOrders,
+          draggedFrom: draggedImageIndex,
+          droppedAt: dropIndex,
+        });
+
         if (imageOrders.length > 0) {
-          await products.reorderVariantImages(variant.id!, imageOrders);
+          const response = await products.reorderVariantImages(
+            variant.id!,
+            imageOrders
+          );
+          console.log(`✅ Reorder response:`, response.data);
           toast.success("Images reordered successfully");
+        } else {
+          console.log(`⚠️ No images with IDs to reorder`);
         }
       } catch (error) {
         console.error("Error reordering images:", error);
         toast.error("Failed to reorder images");
       }
     } else {
+      console.log(
+        `📝 Local reorder only (variant ID: ${variant.id}, isEditMode: ${isEditMode})`
+      );
       toast.success("Images reordered");
     }
   };
