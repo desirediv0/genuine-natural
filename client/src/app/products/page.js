@@ -319,14 +319,6 @@ function ProductsContent() {
         handleFilterChange("sort", "createdAt");
         handleFilterChange("order", "asc");
         break;
-      case "price-low":
-        handleFilterChange("sort", "createdAt");
-        handleFilterChange("order", "asc");
-        break;
-      case "price-high":
-        handleFilterChange("sort", "createdAt");
-        handleFilterChange("order", "desc");
-        break;
       case "name-asc":
         handleFilterChange("sort", "name");
         handleFilterChange("order", "asc");
@@ -691,8 +683,6 @@ function ProductsContent() {
                     }
                   >
                     <option value="newest">Featured</option>
-                    <option value="price-low">Price, low to high</option>
-                    <option value="price-high">Price, high to low</option>
                     <option value="name-asc">Alphabetically, A-Z</option>
                     <option value="name-desc">Alphabetically, Z-A</option>
                     <option value="oldest">Date, old to new</option>
