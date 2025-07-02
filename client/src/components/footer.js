@@ -165,7 +165,7 @@ export function Footer() {
                   <MapPin size={18} className="text-white" />
                 </div>
                 <span className="text-gray-300 group-hover:text-white transition-colors leading-relaxed">
-                  Gurgaon, Haryana, India
+                  89/2 Sector 39 Gurugram Haryana
                 </span>
               </div>
 

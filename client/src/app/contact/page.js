@@ -208,7 +208,7 @@ export default function ContactPage() {
                     title: "Visit Our Office",
                     content:
                       contactInfo?.address ||
-                      "T-16, Pocket-5, Plot no-6, Malik Builcon, Commercial Plaza Dwarka Sector-12, New Delhi, 110075",
+                      "89/2 Sector 39 Gurugram Haryana",
                     color: "bg-blue-500",
                   },
                   {
@@ -441,11 +441,9 @@ export default function ContactPage() {
 
           <div className="rounded-2xl overflow-hidden h-[500px] relative shadow-lg">
             <iframe
-              src={`https://maps.google.com/maps?q=${
-                contactInfo?.mapCoordinates?.lat || 28.5493
-              },${
-                contactInfo?.mapCoordinates?.lng || 77.0692
-              }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              src={`https://maps.google.com/maps?q=${contactInfo?.mapCoordinates?.lat || 28.5493
+                },${contactInfo?.mapCoordinates?.lng || 77.0692
+                }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
               title="Desire Div Location"
               width="100%"
               height="100%"
