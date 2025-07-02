@@ -441,10 +441,10 @@ export default function ContactPage() {
 
           <div className="rounded-2xl overflow-hidden h-[500px] relative shadow-lg">
             <iframe
-              src={`https://maps.google.com/maps?q=${contactInfo?.mapCoordinates?.lat || 28.5493
-                },${contactInfo?.mapCoordinates?.lng || 77.0692
+              src={`https://maps.google.com/maps?q=${28.4423
+                },${77.0493
                 }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
-              title="Desire Div Location"
+              title="89/2 Sector 39 Gurugram Haryana"
               width="100%"
               height="100%"
               style={{ border: 0 }}
