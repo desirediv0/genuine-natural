@@ -44,13 +44,22 @@ const Hero = () => {
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover hidden md:block"
         >
           <source src="/bg.mp4" type="video/mp4" />
         </video>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover md:hidden block"
+        >
+          <source src="/smvideo.mp4" type="video/mp4" />
+        </video>
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        <div className="absolute inset-0 md:bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
+        <div className="absolute inset-0 md:bg-gradient-to-t from-black/50 via-transparent to-transparent" />
       </div>
 
       {/* Hero Content */}
