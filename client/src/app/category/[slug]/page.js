@@ -30,6 +30,54 @@ const getImageUrl = (image) => {
   return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
 };
 
+// Helper function to get the best variant for display
+const getBestVariant = (variants) => {
+  if (!variants || variants.length === 0) return null;
+
+  // Find the variant with the lowest sale price, or regular price if no sale
+  return variants.reduce((best, current) => {
+    const currentPrice = parseFloat(current.salePrice || current.price);
+    const bestPrice = parseFloat(best.salePrice || best.price);
+    return currentPrice < bestPrice ? current : best;
+  });
+};
+
+// Helper function to get product display data
+const getProductDisplayData = (product) => {
+  const bestVariant = getBestVariant(product.variants);
+
+  if (!bestVariant) {
+    return {
+      image: product.image || "/placeholder.jpg",
+      basePrice: 0,
+      regularPrice: 0,
+      hasSale: false,
+      salePrice: 0,
+    };
+  }
+
+  const basePrice = parseFloat(bestVariant.salePrice || bestVariant.price);
+  const regularPrice = parseFloat(bestVariant.price);
+  const hasSale =
+    bestVariant.salePrice &&
+    parseFloat(bestVariant.salePrice) < parseFloat(bestVariant.price);
+
+  // Get the primary image from the best variant
+  const primaryImage =
+    bestVariant.images?.find((img) => img.isPrimary)?.url ||
+    bestVariant.images?.[0]?.url ||
+    product.image ||
+    "/placeholder.jpg";
+
+  return {
+    image: primaryImage,
+    basePrice,
+    regularPrice,
+    hasSale,
+    salePrice: hasSale ? parseFloat(bestVariant.salePrice) : basePrice,
+  };
+};
+
 export default function CategoryPage() {
   const params = useParams();
   const { slug } = params;
@@ -68,14 +116,7 @@ export default function CategoryPage() {
             sort = "createdAt";
             order = "asc";
             break;
-          case "price-low":
-            sort = "price";
-            order = "asc";
-            break;
-          case "price-high":
-            sort = "price";
-            order = "desc";
-            break;
+
           case "name-asc":
             sort = "name";
             order = "asc";
@@ -118,12 +159,6 @@ export default function CategoryPage() {
   // Handle sorting
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
-  };
-
-  // Handle quick view
-  const handleQuickView = (product) => {
-    setQuickViewProduct(product);
-    setQuickViewOpen(true);
   };
 
   // Loading state
@@ -256,22 +291,20 @@ export default function CategoryPage() {
                   </motion.div>
                 </div>
 
-                {category.image && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.6 }}
-                    className="w-40 h-40 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 shadow-lg border border-gray-200"
-                  >
-                    <Image
-                      src={getImageUrl(category.image) || "/placeholder.jpg"}
-                      alt={category.name}
-                      width={160}
-                      height={160}
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-                )}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="w-40 h-40 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 shadow-lg border border-gray-200"
+                >
+                  <Image
+                    src={getImageUrl(category.image) || "/placeholder.jpg"}
+                    alt={category.name}
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
               </div>
             </div>
           </motion.div>
@@ -297,8 +330,7 @@ export default function CategoryPage() {
               >
                 <option value="newest">Latest First</option>
                 <option value="oldest">Oldest First</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
+
                 <option value="name-asc">Name: A to Z</option>
                 <option value="name-desc">Name: Z to A</option>
               </select>
@@ -359,107 +391,113 @@ export default function CategoryPage() {
               animate={{ opacity: 1 }}
               className={`grid gap-8 ${
                 viewMode === "grid"
-                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"
                   : "grid-cols-1"
               }`}
             >
-              {products.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -8 }}
-                  className={`bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-500 group ${
-                    viewMode === "list" ? "flex" : ""
-                  }`}
-                >
-                  <div
-                    className={`relative ${
-                      viewMode === "list" ? "w-80 h-80" : "h-80"
-                    } overflow-hidden`}
+              {products.map((product, index) => {
+                const displayData = getProductDisplayData(product);
+
+                return (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -8 }}
+                    className={`bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-500 group ${
+                      viewMode === "list" ? "flex" : ""
+                    }`}
                   >
-                    <Image
-                      src={getImageUrl(product.image)}
-                      alt={product.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
+                    <div
+                      className={`relative ${
+                        viewMode === "list" ? "w-80 h-80" : "h-80"
+                      } overflow-hidden`}
+                    >
+                      <Image
+                        src={getImageUrl(displayData.image)}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
 
-                    {product.hasSale && (
-                      <div className="absolute top-4 left-4">
-                        <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-bold flex items-center">
-                          <Sparkles className="w-3 h-3 mr-1" />
-                          SALE
+                      {displayData.hasSale && (
+                        <div className="absolute top-4 left-4">
+                          <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-bold flex items-center">
+                            <Sparkles className="w-3 h-3 mr-1" />
+                            SALE
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className={`p-6 ${viewMode === "list" ? "flex-1" : ""}`}>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className="h-4 w-4"
-                            fill={
-                              i < Math.round(product.avgRating || 0)
-                                ? "currentColor"
-                                : "none"
-                            }
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        ({product.reviewCount || 0})
-                      </span>
+                      )}
                     </div>
 
-                    <Link href={`/products/${product.slug}`}>
-                      <h3 className="font-bold text-lg mb-3 text-gray-900 group-hover:text-black transition-colors line-clamp-2">
-                        {product.name}
-                      </h3>
-                    </Link>
-
-                    {viewMode === "list" && product.shortDescription && (
-                      <p className="text-gray-600 mb-4 line-clamp-2">
-                        {product.shortDescription}
-                      </p>
-                    )}
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        {product.hasSale ? (
-                          <>
-                            <span className="font-bold text-xl text-black">
-                              {formatCurrency(product.basePrice)}
-                            </span>
-                            <span className="text-gray-500 line-through text-sm">
-                              {formatCurrency(product.regularPrice)}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="font-bold text-xl text-gray-900">
-                            {formatCurrency(product.basePrice)}
-                          </span>
-                        )}
+                    <div
+                      className={`p-6 ${viewMode === "list" ? "flex-1" : ""}`}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex text-yellow-400">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className="h-4 w-4"
+                              fill={
+                                i < Math.round(product.avgRating || 0)
+                                  ? "currentColor"
+                                  : "none"
+                              }
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          ({product._count?.reviews || 0})
+                        </span>
                       </div>
 
                       <Link href={`/products/${product.slug}`}>
-                        <Button
-                          size="sm"
-                          className="bg-black hover:bg-gray-800 text-white rounded-xl font-semibold group/btn"
-                        >
-                          View
-                          <ArrowRight className="ml-1 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                        </Button>
+                        <h3 className="font-bold text-lg mb-3 text-gray-900 group-hover:text-black transition-colors line-clamp-2">
+                          {product.name}
+                        </h3>
                       </Link>
+
+                      {viewMode === "list" && product.description && (
+                        <p className="text-gray-600 mb-4 line-clamp-2">
+                          {product.description}
+                        </p>
+                      )}
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {displayData.hasSale ? (
+                            <>
+                              <span className="font-bold text-xl text-black">
+                                {formatCurrency(displayData.salePrice)}
+                              </span>
+                              <span className="text-gray-500 line-through text-sm">
+                                {formatCurrency(displayData.regularPrice)}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="font-bold text-xl text-gray-900">
+                              {formatCurrency(displayData.basePrice)}
+                            </span>
+                          )}
+                        </div>
+
+                        <Link href={`/products/${product.slug}`}>
+                          <Button
+                            size="sm"
+                            className="bg-black hover:bg-gray-800 text-white rounded-xl font-semibold group/btn"
+                          >
+                            View
+                            <ArrowRight className="ml-1 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </motion.div>
 
             {/* Pagination */}

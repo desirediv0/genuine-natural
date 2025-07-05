@@ -13,6 +13,7 @@ import FeaturedCategoriesSection from "@/components/catgry";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Hero from "@/components/hero";
 import FeatureBanner from "@/components/featurebanner";
+import Heading from "@/components/Heading";
 
 // Testimonials Section
 
@@ -171,7 +172,6 @@ const TestimonialsSection = () => {
             >
               REAL PEOPLE REAL RESULTS
             </motion.span>
-         
           </motion.h2>
 
           <motion.div
@@ -381,18 +381,31 @@ const TestimonialsSection = () => {
 // Home page component
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [bestsellerProducts, setBestsellerProducts] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [newArrivalsProducts, setNewArrivalsProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch featured products
+    // Fetch all product types
     const fetchData = async () => {
       try {
-        // Fetch products
-        const productsRes = await fetchApi(
-          "/public/products?featured=true&limit=8"
-        );
-        setFeaturedProducts(productsRes?.data?.products || []);
+        setProductsLoading(true);
+
+        // Fetch all product types in parallel
+        const [featuredRes, bestsellerRes, trendingRes, newArrivalsRes] =
+          await Promise.all([
+            fetchApi("/public/products/type/featured?limit=8"),
+            fetchApi("/public/products/type/bestseller?limit=8"),
+            fetchApi("/public/products/type/trending?limit=8"),
+            fetchApi("/public/products/type/new?limit=8"),
+          ]);
+
+        setFeaturedProducts(featuredRes?.data?.products || []);
+        setBestsellerProducts(bestsellerRes?.data?.products || []);
+        setTrendingProducts(trendingRes?.data?.products || []);
+        setNewArrivalsProducts(newArrivalsRes?.data?.products || []);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err?.message || "Failed to fetch data");
@@ -416,18 +429,70 @@ export default function Home() {
       <FeatureBanner />
 
       {/* Featured Products Section */}
-      {featuredProducts.length && (
+      {featuredProducts.length > 0 && (
         <section className="py-10 bg-gray-50">
           <div className="container mx-auto px-4">
-            {/* <div className="text-center mb-12">
-              <Headtext text="FEATURED PRODUCTS" />
-              <p className="text-gray-600 my-6 max-w-2xl mx-auto">
-                High-quality supplements to enhance your fitness journey
-              </p>
-            </div> */}
+            <Heading
+              title="Featured Products"
+              description="Handpicked premium supplements to enhance your fitness journey"
+            />
 
             <FeaturedProducts
               products={featuredProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Bestseller Products Section */}
+      {bestsellerProducts.length > 0 && (
+        <section className="py-10 bg-white">
+          <div className="container mx-auto px-4">
+            <Heading
+              title="Bestsellers"
+              description="Our most popular products loved by thousands of customers"
+            />
+
+            <FeaturedProducts
+              products={bestsellerProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Trending Products Section */}
+      {trendingProducts.length > 0 && (
+        <section className="py-10 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <Heading
+              title="Trending Now"
+              description="Products that are currently trending and gaining popularity"
+            />
+
+            <FeaturedProducts
+              products={trendingProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* New Arrivals Section */}
+      {newArrivalsProducts.length > 0 && (
+        <section className="py-10 bg-white">
+          <div className="container mx-auto px-4">
+            <Heading
+              title="New Arrivals"
+              description="Fresh additions to our collection - be the first to try them"
+            />
+
+            <FeaturedProducts
+              products={newArrivalsProducts}
               isLoading={productsLoading}
               error={error}
             />

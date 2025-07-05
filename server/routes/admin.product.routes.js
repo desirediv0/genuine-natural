@@ -23,6 +23,7 @@ import {
   createWeight,
   updateWeight,
   deleteWeight,
+  getProductsByType,
 } from "../controllers/admin.product.controller.js";
 import {
   verifyAdminJWT,
@@ -38,6 +39,14 @@ router.get(
   verifyAdminJWT,
   hasPermission("products", "read"),
   getProducts
+);
+
+// Get products by type (featured, bestseller, trending, new, etc.)
+router.get(
+  "/products/type/:productType",
+  verifyAdminJWT,
+  hasPermission("products", "read"),
+  getProductsByType
 );
 
 router.get(

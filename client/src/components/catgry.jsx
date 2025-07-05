@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import Headtext from "./ui/headtext";
 import Image from "next/image";
+import Heading from "./Heading";
 
 const CircularCategoryCard = ({ category, index }) => {
   return (
@@ -204,28 +205,10 @@ const FeaturedCategoriesSection = () => {
     <section className="mt-20 py-16 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="relative z-10"
-          >
-            <div className="text-center mb-8">
-              <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
-                Featured Categories
-              </h2>
-              <p className="text-gray-600 mt-6 mb-10 max-w-2xl mx-auto text-lg font-medium">
-                Discover our exceptional collection of premium fitness
-                supplements
-              </p>
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-12 h-1 bg-black rounded-full"></div>
-                <div className="w-3 h-3 bg-black rounded-full"></div>
-                <div className="w-12 h-1 bg-black rounded-full"></div>
-              </div>
-            </div>
-          </motion.div>
+          <Heading
+            title={"Featured Categories"}
+            description={"Explore our collection of categories"}
+          />
 
           {/* Decorative Background Elements */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-black/5 rounded-full blur-3xl -z-10" />

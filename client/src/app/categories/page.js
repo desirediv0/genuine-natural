@@ -10,7 +10,7 @@ import { AlertCircle, ShoppingBag } from "lucide-react";
 // Category card component
 const CategoryCard = ({ category, index }) => {
   const getImageUrl = (image) => {
-    if (!image) return "/placeholder.svg?height=300&width=400";
+    if (!image) return "/placeholder.jpg";
     if (image.startsWith("http")) return image;
     return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
   };
@@ -30,7 +30,7 @@ const CategoryCard = ({ category, index }) => {
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           {/* Main Image Container with Overlay */}
-          <div className="relative h-[65%] overflow-hidden  ">
+          <div className="relative h-[65%] overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 z-10" />
             <Image
               src={getImageUrl(category.image)}
@@ -232,7 +232,7 @@ export default function CategoriesPage() {
               </Link>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-8 max-w-7xl mx-auto">
               {categories.map((category, index) => (
                 <Link key={category.id} href={`/category/${category.slug}`}>
                   <CategoryCard category={category} index={index} />

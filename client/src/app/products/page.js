@@ -805,13 +805,13 @@ function ProductsContent() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {products.map((product) => (
                   <div
                     key={product.id}
                     className="bg-white rounded-none shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-black group"
                   >
-                    <div className="relative h-64 w-full bg-gray-50 overflow-hidden">
+                    <div className="relative h-64 w-full  overflow-hidden">
                       <Link href={`/products/${product.slug}`}>
                         <Image
                           src={
@@ -824,7 +824,7 @@ function ProductsContent() {
                           }
                           alt={product.name}
                           fill
-                          className="object-contain p-4 transition-transform group-hover:scale-105"
+                          className="object-contain px-2 transition-transform group-hover:scale-105"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                       </Link>
