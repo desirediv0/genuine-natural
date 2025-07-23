@@ -365,7 +365,7 @@ export default function ShowcaseBanner() {
           </motion.div>
 
           <motion.div
-            className="flex items-center justify-center gap-6 text-gray-400"
+            className="flex items-center justify-center gap-6 text-gray-200"
             animate={{ opacity: [0.6, 1, 0.6] }}
             transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >

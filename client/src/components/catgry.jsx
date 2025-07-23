@@ -202,9 +202,9 @@ const FeaturedCategoriesSection = () => {
   }, []);
 
   return (
-    <section className="mt-20 py-16 overflow-hidden">
+    <section className="mt-5 py-8 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 relative">
+        <div className="text-center mb-8 relative">
           <Heading
             title={"Featured Categories"}
             description={"Explore our collection of categories"}

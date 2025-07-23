@@ -14,6 +14,7 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import Hero from "@/components/hero";
 import FeatureBanner from "@/components/featurebanner";
 import Heading from "@/components/Heading";
+import HeroCarousel from "@/components/HeroCarosal";
 
 // Testimonials Section
 
@@ -420,7 +421,8 @@ export default function Home() {
   return (
     <div>
       {/* <HeroCarousel /> */}
-      <Hero />
+      {/* <Hero /> */}
+      <HeroCarousel />
       {/* <AnnouncementBanner /> */}
 
       {/* Featured Categories Section */}
