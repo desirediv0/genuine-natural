@@ -27,6 +27,7 @@ import { fetchApi } from "@/lib/utils";
 import { ClientOnly } from "./client-only";
 import { toast, Toaster } from "sonner";
 import Image from "next/image";
+import { logo } from "@/assets";
 
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -538,7 +539,7 @@ export function Navbar() {
         initial={{ y: 0 }}
         animate={isNavVisible ? "visible" : "hidden"}
         variants={navVariants}
-        className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
+        className={`md:fixed sticky top-0 left-0 right-0 z-30 transition-all duration-300 ${
           isScrolled
             ? "bg-white/95 backdrop-blur-xl shadow-xl border-b border-gray-200 w-[95%] mx-auto mt-4 rounded-2xl"
             : "bg-white shadow-lg border-b border-gray-100 w-full"
@@ -1051,8 +1052,77 @@ export function Navbar() {
         </ClientOnly>
       </motion.header>
 
-      {/* Spacer to prevent content from hiding behind fixed navbar */}
-      <div className="h-20"></div>
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+        <div className="grid grid-cols-4 gap-1">
+          <Link
+            href="/"
+            className={`flex flex-col items-center justify-center py-2 px-1 ${
+              pathname === "/" ? "text-primary" : "text-gray-600"
+            }`}
+          >
+            <svg
+              className="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span className="text-xs mt-1">Home</span>
+          </Link>
+
+          <Link
+            href={isAuthenticated ? "/account" : "/login"}
+            className={`flex flex-col items-center justify-center py-2 px-1 ${
+              pathname.includes("/account") || pathname === "/login"
+                ? "text-primary"
+                : "text-gray-600"
+            }`}
+          >
+            {isAuthenticated ? (
+              <User className="h-6 w-6" />
+            ) : (
+              <LogIn className="h-6 w-6" />
+            )}
+            <span className="text-xs mt-1">You</span>
+          </Link>
+
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="flex flex-col items-center justify-center py-2 px-1 text-gray-600 w-full"
+          >
+            <svg
+              className="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span className="text-xs mt-1">More</span>
+          </button>
+
+          <motion.a
+            href="https://genuinenutrition.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex flex-col items-center justify-center  px-1"
+          >
+            <Image
+              src={logo}
+              alt="Genuine Nutrition"
+              width={150}
+              height={150}
+              className="h-[75px] w-[75px] object-contain"
+            />
+          </motion.a>
+        </div>
+      </div>
     </>
   );
 }
