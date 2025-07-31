@@ -5,7 +5,124 @@ import { prisma } from "../config/db.js";
 import { deleteFromS3, getFileUrl } from "../utils/deleteFromS3.js";
 import { processAndUploadImage } from "../middlewares/multer.middlerware.js";
 import { createSlug } from "../helper/Slug.js";
-import { generateSKU, generateVariantSKUs } from "../utils/generateSKU.js";
+import { generateSKU } from "../utils/generateSKU.js";
+
+// Get products by type (featured, bestseller, trending, new, etc.)
+export const getProductsByType = asyncHandler(async (req, res, next) => {
+  const { productType } = req.params;
+  const {
+    page = 1,
+    limit = 10,
+    sort = "createdAt",
+    order = "desc",
+  } = req.query;
+
+  const skip = (parseInt(page) - 1) * parseInt(limit);
+
+  // Build filter conditions for product type
+  const filterConditions = {
+    isActive: true,
+    productType: {
+      array_contains: [productType],
+    },
+  };
+
+  // Get total count for pagination
+  const totalProducts = await prisma.product.count({
+    where: filterConditions,
+  });
+
+  // Get products with sorting
+  const products = await prisma.product.findMany({
+    where: filterConditions,
+    include: {
+      categories: {
+        include: {
+          category: true,
+        },
+      },
+      images: {
+        orderBy: { order: "asc" },
+      },
+      variants: {
+        include: {
+          flavor: true,
+          weight: true,
+          images: {
+            orderBy: { order: "asc" },
+          },
+        },
+      },
+      _count: {
+        select: {
+          reviews: true,
+        },
+      },
+    },
+    orderBy: [{ ourProduct: "desc" }, { [sort]: order }],
+    skip,
+    take: parseInt(limit),
+  });
+
+  // Format the response data
+  const formattedProducts = products.map((product) => {
+    // Add image URLs and clean up the data
+    return {
+      ...product,
+      // Extract categories into a more usable format
+      categories: product.categories.map((pc) => ({
+        id: pc.category.id,
+        name: pc.category.name,
+        description: pc.category.description,
+        image: pc.category.image ? getFileUrl(pc.category.image) : null,
+        slug: pc.category.slug,
+        isPrimary: pc.isPrimary,
+      })),
+      primaryCategory:
+        product.categories.find((pc) => pc.isPrimary)?.category ||
+        (product.categories.length > 0 ? product.categories[0].category : null),
+      images: product.images.map((image) => ({
+        ...image,
+        url: getFileUrl(image.url),
+      })),
+      variants: product.variants.map((variant) => ({
+        ...variant,
+        flavor: variant.flavor
+          ? {
+              ...variant.flavor,
+              image: variant.flavor.image
+                ? getFileUrl(variant.flavor.image)
+                : null,
+            }
+          : null,
+        images: variant.images
+          ? variant.images
+              .sort((a, b) => a.order - b.order)
+              .map((image) => ({
+                ...image,
+                url: getFileUrl(image.url),
+              }))
+          : [],
+      })),
+    };
+  });
+
+  res.status(200).json(
+    new ApiResponsive(
+      200,
+      {
+        products: formattedProducts,
+        pagination: {
+          total: totalProducts,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          pages: Math.ceil(totalProducts / parseInt(limit)),
+        },
+      },
+      `${productType} products fetched successfully`
+    )
+  );
+});
 
 // Get all products with pagination, filtering, and sorting
 export const getProducts = asyncHandler(async (req, res, next) => {
@@ -75,9 +192,7 @@ export const getProducts = asyncHandler(async (req, res, next) => {
         },
       },
     },
-    orderBy: {
-      [sort]: order,
-    },
+    orderBy: [{ ourProduct: "desc" }, { [sort]: order }],
     skip,
     take: parseInt(limit),
   });
@@ -243,19 +358,6 @@ export const createProduct = asyncHandler(async (req, res, next) => {
   // Initialize variantIdsWithOrders for new product creation (empty since no existing variants)
   let variantIdsWithOrders = [];
 
-  // COMPREHENSIVE DEBUG LOGGING
-  console.log("🔍 ===== CREATE PRODUCT DEBUG =====");
-  console.log("🔍 Request headers:", {
-    "content-type": req.headers["content-type"],
-    "content-length": req.headers["content-length"],
-  });
-  console.log("🔍 Request body keys:", Object.keys(req.body || {}));
-  console.log("🔍 Request body:", req.body);
-  console.log("🔍 req.files:", req.files);
-  console.log("🔍 req.file:", req.file);
-  console.log("🔍 Files length:", req.files ? req.files.length : 0);
-  console.log("🔍 ================================");
-
   // Check if body is completely empty
   if (!req.body || Object.keys(req.body).length === 0) {
     throw new ApiError(400, "Product data is missing. Empty request received.");
@@ -270,12 +372,14 @@ export const createProduct = asyncHandler(async (req, res, next) => {
     ingredients,
     nutritionInfo,
     featured,
+    productType,
     isActive,
     hasVariants,
     variants: variantsJson,
     metaTitle,
     metaDescription,
     keywords,
+    ourProduct,
   } = req.body;
 
   // Validation checks with better error handling
@@ -377,6 +481,23 @@ export const createProduct = asyncHandler(async (req, res, next) => {
         }
       }
 
+      // Parse productType if provided
+      let parsedProductType = [];
+      if (productType) {
+        try {
+          parsedProductType =
+            typeof productType === "string"
+              ? JSON.parse(productType)
+              : productType;
+          if (!Array.isArray(parsedProductType)) {
+            parsedProductType = [];
+          }
+        } catch (error) {
+          console.error("Error parsing productType:", error);
+          parsedProductType = [];
+        }
+      }
+
       const newProduct = await prisma.product.create({
         data: {
           name: cleanName,
@@ -387,10 +508,32 @@ export const createProduct = asyncHandler(async (req, res, next) => {
           ingredients,
           nutritionInfo: parsedNutritionInfo,
           featured: featured === "true" || featured === true,
+          productType: parsedProductType,
           isActive: isActive === "true" || isActive === true || true,
           metaTitle: metaTitle || cleanName,
           metaDescription: metaDescription || description,
           keywords,
+          tags: req.body.tags
+            ? Array.isArray(req.body.tags)
+              ? req.body.tags
+              : [req.body.tags]
+            : [],
+          topBrandIds: req.body.topBrandIds
+            ? typeof req.body.topBrandIds === "string"
+              ? JSON.parse(req.body.topBrandIds)
+              : req.body.topBrandIds
+            : [],
+          newBrandIds: req.body.newBrandIds
+            ? typeof req.body.newBrandIds === "string"
+              ? JSON.parse(req.body.newBrandIds)
+              : req.body.newBrandIds
+            : [],
+          hotBrandIds: req.body.hotBrandIds
+            ? typeof req.body.hotBrandIds === "string"
+              ? JSON.parse(req.body.hotBrandIds)
+              : req.body.hotBrandIds
+            : [],
+          ourProduct: ourProduct === "true" || ourProduct === true,
         },
       });
 
@@ -851,6 +994,7 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
     metaTitle,
     metaDescription,
     keywords,
+    ourProduct,
   } = req.body;
 
   // Check if product exists
@@ -999,6 +1143,33 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
           ...(metaTitle !== undefined && { metaTitle }),
           ...(metaDescription !== undefined && { metaDescription }),
           ...(keywords !== undefined && { keywords }),
+          ...(req.body.tags !== undefined && {
+            tags: Array.isArray(req.body.tags)
+              ? req.body.tags
+              : [req.body.tags],
+          }),
+          ...(req.body.topBrandIds !== undefined && {
+            topBrandIds:
+              typeof req.body.topBrandIds === "string"
+                ? JSON.parse(req.body.topBrandIds)
+                : req.body.topBrandIds,
+          }),
+          ...(req.body.newBrandIds !== undefined && {
+            newBrandIds:
+              typeof req.body.newBrandIds === "string"
+                ? JSON.parse(req.body.newBrandIds)
+                : req.body.newBrandIds,
+          }),
+          ...(req.body.hotBrandIds !== undefined && {
+            hotBrandIds:
+              typeof req.body.hotBrandIds === "string"
+                ? JSON.parse(req.body.hotBrandIds)
+                : req.body.hotBrandIds,
+          }),
+          ...(ourProduct !== undefined && {
+            ourProduct: ourProduct === "true" || ourProduct === true,
+          }),
+          ...(req.body.brandId !== undefined && { brandId: req.body.brandId }),
         },
       });
 
@@ -1921,6 +2092,7 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
     throw new ApiError(500, `Failed to update product: ${error.message}`);
   }
 });
+
 // Delete product
 export const deleteProduct = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
@@ -2549,7 +2721,22 @@ export const deleteProductVariant = asyncHandler(async (req, res, next) => {
 
 // Get all flavors
 export const getFlavors = asyncHandler(async (req, res, next) => {
-  const flavors = await prisma.flavor.findMany();
+  const { search } = req.query;
+  let where = {};
+
+  if (search) {
+    where = {
+      name: {
+        contains: search,
+        mode: "insensitive",
+      },
+    };
+  }
+
+  const flavors = await prisma.flavor.findMany({
+    where,
+    orderBy: { name: "asc" },
+  });
 
   // Format flavors with proper image URLs
   const formattedFlavors = flavors.map((flavor) => ({
@@ -2769,7 +2956,30 @@ export const deleteFlavor = asyncHandler(async (req, res, next) => {
 
 // Get all weights
 export const getWeights = asyncHandler(async (req, res, next) => {
+  const { search } = req.query;
+  let where = {};
+
+  if (search) {
+    // Try to match value (as string) or unit
+    where = {
+      OR: [
+        {
+          value: {
+            equals: isNaN(Number(search)) ? undefined : Number(search),
+          },
+        },
+        {
+          unit: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    };
+  }
+
   const weights = await prisma.weight.findMany({
+    where,
     orderBy: { value: "asc" },
   });
 
@@ -3519,16 +3729,6 @@ export const setVariantImageAsPrimary = asyncHandler(async (req, res, next) => {
           const currentOrder = currentImage.order;
           const variantId = currentImage.variant.id;
 
-          console.log(
-            `🔑 Setting image ${imageId} as primary (attempt ${
-              retryCount + 1
-            }):`,
-            {
-              currentOrder,
-              variantId,
-            }
-          );
-
           // Step 1: Remove primary flag from all images in this variant
           await tx.productVariantImage.updateMany({
             where: {
@@ -3576,19 +3776,11 @@ export const setVariantImageAsPrimary = asyncHandler(async (req, res, next) => {
         break;
       } catch (error) {
         retryCount++;
-        console.log(
-          `⚠️ Primary image transaction attempt ${retryCount} failed:`,
-          error.code
-        );
 
         if (error.code === "P2034" && retryCount < maxRetries) {
           // Wait a bit before retrying for deadlock/write conflict
           await new Promise((resolve) => setTimeout(resolve, 100 * retryCount));
-          console.log(
-            `🔄 Retrying primary image transaction (attempt ${
-              retryCount + 1
-            }/${maxRetries})`
-          );
+
           continue;
         } else {
           throw error;
@@ -3608,123 +3800,4 @@ export const setVariantImageAsPrimary = asyncHandler(async (req, res, next) => {
       `Failed to set variant image as primary: ${error.message}`
     );
   }
-});
-
-// Get products by type (featured, bestseller, trending, new, etc.)
-export const getProductsByType = asyncHandler(async (req, res, next) => {
-  const { productType } = req.params;
-  const {
-    page = 1,
-    limit = 10,
-    sort = "createdAt",
-    order = "desc",
-  } = req.query;
-
-  const skip = (parseInt(page) - 1) * parseInt(limit);
-
-  // Build filter conditions for product type
-  const filterConditions = {
-    isActive: true,
-    productType: {
-      array_contains: [productType],
-    },
-  };
-
-  // Get total count for pagination
-  const totalProducts = await prisma.product.count({
-    where: filterConditions,
-  });
-
-  // Get products with sorting
-  const products = await prisma.product.findMany({
-    where: filterConditions,
-    include: {
-      categories: {
-        include: {
-          category: true,
-        },
-      },
-      images: {
-        orderBy: { order: "asc" },
-      },
-      variants: {
-        include: {
-          flavor: true,
-          weight: true,
-          images: {
-            orderBy: { order: "asc" },
-          },
-        },
-      },
-      _count: {
-        select: {
-          reviews: true,
-        },
-      },
-    },
-    orderBy: {
-      [sort]: order,
-    },
-    skip,
-    take: parseInt(limit),
-  });
-
-  // Format the response data
-  const formattedProducts = products.map((product) => {
-    // Add image URLs and clean up the data
-    return {
-      ...product,
-      // Extract categories into a more usable format
-      categories: product.categories.map((pc) => ({
-        id: pc.category.id,
-        name: pc.category.name,
-        description: pc.category.description,
-        image: pc.category.image ? getFileUrl(pc.category.image) : null,
-        slug: pc.category.slug,
-        isPrimary: pc.isPrimary,
-      })),
-      primaryCategory:
-        product.categories.find((pc) => pc.isPrimary)?.category ||
-        (product.categories.length > 0 ? product.categories[0].category : null),
-      images: product.images.map((image) => ({
-        ...image,
-        url: getFileUrl(image.url),
-      })),
-      variants: product.variants.map((variant) => ({
-        ...variant,
-        flavor: variant.flavor
-          ? {
-              ...variant.flavor,
-              image: variant.flavor.image
-                ? getFileUrl(variant.flavor.image)
-                : null,
-            }
-          : null,
-        images: variant.images
-          ? variant.images
-              .sort((a, b) => a.order - b.order)
-              .map((image) => ({
-                ...image,
-                url: getFileUrl(image.url),
-              }))
-          : [],
-      })),
-    };
-  });
-
-  res.status(200).json(
-    new ApiResponsive(
-      200,
-      {
-        products: formattedProducts,
-        pagination: {
-          total: totalProducts,
-          page: parseInt(page),
-          limit: parseInt(limit),
-          pages: Math.ceil(totalProducts / parseInt(limit)),
-        },
-      },
-      `${productType} products fetched successfully`
-    )
-  );
 });

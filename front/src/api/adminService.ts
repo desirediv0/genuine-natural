@@ -324,8 +324,8 @@ export const products = {
 
 // Flavors Management
 export const flavors = {
-  getFlavors: () => {
-    return api.get("/api/admin/flavors");
+  getFlavors: (params = {}) => {
+    return api.get("/api/admin/flavors", { params });
   },
   getFlavorById: (flavorId: string) => {
     return api.get(`/api/admin/flavors/${flavorId}`);
@@ -432,8 +432,8 @@ export const inventory = {
 
 // Weights Management
 export const weights = {
-  getWeights: () => {
-    return api.get("/api/admin/weights");
+  getWeights: (params = {}) => {
+    return api.get("/api/admin/weights", { params });
   },
   getWeightById: (weightId: string) => {
     return api.get(`/api/admin/weights/${weightId}`);
@@ -507,10 +507,8 @@ export const orders = {
     return api.patch(`/api/admin/orders/${orderId}/status`, data);
   },
   getOrderStats: async () => {
-    console.log("Calling order stats API endpoint");
     try {
       const response = await api.get("/api/admin/orders-stats");
-      console.log("Raw order stats API response:", response);
 
       // Check if data is nested in a success response wrapper
       if (response.data.success && response.data.data) {
@@ -701,5 +699,39 @@ export const settings = {
         message: "Settings updated successfully",
       },
     });
+  },
+};
+
+// Brands Management
+export const brands = {
+  getBrands: (params: any = {}) => {
+    return api.get("/api/admin/brands", { params });
+  },
+  createBrand: (data: { name: string; image: File; tags?: string[] }) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("image", data.image);
+    if (data.tags) data.tags.forEach((tag) => formData.append("tags", tag));
+    return api.post("/api/admin/brands", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  updateBrand: (
+    brandId: string,
+    data: { name?: string; image?: File; tags?: string[] }
+  ) => {
+    const formData = new FormData();
+    if (data.name) formData.append("name", data.name);
+    if (data.image) formData.append("image", data.image);
+    if (data.tags) data.tags.forEach((tag) => formData.append("tags", tag));
+    return api.patch(`/api/admin/brands/${brandId}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  deleteBrand: (brandId: string) => {
+    return api.delete(`/api/admin/brands/${brandId}`);
+  },
+  removeProductFromBrand: (brandId: string, productId: string) => {
+    return api.delete(`/api/admin/brands/${brandId}/products/${productId}`);
   },
 };

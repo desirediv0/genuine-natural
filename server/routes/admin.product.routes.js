@@ -2,6 +2,7 @@ import express from "express";
 import {
   getProducts,
   getProductById,
+  getProductsByType,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -23,7 +24,6 @@ import {
   createWeight,
   updateWeight,
   deleteWeight,
-  getProductsByType,
 } from "../controllers/admin.product.controller.js";
 import {
   verifyAdminJWT,
@@ -41,19 +41,19 @@ router.get(
   getProducts
 );
 
+router.get(
+  "/products/:productId",
+  verifyAdminJWT,
+  hasPermission("products", "read"),
+  getProductById
+);
+
 // Get products by type (featured, bestseller, trending, new, etc.)
 router.get(
   "/products/type/:productType",
   verifyAdminJWT,
   hasPermission("products", "read"),
   getProductsByType
-);
-
-router.get(
-  "/products/:productId",
-  verifyAdminJWT,
-  hasPermission("products", "read"),
-  getProductById
 );
 
 router.post(

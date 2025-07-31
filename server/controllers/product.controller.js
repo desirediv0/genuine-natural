@@ -18,6 +18,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
     minPrice,
     maxPrice,
     featured,
+    productType,
   } = req.query;
 
   // Build filter conditions
@@ -42,6 +43,12 @@ export const getAllProducts = asyncHandler(async (req, res) => {
     }),
     // Filter by featured
     ...(featured === "true" && { featured: true }),
+    // Filter by product type
+    ...(productType && {
+      productType: {
+        array_contains: [productType],
+      },
+    }),
     // Filter by price range via variants
     ...((minPrice || maxPrice) && {
       variants: {
@@ -53,16 +60,11 @@ export const getAllProducts = asyncHandler(async (req, res) => {
               ? [
                   {
                     OR: [
+                      { price: { gte: parseFloat(minPrice) } },
                       {
                         AND: [
                           { salePrice: { not: null } },
                           { salePrice: { gte: parseFloat(minPrice) } },
-                        ],
-                      },
-                      {
-                        AND: [
-                          { salePrice: null },
-                          { price: { gte: parseFloat(minPrice) } },
                         ],
                       },
                     ],
@@ -167,9 +169,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
         },
       },
     },
-    orderBy: {
-      [sort]: order,
-    },
+    orderBy: [{ [sort]: order }],
     skip: (parseInt(page) - 1) * parseInt(limit),
     take: parseInt(limit),
   });
@@ -442,13 +442,7 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
     id: p.id,
     name: p.name,
     slug: p.slug,
-    image: p.images[0]
-      ? getFileUrl(p.images[0].url)
-      : p.variants[0]?.images?.find((img) => img.isPrimary)?.url
-      ? getFileUrl(p.variants[0].images.find((img) => img.isPrimary).url)
-      : p.variants[0]?.images?.[0]?.url
-      ? getFileUrl(p.variants[0].images[0].url)
-      : null,
+    image: p.images[0] ? getFileUrl(p.images[0].url) : null,
     basePrice:
       p.variants.length > 0
         ? parseFloat(p.variants[0].salePrice || p.variants[0].price)
@@ -636,8 +630,7 @@ export const getProductsByType = asyncHandler(async (req, res) => {
   const filterConditions = {
     isActive: true,
     productType: {
-      path: [],
-      array_contains: productType,
+      array_contains: [productType],
     },
   };
 
@@ -681,9 +674,7 @@ export const getProductsByType = asyncHandler(async (req, res) => {
         },
       },
     },
-    orderBy: {
-      [sort]: order,
-    },
+    orderBy: [{ [sort]: order }],
     skip,
     take: parseInt(limit),
   });

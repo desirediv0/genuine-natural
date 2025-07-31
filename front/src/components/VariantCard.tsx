@@ -557,12 +557,6 @@ export default function VariantCard({
             order: i,
           }));
 
-        console.log(`🔄 Reordering images for variant ${variant.id}:`, {
-          imageOrders,
-          draggedFrom: draggedImageIndex,
-          droppedAt: dropIndex,
-        });
-
         if (imageOrders.length > 0) {
           const response = await products.reorderVariantImages(
             variant.id!,
@@ -737,7 +731,7 @@ export default function VariantCard({
                 id={`price-${index}`}
                 type="number"
                 min="0"
-                step="0.01"
+
                 value={variant.price}
                 onChange={(e) => handleInputChange("price", e.target.value)}
                 className="h-8"
@@ -753,7 +747,7 @@ export default function VariantCard({
                 id={`salePrice-${index}`}
                 type="number"
                 min="0"
-                step="0.01"
+
                 value={variant.salePrice || ""}
                 onChange={(e) => handleInputChange("salePrice", e.target.value)}
                 className="h-8"
@@ -842,11 +836,6 @@ export default function VariantCard({
                           src={image.url}
                           alt={`Variant image ${imageIndex + 1}`}
                           className="h-full w-full object-cover"
-                          onLoad={() => {
-                            console.log(
-                              `✅ Image loaded successfully: ${image.url}`
-                            );
-                          }}
                           onError={(e) => {
                             console.error(
                               `❌ Failed to load image: ${image.url}`

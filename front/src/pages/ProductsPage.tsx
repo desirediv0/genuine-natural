@@ -27,6 +27,8 @@ import { v4 as uuidv4 } from "uuid";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DeleteProductDialog } from "@/components/DeleteProductDialog";
 import VariantCard from "@/components/VariantCard";
+import { useDebounce } from "@/utils/debounce";
+// import { MultiSelect } from "@/components/ui/multiselect";
 
 function useCategories() {
   const [categoriesData, setCategoriesData] = useState<any[]>([]);
@@ -84,6 +86,7 @@ export function ProductForm({
     quantity: 0,
     isSupplement: false,
     featured: false,
+    ourProduct: false,
     productType: [] as string[],
     isActive: true,
     ingredients: "",
@@ -99,6 +102,10 @@ export function ProductForm({
     metaTitle: "",
     metaDescription: "",
     keywords: "",
+    tags: [] as string[],
+    topBrandIds: [] as string[],
+    newBrandIds: [] as string[],
+    hotBrandIds: [] as string[],
   });
 
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -331,6 +338,7 @@ export function ProductForm({
                   : 0,
               isSupplement: productData.isSupplement || false,
               featured: productData.featured || false,
+              ourProduct: productData.ourProduct || false,
               productType: productData.productType || [],
               isActive:
                 productData.isActive !== undefined
@@ -349,9 +357,13 @@ export function ProductForm({
               metaTitle: productData.metaTitle || "",
               metaDescription: productData.metaDescription || "",
               keywords: productData.keywords || "",
+              tags: productData.tags || [],
+              topBrandIds: productData.topBrandIds || [],
+              newBrandIds: productData.newBrandIds || [],
+              hotBrandIds: productData.hotBrandIds || [],
             });
 
-            // Set selected categories
+            // Set selected categories (for radio buttons, not checkboxes)
             setSelectedCategories(productCategories);
 
             // Setup image previews
@@ -491,17 +503,26 @@ export function ProductForm({
     // Generate combinations of flavors and weights
     const newVariants: any[] = [];
 
-    // If both flavors and weights are selected, create combinations
+    // Helper to check for duplicate
+    const isDuplicate = (flavorId: string | null, weightId: string | null) => {
+      return variants.some(
+        (v) =>
+          (v.flavorId || null) === (flavorId || null) &&
+          (v.weightId || null) === (weightId || null)
+      );
+    };
+
     if (selectedFlavorObjects.length > 0 && selectedWeightObjects.length > 0) {
       selectedFlavorObjects.forEach((flavor) => {
         selectedWeightObjects.forEach((weight) => {
+          if (isDuplicate(flavor.id, weight.id)) {
+            return;
+          }
           const skuBase = product.sku || "";
           const variantSku = `${skuBase}-${flavor.name
             .substring(0, 3)
             .toUpperCase()}-${weight.value}${weight.unit}`;
-
           const variantName = `${flavor.name} - ${weight.value}${weight.unit}`;
-
           newVariants.push({
             id: uuidv4(),
             name: variantName,
@@ -519,13 +540,14 @@ export function ProductForm({
         });
       });
     } else if (selectedFlavorObjects.length > 0) {
-      // Only flavors selected
       selectedFlavorObjects.forEach((flavor) => {
+        if (isDuplicate(flavor.id, null)) {
+          return;
+        }
         const skuBase = product.sku || "";
         const variantSku = `${skuBase}-${flavor.name
           .substring(0, 3)
           .toUpperCase()}`;
-
         newVariants.push({
           id: uuidv4(),
           name: flavor.name,
@@ -542,11 +564,12 @@ export function ProductForm({
         });
       });
     } else if (selectedWeightObjects.length > 0) {
-      // Only weights selected
       selectedWeightObjects.forEach((weight) => {
+        if (isDuplicate(null, weight.id)) {
+          return;
+        }
         const skuBase = product.sku || "";
         const variantSku = `${skuBase}-${weight.value}${weight.unit}`;
-
         newVariants.push({
           id: uuidv4(),
           name: `${weight.value}${weight.unit}`,
@@ -564,7 +587,21 @@ export function ProductForm({
       });
     }
 
+    if (newVariants.length === 0) {
+      // If all were duplicates, show a toast
+      toast.error(
+        "No new variants generated. All selected combinations already exist.",
+        {
+          position: "top-center",
+        }
+      );
+      return;
+    }
+
     setVariants((prev) => [...prev, ...newVariants]);
+    toast.success(`${newVariants.length} new variant(s) generated!`, {
+      position: "top-center",
+    });
   };
 
   // Handle variant images change (used by VariantCard)
@@ -628,6 +665,7 @@ export function ProductForm({
       formData.append("name", product.name);
       formData.append("description", product.description || "");
       formData.append("featured", String(product.featured));
+      formData.append("ourProduct", String(product.ourProduct));
       formData.append("productType", JSON.stringify(product.productType));
       formData.append("isActive", String(product.isActive));
       formData.append("hasVariants", String(hasVariants));
@@ -637,6 +675,7 @@ export function ProductForm({
       formData.append("metaTitle", product.metaTitle || "");
       formData.append("metaDescription", product.metaDescription || "");
       formData.append("keywords", product.keywords || "");
+      formData.append("tags", JSON.stringify(product.tags || []));
 
       // Add categories information
       if (product.categoryIds && product.categoryIds.length > 0) {
@@ -685,28 +724,47 @@ export function ProductForm({
 
       // Add images (only for non-variant products)
       if (!hasVariants && imageFiles.length > 0) {
+        console.log(
+          `📸 Submitting ${imageFiles.length} images for simple product:`,
+          imageFiles
+        );
+
         // Add primary image index
         const primaryIndex = imagePreviews.findIndex(
           (img) => img.isPrimary === true
         );
         if (primaryIndex >= 0) {
           formData.append("primaryImageIndex", String(primaryIndex));
+          console.log(`📸 Primary image index: ${primaryIndex}`);
         } else {
           // Default to first image as primary if none is marked
           formData.append("primaryImageIndex", "0");
+          console.log(`📸 Default primary image index: 0`);
         }
 
         // Append each image file with proper field name for multer
-        imageFiles.forEach((file) => {
+        imageFiles.forEach((file, index) => {
           formData.append("images", file);
+          console.log(
+            `📸 Added image ${index + 1}: ${file.name} (${file.size} bytes)`
+          );
         });
 
         // Also log the FormData contents
+        console.log(
+          `📸 FormData contents:`,
+          Object.fromEntries(formData.entries())
+        );
       } else if (hasVariants) {
         console.log(
           `📸 Skipping product images for variant product - will use variant-specific images`
         );
       }
+
+      // Add topBrandIds, newBrandIds, hotBrandIds to formData
+      formData.append("topBrandIds", JSON.stringify(product.topBrandIds || []));
+      formData.append("newBrandIds", JSON.stringify(product.newBrandIds || []));
+      formData.append("hotBrandIds", JSON.stringify(product.hotBrandIds || []));
 
       let response;
       if (mode === "create") {
@@ -719,6 +777,9 @@ export function ProductForm({
         // If product creation/update was successful and we have variant images, upload them
         if (hasVariants && response.data.data?.product?.variants) {
           const productVariants = response.data.data.product.variants;
+          console.log(
+            `📸 Processing variant images for ${productVariants.length} variants`
+          );
 
           let uploadPromises = [];
 
@@ -760,6 +821,10 @@ export function ProductForm({
               );
 
               if (newImages.length > 0) {
+                console.log(
+                  `📸 Found ${newImages.length} new images for variant ${serverVariant.id} (${localVariant.flavor?.name || "N/A"} - ${localVariant.weight?.value || "N/A"}${localVariant.weight?.unit || ""}) [Mode: ${mode}]`
+                );
+
                 // Upload each new image for this variant
                 for (let j = 0; j < newImages.length; j++) {
                   const imageData = newImages[j];
@@ -769,14 +834,28 @@ export function ProductForm({
                   const isPrimary =
                     imageData.isPrimary === true ? true : undefined;
 
+                  console.log(`📸 Upload decision for image ${j + 1}:`, {
+                    imageDataIsPrimary: imageData.isPrimary,
+                    finalIsPrimary: isPrimary,
+                    note: "undefined = let backend decide, true = force primary",
+                  });
+
                   const uploadPromise = products
                     .uploadVariantImage(
                       serverVariant.id,
                       imageData.file,
                       isPrimary
                     )
-                    .then(() => {})
+                    .then(() => {
+                      console.log(
+                        `📸 Uploaded image ${j + 1}/${newImages.length} for variant ${serverVariant.id} (isPrimary: ${isPrimary})`
+                      );
+                    })
                     .catch((error) => {
+                      console.error(
+                        `❌ Failed to upload image ${j + 1} for variant ${serverVariant.id}:`,
+                        error
+                      );
                       throw error;
                     });
 
@@ -981,6 +1060,27 @@ export function ProductForm({
     categories,
   ]);
 
+  // ... inside ProductForm, after brands state:
+  // const [brands, setBrands] = useState<{ label: string; value: string }[]>([]); // Removed unused brands state
+
+  // useEffect(() => {
+  //   async function fetchBrands() {
+  //     try {
+  //       const res = await import("@/api/adminService").then((m) =>
+  //         m.brands.getBrands()
+  //       );
+  //       const brandOptions = (res.data.data.brands || []).map((b: any) => ({
+  //         label: b.name,
+  //         value: b.id,
+  //       }));
+  //       setBrands(brandOptions);
+  //     } catch (e) {
+  //       // ignore
+  //     }
+  //   }
+  //   fetchBrands();
+  // }, []);
+
   if (formLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center py-10">
@@ -1097,6 +1197,7 @@ export function ProductForm({
                 <Checkbox
                   checked={hasVariants}
                   onCheckedChange={handleVariantsToggle}
+                  className="h-6 w-6 border-gray-400 cursor-pointer"
                 />
               </div>
 
@@ -1118,9 +1219,9 @@ export function ProductForm({
                       }
                     />
                     <Label htmlFor="isSupplement">Is Supplement</Label>
-                  </div>
+                  </div> */}
 
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <Checkbox
                       id="featured"
                       name="featured"
@@ -1142,6 +1243,23 @@ export function ProductForm({
                       }
                     />
                     <Label htmlFor="isActive">Active</Label>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="ourProduct"
+                      name="ourProduct"
+                      checked={product.ourProduct}
+                      onCheckedChange={(checked) =>
+                        setProduct((prev) => ({
+                          ...prev,
+                          ourProduct: !!checked,
+                        }))
+                      }
+                    />
+                    <Label htmlFor="ourProduct">
+                      Our Product (Prioritized in listings)
+                    </Label>
                   </div>
                 </div>
 
@@ -1172,10 +1290,11 @@ export function ProductForm({
                                   ),
                             }));
                           }}
+                          className="h-6 w-6 border-gray-400 cursor-pointer"
                         />
                         <Label
                           htmlFor={`productType-${type.key}`}
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 cursor-pointer"
                         >
                           <span>{type.icon}</span>
                           {type.label}
@@ -1474,7 +1593,7 @@ export function ProductForm({
                             id={`flavor-${flavor.id}`}
                             checked={selectedFlavors.includes(flavor.id)}
                             onChange={() => handleFlavorToggle(flavor.id)}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            className="h-6 w-6 rounded border-gray-400 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                           />
                           <Label
                             htmlFor={`flavor-${flavor.id}`}
@@ -1505,7 +1624,7 @@ export function ProductForm({
                             id={`weight-${weight.id}`}
                             checked={selectedWeights.includes(weight.id)}
                             onChange={() => handleWeightToggle(weight.id)}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            className="h-6 w-6 rounded border-gray-400 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                           />
                           <Label
                             htmlFor={`weight-${weight.id}`}
@@ -1671,6 +1790,72 @@ export function ProductForm({
             </div>
           )}
 
+          {/* Product Tags */}
+          {/* <div className="space-y-4 rounded-lg border p-4 bg-gray-50">
+            <h2 className="text-xl font-semibold border-b pb-2">
+              Product Tags
+            </h2>
+            <div className="flex gap-4">
+              {tagOptions.map((tag) => (
+                <label key={tag.key} className="flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    checked={product.tags.includes(tag.key)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setProduct((prev) => ({
+                        ...prev,
+                        tags: checked
+                          ? [...prev.tags, tag.key]
+                          : prev.tags.filter((t) => t !== tag.key),
+                      }));
+                    }}
+                  />
+                  {tag.label}
+                </label>
+              ))}
+            </div>
+            {product.tags.includes("top") && (
+              <div className="mt-4">
+                <Label>Select brands for Top tag</Label>
+                <MultiSelect
+                  options={brands}
+                  value={product.topBrandIds}
+                  onChange={(val: string[]) =>
+                    setProduct((prev) => ({ ...prev, topBrandIds: val }))
+                  }
+                  placeholder="Select brands for Top"
+                />
+              </div>
+            )}
+            {product.tags.includes("new") && (
+              <div className="mt-4">
+                <Label>Select brands for New tag</Label>
+                <MultiSelect
+                  options={brands}
+                  value={product.newBrandIds}
+                  onChange={(val: string[]) =>
+                    setProduct((prev) => ({ ...prev, newBrandIds: val }))
+                  }
+                  placeholder="Select brands for New"
+                />
+              </div>
+            )}
+            {product.tags.includes("hot") && (
+              <div className="mt-4">
+                <Label>Select brands for Hot tag</Label>
+                <MultiSelect
+                  options={brands}
+                  value={product.hotBrandIds}
+                  onChange={(val: string[]) =>
+                    setProduct((prev) => ({ ...prev, hotBrandIds: val }))
+                  }
+                  placeholder="Select brands for Hot"
+                />
+              </div>
+            )}
+          </div> */}
+
           {/* Submit Buttons */}
           <div className="flex justify-end gap-2">
             <Button
@@ -1824,11 +2009,11 @@ const CategorySelector = ({
               id={`cat-${categoryId}`}
               checked={isSelected}
               onChange={() => handleCategorySelect(categoryId)}
-              className="mr-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              className="mr-2 h-6 w-6 rounded border-gray-400 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
             />
             <label
               htmlFor={`cat-${categoryId}`}
-              className="text-sm font-medium"
+              className="text-sm font-medium cursor-pointer"
             >
               {category.name}
             </label>
@@ -1873,9 +2058,12 @@ const CategorySelector = ({
                       id={`cat-${childId}`}
                       checked={isChildSelected}
                       onChange={() => handleCategorySelect(childId)}
-                      className="mr-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="mr-2 h-6 w-6 rounded border-gray-400 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                     />
-                    <label htmlFor={`cat-${childId}`} className="text-sm">
+                    <label
+                      htmlFor={`cat-${childId}`}
+                      className="text-sm cursor-pointer"
+                    >
                       {child.name}
                     </label>
                   </div>
@@ -1940,6 +2128,7 @@ function ProductsList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -1959,7 +2148,7 @@ function ProductsList() {
         const params = {
           page: currentPage,
           limit: 10,
-          ...(searchQuery && { search: searchQuery }),
+          ...(debouncedSearchQuery && { search: debouncedSearchQuery }),
           ...(selectedCategory && { category: selectedCategory }),
         };
 
@@ -1982,7 +2171,7 @@ function ProductsList() {
     };
 
     fetchProducts();
-  }, [currentPage, searchQuery, selectedCategory]);
+  }, [currentPage, debouncedSearchQuery, selectedCategory]);
 
   // Fetch categories for filter
   useEffect(() => {
@@ -2432,7 +2621,17 @@ function ProductsList() {
                               </div>
                             )}
                             <div>
-                              <p className="font-medium">{product.name}</p>
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium">{product.name}</p>
+                                {product.ourProduct && (
+                                  <Badge
+                                    variant="default"
+                                    className="text-xs bg-blue-600"
+                                  >
+                                    Our Product
+                                  </Badge>
+                                )}
+                              </div>
                               {product.hasVariants && (
                                 <p className="text-xs text-muted-foreground">
                                   {product.variants.length} variants
@@ -2572,3 +2771,10 @@ function ProductsList() {
     </div>
   );
 }
+
+// // Add state for tags
+// const tagOptions = [
+//   { key: "top", label: "Top" },
+//   { key: "hot", label: "Hot" },
+//   { key: "new", label: "New" },
+// ];
