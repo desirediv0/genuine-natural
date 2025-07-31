@@ -1,5 +1,10 @@
-import { useRouter } from "next/navigation";
+"use client";
+
 import { useState, useEffect } from "react";
+
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+
 import {
   Carousel,
   CarouselContent,
@@ -7,8 +12,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { bg1, bg1sm, bg2, bg2sm, bg3, bg3sm, bg4, bg4sm } from "@/assets";
 
 const HeroCarousel = () => {
@@ -30,21 +34,21 @@ const HeroCarousel = () => {
     {
       ctaLink: "/category/protein",
       img: bg2,
-      smimg: bg2sm, // fallback to bg1sm since bg2sm is missing
+      smimg: bg2sm,
       title: "Protein Collection",
       subtitle: "Build Muscle Faster",
     },
     {
       ctaLink: "/category/protein",
       img: bg3,
-      smimg: bg3sm, // fallback to bg1sm since bg3sm is missing
+      smimg: bg3sm,
       title: "Protein Collection",
       subtitle: "Build Muscle Faster",
     },
     {
       ctaLink: "/category/protein",
       img: bg4,
-      smimg: bg4sm, // fallback to bg1sm since bg3sm is missing
+      smimg: bg4sm,
       title: "Protein Collection",
       subtitle: "Build Muscle Faster",
     },
@@ -92,10 +96,17 @@ const HeroCarousel = () => {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full  md:mt-20">
       {/* Mobile: Smaller height, Desktop: Larger height */}
-      <div className="relative overflow-hidden ">
-        <Carousel setApi={setApi} className="h-full w-full">
+      <div className="relative overflow-hidden">
+        <Carousel
+          setApi={setApi}
+          className="h-full w-full"
+          opts={{
+            loop: true,
+            align: "start",
+          }}
+        >
           <CarouselContent className="h-full">
             {slides.map((slide, index) => (
               <CarouselItem key={index} className="h-full p-0">
