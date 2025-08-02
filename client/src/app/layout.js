@@ -23,9 +23,10 @@ const poppinsFont = localFont({
 });
 
 export const metadata = {
-  title: "Being genuine nutrition - Premium Supplements for Your Fitness Journey",
+  title:
+    "Being genuine nutrition - Premium Supplements for Your Fitness Journey",
   description:
-    "Get high-quality supplements at the best prices. Free shipping on orders over ₹999.",
+    "Get high-quality supplements at the best prices. Enjoy a free scratch card with all orders above ₹999.",
 };
 
 export default function RootLayout({ children }) {

@@ -5,7 +5,7 @@ export async function generateMetadata({ params }) {
   const { slug } = params;
   let title = "Product Details | GenuineNutrition";
   let description =
-    "Premium quality fitness supplements with lab-tested ingredients for maximum effectiveness. Free shipping on orders over ₹999.";
+    "Premium quality fitness supplements with lab-tested ingredients for maximum effectiveness. Enjoy a free scratch card with all orders above ₹999.";
   let image = null;
 
   try {
