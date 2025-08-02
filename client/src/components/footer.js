@@ -174,7 +174,7 @@ export function Footer() {
                   <Mail size={18} className="text-white" />
                 </div>
                 <span className="text-gray-300 group-hover:text-white transition-colors">
-                  support.genuinenutrition@gmail.com
+                  support@beinggenuinenutrition.com
                 </span>
               </div>
 
@@ -214,7 +214,7 @@ export function Footer() {
               <div className="text-gray-400 text-sm">
                 © 2025{" "}
                 <a
-                  href="https://genuinenutrition.in"
+                  href="https://beinggenuinenutrition.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-400 hover:underline"

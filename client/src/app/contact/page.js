@@ -207,8 +207,7 @@ export default function ContactPage() {
                     icon: MapPin,
                     title: "Visit Our Office",
                     content:
-                      contactInfo?.address ||
-                      "89/2 Sector 39 Gurugram Haryana",
+                      contactInfo?.address || "89/2 Sector 39 Gurugram Haryana",
                     color: "bg-blue-500",
                   },
                   {
@@ -221,8 +220,7 @@ export default function ContactPage() {
                     icon: Mail,
                     title: "Email Us",
                     content:
-                      contactInfo?.email ||
-                      "support.genuinenutrition@gmail.com",
+                      contactInfo?.email || "support@beinggenuinenutrition.com",
                     color: "bg-red-500",
                   },
                 ].map((item, index) => (
@@ -441,9 +439,7 @@ export default function ContactPage() {
 
           <div className="rounded-2xl overflow-hidden h-[500px] relative shadow-lg">
             <iframe
-              src={`https://maps.google.com/maps?q=${28.4423
-                },${77.0493
-                }&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              src={`https://maps.google.com/maps?q=${28.4423},${77.0493}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
               title="89/2 Sector 39 Gurugram Haryana"
               width="100%"
               height="100%"

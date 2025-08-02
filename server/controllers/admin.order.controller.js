@@ -3,6 +3,8 @@ import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { prisma } from "../config/db.js";
 import { razorpay } from "../app.js";
+import sendEmail from "../utils/sendEmail.js";
+import { getOrderStatusUpdateTemplate } from "../email/temp/EmailTemplate.js";
 
 // Get all orders with pagination, filtering, and sorting
 export const getOrders = asyncHandler(async (req, res, next) => {
@@ -438,6 +440,68 @@ export const updateOrderStatus = asyncHandler(async (req, res, next) => {
       performedByRole: "admin",
     },
   });
+
+  // Send email notifications based on status change
+  try {
+    const orderWithUser = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        items: {
+          include: {
+            product: {
+              select: {
+                name: true,
+              },
+            },
+            variant: {
+              include: {
+                flavor: true,
+                weight: true,
+              },
+            },
+          },
+        },
+        tracking: true,
+      },
+    });
+
+    if (orderWithUser && orderWithUser.user) {
+      // Send different emails based on status
+      if (
+        status === "SHIPPED" ||
+        status === "DELIVERED" ||
+        status === "CANCELLED"
+      ) {
+        await sendEmail({
+          email: orderWithUser.user.email,
+          subject: `Your Order #${orderWithUser.orderNumber} Status Update - Being Genuine Nutrition`,
+          html: getOrderStatusUpdateTemplate({
+            userName: orderWithUser.user.name || "Valued Customer",
+            orderNumber: orderWithUser.orderNumber,
+            status: status,
+            products: orderWithUser.items
+              .map(
+                (item) =>
+                  `${item.product.name} ${item.variant.flavor.name} ${item.variant.weight.name}`
+              )
+              .join(", "),
+            trackingNumber:
+              orderWithUser.tracking?.trackingNumber || "TRK" + Date.now(),
+            carrier: orderWithUser.tracking?.carrier || "Default Carrier",
+          }),
+        });
+      }
+    }
+  } catch (emailError) {
+    console.error("Error sending order status email:", emailError);
+    // Don't throw error, continue with response
+  }
 
   res
     .status(200)

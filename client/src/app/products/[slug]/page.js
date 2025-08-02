@@ -3,7 +3,7 @@ import ProductContent from "./ProductContent";
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  let title = "Product Details | GenuineNutrition";
+  let title = "Product Details | Being Genuine Nutrition";
   let description =
     "Premium quality fitness supplements with lab-tested ingredients for maximum effectiveness. Enjoy a free scratch card with all orders above ₹999.";
   let image = null;
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
     const product = response.data.product;
 
     if (product) {
-      title = product.metaTitle || `${product.name} | GenuineNutrition`;
+      title = product.metaTitle || `${product.name} | Being Genuine Nutrition`;
       description =
         product.metaDescription || product.description || description;
 
