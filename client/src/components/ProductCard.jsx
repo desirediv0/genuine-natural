@@ -131,7 +131,7 @@ const ProductCard = ({ product }) => {
   return (
     <div
       key={product.id}
-      className="bg-white overflow-hidden transition-all hover:shadow-lg shadow-md rounded-sm group h-full flex flex-col"
+      className="bg-white overflow-hidden transition-all hover:shadow-lg shadow-md rounded-sm group h-full flex flex-col min-h-[450px]"
     >
       {/* Product Image Section */}
       <div className="relative h-48 md:h-64 w-full overflow-hidden bg-gray-50">
@@ -215,13 +215,13 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Product Details Section */}
-      <div className="p-4 text-center flex-1 flex flex-col">
+      <div className="p-4 text-center flex-1 flex flex-col justify-between">
         {/* Product Title */}
         <Link
           href={`/products/${product.slug}`}
           className="hover:text-primary mb-2"
         >
-          <h3 className="font-medium text-sm text-black line-clamp-2 leading-tight">
+          <h3 className="font-medium text-sm text-black line-clamp-2 leading-tight min-h-[2.5rem]">
             {product.name}
           </h3>
         </Link>
@@ -245,7 +245,7 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Pricing */}
-        <div className="flex items-center justify-center mb-2 ">
+        <div className="flex items-center justify-center mb-2 min-h-[2rem]">
           {product.hasSale ? (
             <div className="flex items-center gap-2 md:flex-row flex-col">
               <span className="font-bold text-lg text-black">
@@ -272,7 +272,7 @@ const ProductCard = ({ product }) => {
         {/* Add to Cart Button */}
         <Button
           onClick={() => handleAddToCart(product)}
-          className="w-full mt-auto bg-black hover:bg-gray-800 text-white font-medium py-2.5 px-4 rounded-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          className="w-full bg-black hover:bg-gray-800 text-white font-medium py-2.5 px-4 rounded-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           disabled={isAddingToCart[product.id]}
         >
           {isAddingToCart[product.id] ? (
