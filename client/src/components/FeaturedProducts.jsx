@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import { Eye, ShoppingCart } from "lucide-react";
 import ProductQuickView from "./ProductQuickView";
+import ProductCard from "./ProductCard";
 
 const ProductSkeleton = () => (
   <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
@@ -82,128 +83,16 @@ const FeaturedProducts = ({
                   key={product.id || product.slug || Math.random().toString()}
                   className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
                 >
-                  <div className="bg-white rounded-md shadow-lg hover:shadow-lg transition-all duration-500 overflow-hidden group relative transform hover:-translate-y-2 h-full flex flex-col border border-gray-100/50">
-                    {/* Product Image */}
-                    <div className="relative h-72  overflow-hidden flex-shrink-0">
-                      <Link href={`/products/${product.slug || ""}`}>
-                        {product.image ? (
-                          <Image
-                            src={product.image || "/placeholder.jpg"}
-                            alt={product.name || "Product"}
-                            fill
-                            className="object-contain px-2 transition-all duration-700 group-hover:scale-105"
-                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
-                          />
-                        ) : (
-                          <Image
-                            src="/product-placeholder.jpg"
-                            alt={product.name || "Product"}
-                            fill
-                            className="object-contain p-6 transition-all duration-700 group-hover:scale-105"
-                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
-                          />
-                        )}
-                      </Link>
-
-                      {/* Enhanced Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                      {/* Sale Badge */}
-                      {product.hasSale && (
-                        <span className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg transform -rotate-12 animate-pulse">
-                          🔥 SALE
-                        </span>
-                      )}
-
-                      {/* Action Icons - Only visible on large screens and on hover */}
-                      <div className="absolute top-4 right-4 flex flex-col space-y-2 translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none group-hover:pointer-events-auto">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-10 h-10 p-0 bg-white/90 hover:bg-black hover:text-white rounded-xl shadow-lg backdrop-blur-sm transform hover:scale-110 transition-all duration-300 border border-gray-200"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setQuickViewProduct(product);
-                            setQuickViewOpen(true);
-                          }}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </div>
-
-                      {/* Bottom gradient for better text readability */}
-                      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent"></div>
-                    </div>
-
-                    {/* Product Info */}
-                    <div className="p-5 flex-grow flex flex-col bg-gradient-to-b from-white to-gray-50/20">
-                      {/* Product Name */}
-                      <Link
-                        href={`/products/${product.slug || ""}`}
-                        className="block flex-grow mb-3"
-                      >
-                        <h3 className="font-semibold text-gray-900 text-base md:text-lg line-clamp-2 group-hover:text-black transition-colors leading-snug">
-                          {product.name || "Product"}
-                        </h3>
-                      </Link>
-
-                      {/* Price */}
-                      <div className="mb-4 text-center">
-                        {product.hasSale ? (
-                          <div className="space-y-1">
-                            <div className="flex items-center justify-center space-x-2">
-                              <span className="font-bold text-xl md:text-2xl text-black">
-                                ₹
-                                {Number(
-                                  product.basePrice || 0
-                                ).toLocaleString()}
-                              </span>
-                              <span className="text-gray-400 line-through text-sm md:text-base">
-                                ₹
-                                {Number(
-                                  product.regularPrice || 0
-                                ).toLocaleString()}
-                              </span>
-                            </div>
-                            <div className="text-green-600 font-medium text-xs">
-                              Save ₹
-                              {Number(
-                                (product.regularPrice || 0) -
-                                  (product.basePrice || 0)
-                              ).toLocaleString()}
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="font-bold text-xl md:text-2xl text-black">
-                            ₹{Number(product.basePrice || 0).toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Variants Info */}
-                      {(product.flavors || 0) > 1 && (
-                        <div className="mb-4 text-center">
-                          <span className="text-xs text-gray-600 bg-gray-100 px-3 py-1 rounded-full font-medium">
-                            🎯 {product.flavors} variants
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Add to Cart Button */}
-                      <div className="mt-auto">
-                        <Button
-                          className="w-full bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-semibold py-2.5 md:py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-400 transform hover:scale-[1.02] text-sm"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setQuickViewProduct(product);
-                            setQuickViewOpen(true);
-                          }}
-                        >
-                          <ShoppingCart className="h-4 w-4 mr-2" />
-                          Quick Add
-                        </Button>
-                      </div>
-                    </div>
+                  <div className="transform hover:-translate-y-2 transition-all duration-500">
+                    <ProductCard
+                      product={product}
+                      onQuickView={(product) => {
+                        setQuickViewProduct(product);
+                        setQuickViewOpen(true);
+                      }}
+                      className="h-full"
+                      showVariants={true}
+                    />
                   </div>
                 </CarouselItem>
               ))}

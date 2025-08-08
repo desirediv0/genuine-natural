@@ -22,6 +22,7 @@ import { useCart } from "@/lib/cart-context";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import ReviewSection from "./ReviewSection";
+import ProductCard from "@/components/ProductCard";
 
 export default function ProductContent({ slug }) {
   const [product, setProduct] = useState(null);
@@ -1182,75 +1183,14 @@ export default function ProductContent({ slug }) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((product) => (
-                <Link
+                <ProductCard
                   key={product.id}
-                  href={`/products/${product.slug}`}
-                  className="bg-gray-50 rounded-xl overflow-hidden transition-all hover:shadow-lg border border-gray-200 group"
-                >
-                  <div className="relative h-64 w-full bg-white overflow-hidden">
-                    <Image
-                      src={
-                        product.image ||
-                        product.variants?.[0]?.images?.find(
-                          (img) => img.isPrimary
-                        )?.url ||
-                        product.variants?.[0]?.images?.[0]?.url ||
-                        "/product-placeholder.jpg"
-                      }
-                      alt={product.name}
-                      fill
-                      className="object-contain p-4 transition-transform group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                    {product.hasSale && (
-                      <span className="absolute top-3 left-3 bg-[#000] text-white text-xs font-bold px-3 py-1 rounded-full">
-                        SALE
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="p-6">
-                    <div className="flex items-center justify-center mb-3">
-                      <div className="flex text-gray-400">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className="h-4 w-4"
-                            fill={
-                              i < Math.round(product.avgRating || 0)
-                                ? "currentColor"
-                                : "none"
-                            }
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs text-gray-500 ml-2">
-                        ({product.reviewCount || 0})
-                      </span>
-                    </div>
-
-                    <h3 className="font-bold mb-3 line-clamp-2 hover:text-[#000] transition-colors text-center text-[#2C3E50]">
-                      {product.name}
-                    </h3>
-
-                    <div className="text-center">
-                      {product.hasSale ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <span className="font-bold text-[#000] text-lg">
-                            {formatCurrency(product.basePrice)}
-                          </span>
-                          <span className="text-gray-500 line-through text-sm">
-                            {formatCurrency(product.regularPrice)}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="font-bold text-[#2C3E50] text-lg">
-                          {formatCurrency(product.basePrice)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </Link>
+                  product={product}
+                  showQuickView={false}
+                  className="bg-gray-50 border-gray-200"
+                  imageClassName="object-contain p-4"
+                  showVariants={false}
+                />
               ))}
             </div>
           </div>

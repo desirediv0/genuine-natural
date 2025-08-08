@@ -22,6 +22,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import ProductQuickView from "@/components/ProductQuickView";
+import ProductCard from "@/components/ProductCard";
 
 // Helper function to format image URLs correctly
 const getImageUrl = (image) => {
@@ -395,109 +396,30 @@ export default function CategoryPage() {
                   : "grid-cols-1"
               }`}
             >
-              {products.map((product, index) => {
-                const displayData = getProductDisplayData(product);
-
-                return (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ y: -8 }}
-                    className={`bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-500 group ${
-                      viewMode === "list" ? "flex" : ""
-                    }`}
-                  >
-                    <div
-                      className={`relative ${
-                        viewMode === "list" ? "w-80 h-80" : "h-80"
-                      } overflow-hidden`}
-                    >
-                      <Image
-                        src={getImageUrl(displayData.image)}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-
-                      {displayData.hasSale && (
-                        <div className="absolute top-4 left-4">
-                          <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-bold flex items-center">
-                            <Sparkles className="w-3 h-3 mr-1" />
-                            SALE
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div
-                      className={`p-6 ${viewMode === "list" ? "flex-1" : ""}`}
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex text-yellow-400">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-4 w-4"
-                              fill={
-                                i < Math.round(product.avgRating || 0)
-                                  ? "currentColor"
-                                  : "none"
-                              }
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-500">
-                          ({product._count?.reviews || 0})
-                        </span>
-                      </div>
-
-                      <Link href={`/products/${product.slug}`}>
-                        <h3 className="font-bold text-lg mb-3 text-gray-900 group-hover:text-black transition-colors line-clamp-2">
-                          {product.name}
-                        </h3>
-                      </Link>
-
-                      {viewMode === "list" && product.description && (
-                        <p className="text-gray-600 mb-4 line-clamp-2">
-                          {product.description}
-                        </p>
-                      )}
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {displayData.hasSale ? (
-                            <>
-                              <span className="font-bold text-xl text-black">
-                                {formatCurrency(displayData.salePrice)}
-                              </span>
-                              <span className="text-gray-500 line-through text-sm">
-                                {formatCurrency(displayData.regularPrice)}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="font-bold text-xl text-gray-900">
-                              {formatCurrency(displayData.basePrice)}
-                            </span>
-                          )}
-                        </div>
-
-                        <Link href={`/products/${product.slug}`}>
-                          <Button
-                            size="sm"
-                            className="bg-black hover:bg-gray-800 text-white rounded-xl font-semibold group/btn"
-                          >
-                            View
-                            <ArrowRight className="ml-1 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -8 }}
+                >
+                  <ProductCard
+                    product={product}
+                    onQuickView={(product) => {
+                      setQuickViewProduct(product);
+                      setQuickViewOpen(true);
+                    }}
+                    className={`${viewMode === "list" ? "flex" : ""}`}
+                    imageClassName={
+                      viewMode === "list"
+                        ? "object-cover"
+                        : "object-contain px-2"
+                    }
+                    showVariants={false}
+                  />
+                </motion.div>
+              ))}
             </motion.div>
 
             {/* Pagination */}

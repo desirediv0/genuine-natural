@@ -20,6 +20,14 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
+import { useAddVariantToCart } from "@/lib/cart-utils";
+
+// Helper function to format image URLs correctly
+const getImageUrl = (image) => {
+  if (!image) return "/product-placeholder.jpg";
+  if (image.startsWith("http")) return image;
+  return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
+};
 
 export default function ProductQuickView({ product, open, onOpenChange }) {
   const [selectedFlavor, setSelectedFlavor] = useState(null);
@@ -31,6 +39,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
   const [addingToCart, setAddingToCart] = useState(false);
   const [success, setSuccess] = useState(false);
   const { addToCart } = useCart();
+  const { addVariantToCart } = useAddVariantToCart();
   const [productDetails, setProductDetails] = useState(null);
   const [imgSrc, setImgSrc] = useState("");
   const [availableCombinations, setAvailableCombinations] = useState([]);
@@ -55,12 +64,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
     if (product) {
       // Set initial image when product changes
-      setImgSrc(
-        product.image ||
-          product.variants?.[0]?.images?.find((img) => img.isPrimary)?.url ||
-          product.variants?.[0]?.images?.[0]?.url ||
-          "/placeholder.jpg"
-      );
+      setImgSrc(product.image || "/product-placeholder.jpg");
     }
   }, [product, open]);
 
@@ -78,9 +82,13 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
           const productData = response.data.product;
           setProductDetails(productData);
 
-          // Update image if available - use product image
-          if (productData.image) {
-            setImgSrc(productData.image || "/product-placeholder.jpg");
+          // Update image if available
+          if (productData.images && productData.images.length > 0) {
+            setImgSrc(
+              getImageUrl(productData.images[0].url) ||
+                getImageUrl(productData.image) ||
+                "/product-placeholder.jpg"
+            );
           }
 
           // Extract all available combinations from variants
@@ -95,7 +103,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
             setAvailableCombinations(combinations);
 
-            // Set default selections based on available options
+            // Set default selections
             if (productData.flavorOptions?.length > 0) {
               const firstFlavor = productData.flavorOptions[0];
               setSelectedFlavor(firstFlavor);
@@ -105,11 +113,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                 (combo) => combo.flavorId === firstFlavor.id
               );
 
-              if (
-                matchingVariant &&
-                productData.weightOptions &&
-                productData.weightOptions.length > 0
-              ) {
+              if (matchingVariant && productData.weightOptions) {
                 const matchingWeight = productData.weightOptions.find(
                   (weight) => weight.id === matchingVariant.weightId
                 );
@@ -118,28 +122,24 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                   setSelectedWeight(matchingWeight);
                   setSelectedVariant(matchingVariant.variant);
                 }
-              } else if (matchingVariant) {
-                // Flavor selected but no weight options or no matching weight
-                setSelectedVariant(matchingVariant.variant);
               }
-            } else if (productData.weightOptions?.length > 0) {
-              // Only weight options available, no flavors
+            } else if (
+              productData.weightOptions?.length > 0 &&
+              combinations.length > 0
+            ) {
+              // No flavors, but weights and variants exist
               const firstWeight = productData.weightOptions[0];
               setSelectedWeight(firstWeight);
-
+              // Find the variant for this weight
               const matchingVariant = combinations.find(
                 (combo) => combo.weightId === firstWeight.id
               );
-
               if (matchingVariant) {
                 setSelectedVariant(matchingVariant.variant);
               }
             } else if (productData.variants.length > 0) {
-              // No flavor or weight options, just set first active variant
-              const firstActiveVariant = productData.variants.find(
-                (v) => v.isActive && v.quantity > 0
-              );
-              setSelectedVariant(firstActiveVariant || productData.variants[0]);
+              // Fallback: just pick the first variant
+              setSelectedVariant(productData.variants[0]);
             }
           }
         } else {
@@ -156,44 +156,6 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
     fetchProductDetails();
   }, [product, open]);
-
-  // Update image when selectedVariant changes
-  useEffect(() => {
-    if (
-      selectedVariant &&
-      selectedVariant.images &&
-      selectedVariant.images.length > 0
-    ) {
-      const primaryImage =
-        selectedVariant.images.find((img) => img.isPrimary) ||
-        selectedVariant.images[0];
-      setImgSrc(primaryImage.url || "/product-placeholder.jpg");
-    } else if (
-      productDetails &&
-      productDetails.image &&
-      (!productDetails.variants ||
-        productDetails.variants.length === 0 ||
-        !productDetails.variants.some((v) => v.images && v.images.length > 0))
-    ) {
-      // Only use product image if no variants have images
-      setImgSrc(productDetails.image || "/product-placeholder.jpg");
-    } else if (product && product.image) {
-      // Fallback to basic product image
-      setImgSrc(product.image);
-    } else if (
-      product &&
-      product.variants?.[0]?.images?.find((img) => img.isPrimary)?.url
-    ) {
-      // Fallback to first variant's primary image
-      setImgSrc(product.variants[0].images.find((img) => img.isPrimary).url);
-    } else if (product && product.variants?.[0]?.images?.[0]?.url) {
-      // Fallback to first variant's first image
-      setImgSrc(product.variants[0].images[0].url);
-    } else {
-      // Final fallback
-      setImgSrc("/product-placeholder.jpg");
-    }
-  }, [selectedVariant, productDetails, product]);
 
   // Get available weights for a specific flavor
   const getAvailableWeightsForFlavor = (flavorId) => {
@@ -264,19 +226,8 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
         }
       }
     } else {
-      // No weight options or no available weights for this flavor
-      // Try to find a variant with just this flavor
-      const matchingVariant = availableCombinations.find(
-        (combo) => combo.flavorId === flavor.id
-      );
-
-      if (matchingVariant) {
-        setSelectedVariant(matchingVariant.variant);
-        // Clear weight selection if no weight options
-        if (!productDetails?.weightOptions?.length) {
-          setSelectedWeight(null);
-        }
-      }
+      setSelectedWeight(null);
+      setSelectedVariant(null);
     }
   };
 
@@ -284,13 +235,9 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
   const handleWeightChange = (weight) => {
     setSelectedWeight(weight);
 
-    // Find available flavors for this weight
-    const availableFlavorIds = getAvailableFlavorsForWeight(weight.id);
-
-    if (
-      productDetails?.flavorOptions?.length > 0 &&
-      availableFlavorIds.length > 0
-    ) {
+    if (productDetails?.flavorOptions?.length > 0) {
+      // Find available flavors for this weight
+      const availableFlavorIds = getAvailableFlavorsForWeight(weight.id);
       // Use currently selected flavor if it's compatible with the new weight
       if (selectedFlavor && availableFlavorIds.includes(selectedFlavor.id)) {
         // Current flavor is compatible, keep it selected
@@ -298,7 +245,6 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
           (combo) =>
             combo.weightId === weight.id && combo.flavorId === selectedFlavor.id
         );
-
         if (matchingVariant) {
           setSelectedVariant(matchingVariant.variant);
         }
@@ -307,35 +253,26 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
         const firstAvailableFlavor = productDetails.flavorOptions.find(
           (flavor) => availableFlavorIds.includes(flavor.id)
         );
-
         if (firstAvailableFlavor) {
           setSelectedFlavor(firstAvailableFlavor);
-
           // Find the corresponding variant
           const matchingVariant = availableCombinations.find(
             (combo) =>
               combo.weightId === weight.id &&
               combo.flavorId === firstAvailableFlavor.id
           );
-
           if (matchingVariant) {
             setSelectedVariant(matchingVariant.variant);
           }
         }
       }
     } else {
-      // No flavor options or no available flavors for this weight
-      // Try to find a variant with just this weight
+      // No flavors, just pick the variant for this weight
       const matchingVariant = availableCombinations.find(
         (combo) => combo.weightId === weight.id
       );
-
       if (matchingVariant) {
         setSelectedVariant(matchingVariant.variant);
-        // Clear flavor selection if no flavor options
-        if (!productDetails?.flavorOptions?.length) {
-          setSelectedFlavor(null);
-        }
       }
     }
   };
@@ -373,13 +310,20 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     }
 
     try {
-      await addToCart(variantToAdd.id, quantity);
-      setSuccess(true);
-
-      // Auto close after success notification
-      setTimeout(() => {
-        onOpenChange(false);
-      }, 2000);
+      const result = await addVariantToCart(
+        variantToAdd,
+        quantity,
+        productDetails?.name || product?.name
+      );
+      if (result.success) {
+        setSuccess(true);
+        // Auto close after success notification
+        setTimeout(() => {
+          onOpenChange(false);
+        }, 2000);
+      } else {
+        setError("Failed to add to cart. Please try again.");
+      }
     } catch (err) {
       console.error("Error adding to cart:", err);
       setError("Failed to add to cart. Please try again.");
@@ -388,11 +332,63 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     }
   };
 
+  // Get the appropriate image to display (variant image or product image)
+  const getDisplayImage = () => {
+    // Priority 1: Selected variant images
+    if (
+      selectedVariant &&
+      selectedVariant.images &&
+      selectedVariant.images.length > 0
+    ) {
+      const primaryImage = selectedVariant.images.find((img) => img.isPrimary);
+      const imageUrl = primaryImage
+        ? primaryImage.url
+        : selectedVariant.images[0]?.url;
+
+      return getImageUrl(imageUrl);
+    }
+
+    // Priority 2: Product images
+    if (displayProduct?.images && displayProduct.images.length > 0) {
+      const primaryImage = displayProduct.images.find((img) => img.isPrimary);
+      const imageUrl = primaryImage
+        ? primaryImage.url
+        : displayProduct.images[0]?.url;
+
+      return getImageUrl(imageUrl);
+    }
+
+    // Priority 3: Any variant images from any variant
+    if (displayProduct?.variants && displayProduct.variants.length > 0) {
+      const variantWithImages = displayProduct.variants.find(
+        (variant) => variant.images && variant.images.length > 0
+      );
+      if (variantWithImages) {
+        const primaryImage = variantWithImages.images.find(
+          (img) => img.isPrimary
+        );
+        const imageUrl = primaryImage
+          ? primaryImage.url
+          : variantWithImages.images[0]?.url;
+
+        return getImageUrl(imageUrl);
+      }
+    }
+
+    // Priority 4: Check product.image property (from API response)
+    if (displayProduct?.image) {
+      return getImageUrl(displayProduct.image);
+    }
+
+    // Final fallback
+    return imgSrc || "/placeholder.jpg";
+  };
+
   // Format price display
   const getPriceDisplay = () => {
     // Show loading state while initial data is being fetched
     if (initialLoading || loading) {
-      return <div className="h-6 w-24 bg-gray-200 animate-pulse rounded"></div>;
+      return <div className="h-8 w-32 bg-gray-300 animate-pulse rounded"></div>;
     }
 
     // If we have a selected variant, show its price
@@ -400,7 +396,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
       if (selectedVariant.salePrice && selectedVariant.salePrice > 0) {
         return (
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-red-600">
+            <span className="text-2xl font-bold text-black">
               {formatCurrency(selectedVariant.salePrice)}
             </span>
             <span className="text-lg text-gray-500 line-through">
@@ -410,7 +406,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
         );
       }
       return (
-        <span className="text-2xl font-bold text-gray-900">
+        <span className="text-2xl font-bold text-black">
           {formatCurrency(selectedVariant.price || 0)}
         </span>
       );
@@ -421,7 +417,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
       if (productDetails.hasSale && productDetails.basePrice > 0) {
         return (
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-red-600">
+            <span className="text-2xl font-bold text-black">
               {formatCurrency(productDetails.basePrice)}
             </span>
             <span className="text-lg text-gray-500 line-through">
@@ -431,7 +427,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
         );
       }
       return (
-        <span className="text-2xl font-bold text-gray-900">
+        <span className="text-2xl font-bold text-black">
           {formatCurrency(productDetails.basePrice || 0)}
         </span>
       );
@@ -442,7 +438,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
       if (product.hasSale && product.basePrice > 0) {
         return (
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-red-600">
+            <span className="text-2xl font-bold text-black">
               {formatCurrency(product.basePrice)}
             </span>
             <span className="text-lg text-gray-500 line-through">
@@ -452,7 +448,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
         );
       }
       return (
-        <span className="text-2xl font-bold text-gray-900">
+        <span className="text-2xl font-bold text-black">
           {formatCurrency(product.basePrice || 0)}
         </span>
       );
@@ -468,94 +464,89 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[90vw] md:max-w-[800px] lg:max-w-[900px] w-full max-h-[85vh] overflow-y-auto p-0 bg-white rounded-lg shadow-xl">
-        {/* Header */}
-        <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 bg-black text-white sticky top-0 z-10">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg sm:text-xl md:text-2xl font-medium tracking-wide line-clamp-1">
-              {displayProduct.name}
-            </DialogTitle>
-          </div>
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-white border border-gray-200">
+        <DialogHeader>
+          <DialogTitle className="text-xl text-black font-semibold">
+            {displayProduct.name}
+          </DialogTitle>
         </DialogHeader>
 
         {loading && !productDetails ? (
-          <div className="py-12 flex justify-center">
-            <div className="w-8 h-8 border-3 border-black border-t-transparent rounded-full animate-spin"></div>
+          <div className="py-8 flex justify-center">
+            <div className="w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 p-4 sm:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
             {/* Product Image */}
-            <div className="relative">
-              <div className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] rounded-lg overflow-hidden bg-gray-50 group">
-                <Image
-                  src={imgSrc || "/placeholder.jpg"}
-                  alt={displayProduct.name}
-                  fill
-                  className="object-contain p-3 sm:p-4 transform group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 60vw, 50vw"
-                  onError={() => setImgSrc("/product-placeholder.jpg")}
-                />
-                {displayProduct.hasSale && (
-                  <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded">
-                    SALE
-                  </div>
-                )}
-              </div>
+            <div className="relative h-72 md:h-full rounded-md overflow-hidden bg-white shadow-sm border border-gray-200">
+              <Image
+                src={getDisplayImage()}
+                alt={displayProduct.name}
+                fill
+                className="object-contain p-2"
+                sizes="(max-width: 768px) 100vw, 400px"
+                onError={() => setImgSrc("/product-placeholder.jpg")}
+              />
+              {displayProduct.hasSale && (
+                <div className="absolute top-2 left-2 bg-black text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                  SALE
+                </div>
+              )}
             </div>
 
             {/* Product Info */}
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col">
               {/* Success Message */}
               {success && (
-                <div className="p-3 bg-green-50 border border-green-200 text-green-800 text-sm flex items-center rounded-md">
-                  <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span>Item added to cart successfully!</span>
+                <div className="mb-4 p-3 bg-gray-100 text-black text-sm rounded flex items-center border border-gray-300">
+                  <CheckCircle className="h-4 w-4 mr-2 text-black" />
+                  Item added to cart successfully
                 </div>
               )}
 
               {/* Error message */}
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-sm flex items-center rounded-md">
-                  <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span>{error}</span>
+                <div className="mb-4 p-3 bg-gray-100 text-black text-sm rounded flex items-center border border-gray-300">
+                  <AlertCircle className="h-4 w-4 mr-2 text-black" />
+                  {error}
                 </div>
               )}
 
               {/* Price */}
-              <div className="border-b border-gray-200 pb-3">
-                {getPriceDisplay()}
-              </div>
+              <div className="mb-4">{getPriceDisplay()}</div>
 
               {/* Rating */}
               {displayProduct.avgRating > 0 && (
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center mb-4">
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
                         className={`h-4 w-4 ${
                           star <= Math.round(displayProduct.avgRating || 0)
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-200"
+                            ? "text-black fill-black"
+                            : "text-gray-300"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">
-                    {displayProduct.avgRating
-                      ? Number(displayProduct.avgRating).toFixed(1)
-                      : "0.0"}{" "}
+                  <span className="text-sm text-gray-600 ml-2">
                     ({displayProduct.reviewCount || 0} reviews)
                   </span>
                 </div>
               )}
 
+              {/* Description */}
+              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                {displayProduct.description || "No description available"}
+              </p>
+
               {/* Flavor selection */}
               {productDetails?.flavorOptions &&
                 productDetails.flavorOptions.length > 0 && (
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-900">
-                      Choose Flavor
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-black mb-2">
+                      Flavor
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {productDetails.flavorOptions.map((flavor) => {
@@ -570,11 +561,11 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                             type="button"
                             onClick={() => handleFlavorChange(flavor)}
                             disabled={!isAvailable}
-                            className={`px-3 py-2 text-sm border rounded-md transition-colors ${
+                            className={`px-3 py-2 rounded-md border text-sm transition-all ${
                               selectedFlavor?.id === flavor.id
-                                ? "bg-black text-white border-black"
+                                ? "border-black bg-black text-white font-medium"
                                 : isAvailable
-                                ? "border-gray-300 hover:border-black"
+                                ? "border-gray-300 hover:border-black hover:bg-gray-50"
                                 : "border-gray-200 text-gray-400 cursor-not-allowed"
                             }`}
                           >
@@ -589,9 +580,9 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
               {/* Weight selection */}
               {productDetails?.weightOptions &&
                 productDetails.weightOptions.length > 0 && (
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-900">
-                      Choose Weight
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-black mb-2">
+                      Weight
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {productDetails.weightOptions.map((weight) => {
@@ -612,11 +603,11 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                             type="button"
                             onClick={() => handleWeightChange(weight)}
                             disabled={!isAvailable}
-                            className={`px-3 py-2 text-sm border rounded-md transition-colors ${
+                            className={`px-3 py-2 rounded-md border text-sm transition-all ${
                               selectedWeight?.id === weight.id
-                                ? "bg-black text-white border-black"
+                                ? "border-black bg-black text-white font-medium"
                                 : isAvailable
-                                ? "border-gray-300 hover:border-black"
+                                ? "border-gray-300 hover:border-black hover:bg-gray-50"
                                 : "border-gray-200 text-gray-400 cursor-not-allowed"
                             }`}
                           >
@@ -630,69 +621,57 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
               {/* Stock Availability */}
               {selectedVariant && (
-                <div className="p-2 bg-gray-50 rounded-md border-l-4 border-gray-400">
+                <div className="mb-4">
                   <span
                     className={`text-sm ${
                       selectedVariant.quantity > 0
-                        ? "text-green-700"
-                        : "text-red-700"
+                        ? "text-black"
+                        : "text-gray-600"
                     }`}
                   >
                     {selectedVariant.quantity > 0
-                      ? `✓ In Stock (${selectedVariant.quantity} available)`
-                      : "✗ Out of Stock"}
+                      ? `In Stock (${selectedVariant.quantity} available)`
+                      : "Out of Stock"}
                   </span>
                 </div>
               )}
 
-              {!selectedVariant &&
-                productDetails?.variants &&
-                productDetails.variants.length > 0 && (
-                  <div className="p-2 bg-yellow-50 rounded-md border-l-4 border-yellow-400">
-                    <span className="text-sm text-yellow-700">
-                      Please select a variant to check availability
-                    </span>
-                  </div>
-                )}
-
               {/* Quantity */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-900">
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-black mb-2">
                   Quantity
                 </label>
                 <div className="flex items-center">
-                  <div className="flex items-center border border-gray-300 rounded-md">
-                    <button
-                      onClick={() => handleQuantityChange(-1)}
-                      className="p-2 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={quantity <= 1 || loading}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="px-4 py-2 min-w-[3rem] text-center border-x border-gray-300">
-                      {quantity}
-                    </span>
-                    <button
-                      onClick={() => handleQuantityChange(1)}
-                      className="p-2 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={
-                        loading ||
-                        (selectedVariant &&
-                          selectedVariant.quantity > 0 &&
-                          quantity >= selectedVariant.quantity)
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleQuantityChange(-1)}
+                    className="p-2.5 rounded-l border border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                    disabled={quantity <= 1 || loading}
+                  >
+                    <Minus className="h-4 w-4 text-black" />
+                  </button>
+                  <span className="px-6 py-2.5 border-t border-b border-gray-300 bg-white min-w-[3rem] text-center text-black">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => handleQuantityChange(1)}
+                    className="p-2.5 rounded-r border border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                    disabled={
+                      loading ||
+                      (selectedVariant &&
+                        selectedVariant.quantity > 0 &&
+                        quantity >= selectedVariant.quantity)
+                    }
+                  >
+                    <Plus className="h-4 w-4 text-black" />
+                  </button>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <div className="flex space-x-2 mt-auto">
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-6 bg-black hover:bg-gray-800 text-white border border-black"
                   disabled={
                     loading ||
                     addingToCart ||
@@ -721,7 +700,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                 >
                   <Button
                     variant="outline"
-                    className="w-full border-black text-black hover:bg-black hover:text-white"
+                    className="w-full py-6 border-black text-black hover:bg-black hover:text-white"
                   >
                     View Details
                   </Button>

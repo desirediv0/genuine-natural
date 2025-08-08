@@ -31,7 +31,7 @@ import { logo } from "@/assets";
 
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
-  const { cart } = useCart();
+  const { cart, getCartItemCount } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -850,67 +850,27 @@ export function Navbar() {
                 </motion.div>
 
                 {/* Wishlist */}
-                <motion.div
-                  className="hidden sm:block"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
+                <Link
+                  href="/wishlist"
+                  className="hidden md:block p-2 text-gray-600 hover:text-primary transition-colors relative"
                 >
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link
-                      href="/wishlist"
-                      className="p-2 text-gray-600 hover:text-black hover:bg-gray-100 rounded-xl transition-all duration-200"
-                    >
-                      <Heart className="h-5 w-5" />
-                    </Link>
-                  </motion.div>
-                </motion.div>
+                  <Heart className="h-5 w-5" />
+                </Link>
 
                 {/* Cart */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                <ClientOnly>
+                  <Link
+                    href="/cart"
+                    className="p-2 text-gray-600 hover:text-primary transition-colors relative"
                   >
-                    <Link
-                      href="/cart"
-                      className="p-2 text-gray-600 hover:text-black hover:bg-gray-100 rounded-xl transition-all duration-200 relative"
-                    >
-                      <ShoppingCart className="h-5 w-5" />
-                      <ClientOnly fallback={null}>
-                        {cart && cart.items?.length > 0 && (
-                          <motion.span
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute -top-1 -right-1 bg-black text-white rounded-full text-xs min-w-[20px] h-5 flex items-center justify-center px-1 font-bold"
-                          >
-                            <motion.span
-                              key={cart.items.reduce(
-                                (acc, item) => acc + item.quantity,
-                                0
-                              )}
-                              initial={{ scale: 1.5, opacity: 0 }}
-                              animate={{ scale: 1, opacity: 1 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              {cart.items.reduce(
-                                (acc, item) => acc + item.quantity,
-                                0
-                              )}
-                            </motion.span>
-                          </motion.span>
-                        )}
-                      </ClientOnly>
-                    </Link>
-                  </motion.div>
-                </motion.div>
+                    <ShoppingCart className="h-5 w-5" />
+                    {getCartItemCount() > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                        {getCartItemCount()}
+                      </span>
+                    )}
+                  </Link>
+                </ClientOnly>
 
                 {/* Account dropdown */}
                 <motion.div

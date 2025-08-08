@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { fetchApi, formatCurrency } from "@/lib/utils";
+import { fetchApi } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Star,
   Filter,
   X,
   ChevronDown,
@@ -16,10 +14,8 @@ import {
   ChevronRight,
   AlertCircle,
   Search,
-  Eye,
 } from "lucide-react";
-import { useCart } from "@/lib/cart-context";
-import ProductQuickView from "@/components/ProductQuickView";
+import ProductCard from "@/components/ProductCard";
 import { toast } from "sonner";
 
 // Product Card Skeleton
@@ -54,8 +50,6 @@ function ProductsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [quickViewProduct, setQuickViewProduct] = useState(null);
-  const [quickViewOpen, setQuickViewOpen] = useState(false);
 
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [maxPossiblePrice, setMaxPossiblePrice] = useState(1000);
@@ -78,8 +72,6 @@ function ProductsContent() {
     pages: 0,
   });
 
-  const { addToCart } = useCart();
-  const [debugMode, setDebugMode] = useState(false);
   const [selectedFlavors, setSelectedFlavors] = useState([]);
   const [selectedWeights, setSelectedWeights] = useState([]);
 
@@ -336,39 +328,6 @@ function ProductsContent() {
     if (newPage < 1 || newPage > pagination.pages) return;
     setPagination((prev) => ({ ...prev, page: newPage }));
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleAddToCart = async (product) => {
-    console.log(product);
-    try {
-      if (!product || !product.variants || product.variants.length === 0) {
-        const response = await fetchApi(
-          `/public/products/${product.id}/variants`
-        );
-        const variants = response.data.variants || [];
-
-        if (variants.length === 0) {
-          toast.error("This product is currently not available");
-          return;
-        }
-
-        const variantId = variants[0].id;
-        await addToCart(variantId, 1);
-        toast.success(`${product.name} added to cart`);
-      } else {
-        const variantId = product.variants[0].id;
-        await addToCart(variantId, 1);
-        toast.success(`${product.name} added to cart`);
-      }
-    } catch (err) {
-      console.error("Error adding to cart:", err);
-      toast.error("Failed to add product to cart");
-    }
-  };
-
-  const handleQuickView = (product) => {
-    setQuickViewProduct(product);
-    setQuickViewOpen(true);
   };
 
   if (loading && products.length === 0) {
@@ -807,128 +766,7 @@ function ProductsContent() {
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-none shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-black group"
-                  >
-                    <div className="relative h-64 w-full  overflow-hidden">
-                      <Link href={`/products/${product.slug}`}>
-                        <Image
-                          src={
-                            product.image ||
-                            product.variants?.[0]?.images?.find(
-                              (img) => img.isPrimary
-                            )?.url ||
-                            product.variants?.[0]?.images?.[0]?.url ||
-                            "/placeholder.jpg"
-                          }
-                          alt={product.name}
-                          fill
-                          className="object-contain px-2 transition-transform group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      </Link>
-
-                      {product.hasSale && (
-                        <span className="absolute top-3 left-3 bg-black text-white text-xs font-bold px-3 py-1">
-                          SALE
-                        </span>
-                      )}
-
-                      <div className="absolute top-3 right-3 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {/* <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-10 h-10 p-0 bg-white hover:bg-black hover:text-white border border-black transition-colors duration-300"
-                        >
-                          <Heart className="h-4 w-4" />
-                        </Button> */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-10 h-10 p-0 bg-white hover:bg-black hover:text-white border border-black transition-colors duration-300"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleQuickView(product);
-                          }}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="p-6 border-t border-black">
-                      <Link
-                        href={`/products/${product.slug}`}
-                        className="block hover:text-black transition-colors"
-                      >
-                        <h3 className="font-semibold text-black mb-3 line-clamp-2 text-center">
-                          {product.name}
-                        </h3>
-                      </Link>
-
-                      <div className="flex items-center justify-center mb-3">
-                        <div className="flex text-black">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-4 w-4"
-                              fill={
-                                i < Math.round(product.avgRating || 0)
-                                  ? "currentColor"
-                                  : "none"
-                              }
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-gray-500 ml-2">
-                          ({product.reviewCount || 0})
-                        </span>
-                      </div>
-
-                      <div className="text-center mb-4">
-                        {product.hasSale ? (
-                          <div className="flex items-center justify-center space-x-2">
-                            <span className="font-bold text-xl text-black">
-                              {formatCurrency(product.basePrice)}
-                            </span>
-                            <span className="text-gray-500 line-through text-sm">
-                              {formatCurrency(product.regularPrice)}
-                            </span>
-                          </div>
-                        ) : (
-                          <span className="font-bold text-xl text-black">
-                            {formatCurrency(product.basePrice)}
-                          </span>
-                        )}
-                      </div>
-
-                      {product.flavors > 1 && (
-                        <p className="text-xs text-gray-500 text-center mb-4">
-                          {product.flavors} variants
-                        </p>
-                      )}
-
-                      {(!product.flavors || product.flavors === 0) &&
-                        product.variants &&
-                        product.variants.length > 1 && (
-                          <p className="text-xs text-gray-500 text-center mb-4">
-                            {product.variants.length} variants
-                          </p>
-                        )}
-
-                      {/* <Button
-                        className="w-full bg-black hover:bg-gray-900 text-white font-semibold py-3 rounded-none transition-colors duration-300"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleAddToCart(product);
-                        }}
-                      >
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                        Add to Cart
-                      </Button> */}
-                    </div>
-                  </div>
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
             )}
@@ -1000,13 +838,6 @@ function ProductsContent() {
             )}
           </div>
         </div>
-
-        {/* Quick View Dialog */}
-        <ProductQuickView
-          product={quickViewProduct}
-          open={quickViewOpen}
-          onOpenChange={setQuickViewOpen}
-        />
       </div>
     </div>
   );
