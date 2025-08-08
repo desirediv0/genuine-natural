@@ -123,12 +123,12 @@ export default function ShippingPolicyPage() {
                         </h2>
                       </div>
                       <p className="text-gray-600 leading-relaxed">
-                        At Power Fitness, we strive to deliver your orders as
-                        quickly and efficiently as possible. We understand that
-                        when you order nutritional supplements, you want them
-                        right away. That&apos;s why we&apos;ve partnered with
-                        reliable courier services to ensure your products reach
-                        you in perfect condition.
+                        At Being Genuine Nutrition, we strive to deliver your
+                        orders as quickly and efficiently as possible. We
+                        understand that when you order nutritional supplements,
+                        you want them right away. That&apos;s why we&apos;ve
+                        partnered with reliable courier services to ensure your
+                        products reach you in perfect condition.
                       </p>
                     </section>
 

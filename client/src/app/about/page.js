@@ -105,7 +105,7 @@ export default function AboutPage() {
       role: "Fitness Enthusiast",
       image: "/user.jpg",
       content:
-        "Being Genuine Nutrition has transformed my fitness journey. The quality is unmatched and results speak for themselves.",
+        " has transformed my fitness journey. The quality is unmatched and results speak for themselves.",
       rating: 5,
     },
     {
@@ -256,10 +256,10 @@ export default function AboutPage() {
                     ingredients and manufacturing processes.
                   </p>
                   <p>
-                    Today, Being Genuine Nutrition stands as a testament to what
-                    happens when passion meets purpose. We&apos;ve helped over
-                    50,000 individuals achieve their health and fitness goals
-                    with products they can trust.
+                    Today, stands as a testament to what happens when passion
+                    meets purpose. We&apos;ve helped over 50,000 individuals
+                    achieve their health and fitness goals with products they
+                    can trust.
                   </p>
                 </div>
                 <div className="mt-8 flex flex-wrap gap-4">

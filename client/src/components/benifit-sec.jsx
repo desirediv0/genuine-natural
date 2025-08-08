@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Link from "next/link"
-import Image from "next/image"
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 import {
   Shield,
   Truck,
@@ -16,9 +16,9 @@ import {
   Phone,
   ArrowRight,
   Target,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const BenefitsSec = () => {
   const benefits = [
@@ -54,7 +54,7 @@ const BenefitsSec = () => {
       color: "bg-black",
       hoverColor: "hover:bg-black/80",
     },
-  ]
+  ];
 
   const stats = [
     {
@@ -81,14 +81,14 @@ const BenefitsSec = () => {
       icon: <Clock className="w-6 h-6" />,
       color: "text-blue-500",
     },
-  ]
+  ];
 
   const certifications = [
     { name: "ISO 22000", desc: "Food Safety" },
     { name: "GMP", desc: "Good Manufacturing" },
     { name: "FSSAI", desc: "Licensed" },
     { name: "Lab Tested", desc: "Third Party" },
-  ]
+  ];
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
@@ -97,7 +97,8 @@ const BenefitsSec = () => {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: "radial-gradient(circle at 2px 2px, #3B82F6 1px, transparent 0)",
+            backgroundImage:
+              "radial-gradient(circle at 2px 2px, #3B82F6 1px, transparent 0)",
             backgroundSize: "60px 60px",
           }}
         />
@@ -175,9 +176,12 @@ const BenefitsSec = () => {
             viewport={{ once: true }}
             className="text-gray-600 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed"
           >
-            We&apos;re committed to providing you with the highest quality nutrition supplements
+            We&apos;re committed to providing you with the highest quality
+            nutrition supplements
             <br />
-            <span className="font-semibold text-gray-900">backed by science and trusted by professionals.</span>
+            <span className="font-semibold text-gray-900">
+              backed by science and trusted by professionals.
+            </span>
           </motion.p>
         </div>
 
@@ -239,7 +243,6 @@ const BenefitsSec = () => {
                 className="w-full h-full object-cover"
               />
 
-
               <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
                 <motion.h3
                   className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight"
@@ -257,8 +260,9 @@ const BenefitsSec = () => {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   viewport={{ once: true }}
                 >
-                  Every product is carefully formulated with premium ingredients and rigorously tested to ensure maximum
-                  effectiveness and safety.
+                  Every product is carefully formulated with premium ingredients
+                  and rigorously tested to ensure maximum effectiveness and
+                  safety.
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -316,7 +320,11 @@ const BenefitsSec = () => {
               <motion.h4
                 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 group-hover:scale-110 transition-transform origin-left"
                 animate={{
-                  textShadow: ["0 0 0px rgba(0,0,0,0)", "0 0 10px rgba(0,0,0,0.1)", "0 0 0px rgba(0,0,0,0)"],
+                  textShadow: [
+                    "0 0 0px rgba(0,0,0,0)",
+                    "0 0 10px rgba(0,0,0,0.1)",
+                    "0 0 0px rgba(0,0,0,0)",
+                  ],
                 }}
                 transition={{
                   duration: 3,
@@ -342,8 +350,13 @@ const BenefitsSec = () => {
           className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
         >
           <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Quality Certifications</h3>
-            <p className="text-gray-600">Trusted certifications that guarantee our commitment to quality and safety</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Quality Certifications
+            </h3>
+            <p className="text-gray-600">
+              Trusted certifications that guarantee our commitment to quality
+              and safety
+            </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {certifications.map((cert, index) => (
@@ -365,11 +378,9 @@ const BenefitsSec = () => {
             ))}
           </div>
         </motion.div>
-
-
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default BenefitsSec
+export default BenefitsSec;

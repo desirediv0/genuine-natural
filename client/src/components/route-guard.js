@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
+import { ClientOnly } from "./client-only";
 
 // Define private routes that require authentication
 const privateRoutes = [
@@ -106,5 +107,15 @@ export function RouteGuard({ children }) {
   }, [isAuthenticated, loading, pathname, router, firstRun]);
 
   // Always render children - no more loading or unauthorized screens
-  return children;
+  return (
+    <ClientOnly
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-black"></div>
+        </div>
+      }
+    >
+      {children}
+    </ClientOnly>
+  );
 }

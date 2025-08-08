@@ -24,7 +24,7 @@ const poppinsFont = localFont({
 
 export const metadata = {
   title:
-    "Being genuine nutrition - Premium Supplements for Your Fitness Journey",
+    "Being Genuine Nutrition - Premium Supplements for Your Fitness Journey",
   description:
     "Get high-quality supplements at the best prices. Enjoy a free scratch card with all orders above ₹999.",
 };
@@ -35,20 +35,28 @@ export default function RootLayout({ children }) {
       <body
         className={`${jostFont.variable} ${poppinsFont.variable} font-jost antialiased`}
       >
-        <AuthProvider>
-          <CartProvider>
+        <ClientOnly
+          fallback={
             <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="flex-1">
-                <ClientOnly>
-                  <RouteGuard>{children}</RouteGuard>
-                </ClientOnly>
-              </main>
-              <Footer />
+              <div className="flex-1 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-black"></div>
+              </div>
             </div>
-            <Toaster position="top-center" richColors closeButton />
-          </CartProvider>
-        </AuthProvider>
+          }
+        >
+          <AuthProvider>
+            <CartProvider>
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">
+                  <RouteGuard>{children}</RouteGuard>
+                </main>
+                <Footer />
+              </div>
+              <Toaster position="top-center" richColors closeButton />
+            </CartProvider>
+          </AuthProvider>
+        </ClientOnly>
       </body>
     </html>
   );

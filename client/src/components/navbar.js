@@ -421,109 +421,147 @@ export function Navbar() {
                 >
                   <h3 className="font-bold text-xl mb-5 text-gray-900 flex items-center">
                     <div className="w-1 h-6 bg-black rounded-full mr-3"></div>
-                    {isAuthenticated ? "My Account" : "Account"}
+                    <ClientOnly fallback="Account">
+                      {isAuthenticated ? "My Account" : "Account"}
+                    </ClientOnly>
                   </h3>
 
-                  {isAuthenticated ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3 pb-4 border-b border-gray-100">
+                  <ClientOnly
+                    fallback={
+                      <div className="space-y-4">
+                        <p className="text-gray-600 mb-4">
+                          Join us for better shopping experience!
+                        </p>
                         <motion.div
-                          whileHover={{ scale: 1.05, rotate: 5 }}
-                          className="w-12 h-12 rounded-full bg-black flex items-center justify-center"
-                        >
-                          <User className="h-6 w-6 text-white" />
-                        </motion.div>
-                        <div>
-                          <p className="font-bold text-gray-800">
-                            Hi, {user?.name || "User"}
-                          </p>
-                          <p className="text-sm text-gray-500">{user?.email}</p>
-                        </div>
-                      </div>
-
-                      {[
-                        {
-                          href: "/account",
-                          label: "Profile Settings",
-                          icon: User,
-                        },
-                        {
-                          href: "/account/orders",
-                          label: "My Orders",
-                          icon: ShoppingBag,
-                        },
-                        { href: "/wishlist", label: "Wishlist", icon: Heart },
-                        {
-                          href: "/cart",
-                          label: "Shopping Cart",
-                          icon: ShoppingCart,
-                        },
-                      ].map((item, index) => (
-                        <motion.div
-                          key={item.href}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.9 + index * 0.05 }}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
                           <Link
-                            href={item.href}
-                            className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 group"
+                            href="/login"
                             onClick={() => setIsMenuOpen(false)}
+                            className="block w-full py-3 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
                           >
-                            <div className="flex items-center space-x-3">
-                              <item.icon className="w-5 h-5 text-gray-600" />
-                              <span className="font-medium text-gray-900">
-                                {item.label}
-                              </span>
-                            </div>
-                            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-black group-hover:translate-x-1 transition-all" />
+                            Login to Account
                           </Link>
                         </motion.div>
-                      ))}
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <Link
+                            href="/register"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block w-full py-3 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                          >
+                            Create Account
+                          </Link>
+                        </motion.div>
+                      </div>
+                    }
+                  >
+                    {isAuthenticated ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-3 pb-4 border-b border-gray-100">
+                          <motion.div
+                            whileHover={{ scale: 1.05, rotate: 5 }}
+                            className="w-12 h-12 rounded-full bg-black flex items-center justify-center"
+                          >
+                            <User className="h-6 w-6 text-white" />
+                          </motion.div>
+                          <div>
+                            <p className="font-bold text-gray-800">
+                              Hi, {user?.name || "User"}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              {user?.email}
+                            </p>
+                          </div>
+                        </div>
 
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => {
-                          handleLogout();
-                          setIsMenuOpen(false);
-                        }}
-                        className="w-full mt-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-lg font-semibold border border-red-200"
-                      >
-                        Logout
-                      </motion.button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <p className="text-gray-600 mb-4">
-                        Join us for better shopping experience!
-                      </p>
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Link
-                          href="/login"
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block w-full py-3 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                        {[
+                          {
+                            href: "/account",
+                            label: "Profile Settings",
+                            icon: User,
+                          },
+                          {
+                            href: "/account/orders",
+                            label: "My Orders",
+                            icon: ShoppingBag,
+                          },
+                          { href: "/wishlist", label: "Wishlist", icon: Heart },
+                          {
+                            href: "/cart",
+                            label: "Shopping Cart",
+                            icon: ShoppingCart,
+                          },
+                        ].map((item, index) => (
+                          <motion.div
+                            key={item.href}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.9 + index * 0.05 }}
+                          >
+                            <Link
+                              href={item.href}
+                              className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 group"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <item.icon className="w-5 h-5 text-gray-600" />
+                                <span className="font-medium text-gray-900">
+                                  {item.label}
+                                </span>
+                              </div>
+                              <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-black group-hover:translate-x-1 transition-all" />
+                            </Link>
+                          </motion.div>
+                        ))}
+
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            handleLogout();
+                            setIsMenuOpen(false);
+                          }}
+                          className="w-full mt-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-lg font-semibold border border-red-200"
                         >
-                          Login to Account
-                        </Link>
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Link
-                          href="/register"
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block w-full py-3 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                          Logout
+                        </motion.button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <p className="text-gray-600 mb-4">
+                          Join us for better shopping experience!
+                        </p>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
-                          Create Account
-                        </Link>
-                      </motion.div>
-                    </div>
-                  )}
+                          <Link
+                            href="/login"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block w-full py-3 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                          >
+                            Login to Account
+                          </Link>
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <Link
+                            href="/register"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block w-full py-3 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                          >
+                            Create Account
+                          </Link>
+                        </motion.div>
+                      </div>
+                    )}
+                  </ClientOnly>
                 </motion.div>
               </div>
             </div>
@@ -573,7 +611,7 @@ export function Navbar() {
                   <motion.div className="relative">
                     <Image
                       src="/logo.png"
-                      alt="being genuine nutrition"
+                      alt="Being Genuine Nutrition Logo"
                       width={200}
                       height={200}
                       className="h-10 w-auto "
@@ -832,21 +870,21 @@ export function Navbar() {
                 </motion.div>
 
                 {/* Cart */}
-                <ClientOnly>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
                   <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    <Link
+                      href="/cart"
+                      className="p-2 text-gray-600 hover:text-black hover:bg-gray-100 rounded-xl transition-all duration-200 relative"
                     >
-                      <Link
-                        href="/cart"
-                        className="p-2 text-gray-600 hover:text-black hover:bg-gray-100 rounded-xl transition-all duration-200 relative"
-                      >
-                        <ShoppingCart className="h-5 w-5" />
+                      <ShoppingCart className="h-5 w-5" />
+                      <ClientOnly fallback={null}>
                         {cart && cart.items?.length > 0 && (
                           <motion.span
                             initial={{ scale: 0 }}
@@ -869,10 +907,10 @@ export function Navbar() {
                             </motion.span>
                           </motion.span>
                         )}
-                      </Link>
-                    </motion.div>
+                      </ClientOnly>
+                    </Link>
                   </motion.div>
-                </ClientOnly>
+                </motion.div>
 
                 {/* Account dropdown */}
                 <motion.div
@@ -883,41 +921,52 @@ export function Navbar() {
                   onMouseEnter={() => handleDropdownHover("account")}
                   onMouseLeave={handleDropdownLeave}
                 >
-                  <ClientOnly>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`p-2 ${
-                        activeDropdown === "account"
-                          ? "text-black bg-gray-100"
-                          : "text-gray-600 hover:text-black hover:bg-gray-100"
-                      } rounded-xl transition-all duration-200 flex items-center focus:outline-none`}
-                      onClick={() => toggleDropdown("account")}
-                      aria-expanded={activeDropdown === "account"}
-                    >
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`p-2 ${
+                      activeDropdown === "account"
+                        ? "text-black bg-gray-100"
+                        : "text-gray-600 hover:text-black hover:bg-gray-100"
+                    } rounded-xl transition-all duration-200 flex items-center focus:outline-none`}
+                    onClick={() => toggleDropdown("account")}
+                    aria-expanded={activeDropdown === "account"}
+                  >
+                    <ClientOnly fallback={<LogIn className="h-5 w-5" />}>
                       {isAuthenticated ? (
                         <User className="h-5 w-5" />
                       ) : (
                         <LogIn className="h-5 w-5" />
                       )}
-                      <motion.div
-                        animate={{
-                          rotate: activeDropdown === "account" ? 180 : 0,
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ChevronDown className="ml-1 h-4 w-4" />
-                      </motion.div>
-                    </motion.button>
+                    </ClientOnly>
+                    <motion.div
+                      animate={{
+                        rotate: activeDropdown === "account" ? 180 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    </motion.div>
+                  </motion.button>
 
-                    <AnimatePresence>
-                      {activeDropdown === "account" && (
-                        <motion.div
-                          initial="hidden"
-                          animate="visible"
-                          exit="hidden"
-                          variants={dropdownVariants}
-                          className="absolute right-0 top-full mt-2 w-80 bg-white/95 backdrop-blur-xl shadow-2xl rounded-xl py-4 border border-gray-200 z-50"
+                  <AnimatePresence>
+                    {activeDropdown === "account" && (
+                      <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                        variants={dropdownVariants}
+                        className="absolute right-0 top-full mt-2 w-80 bg-white/95 backdrop-blur-xl shadow-2xl rounded-xl py-4 border border-gray-200 z-50"
+                      >
+                        <ClientOnly
+                          fallback={
+                            <div className="px-6 py-4">
+                              <div className="animate-pulse">
+                                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                              </div>
+                            </div>
+                          }
                         >
                           {isAuthenticated ? (
                             <>
@@ -1025,10 +1074,10 @@ export function Navbar() {
                               </div>
                             </>
                           )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </ClientOnly>
+                        </ClientOnly>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               </div>
             </div>
@@ -1036,20 +1085,18 @@ export function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        <ClientOnly>
-          <MobileMenu
-            isMenuOpen={isMenuOpen}
-            setIsMenuOpen={setIsMenuOpen}
-            categories={categories}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            handleSearch={handleSearch}
-            isAuthenticated={isAuthenticated}
-            user={user}
-            cart={cart}
-            handleLogout={handleLogout}
-          />
-        </ClientOnly>
+        <MobileMenu
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          categories={categories}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearch}
+          isAuthenticated={isAuthenticated}
+          user={user}
+          cart={cart}
+          handleLogout={handleLogout}
+        />
       </motion.header>
 
       {/* Mobile Bottom Navigation */}
@@ -1081,11 +1128,13 @@ export function Navbar() {
                 : "text-gray-600"
             }`}
           >
-            {isAuthenticated ? (
-              <User className="h-6 w-6" />
-            ) : (
-              <LogIn className="h-6 w-6" />
-            )}
+            <ClientOnly fallback={<LogIn className="h-6 w-6" />}>
+              {isAuthenticated ? (
+                <User className="h-6 w-6" />
+              ) : (
+                <LogIn className="h-6 w-6" />
+              )}
+            </ClientOnly>
             <span className="text-xs mt-1">You</span>
           </Link>
 
