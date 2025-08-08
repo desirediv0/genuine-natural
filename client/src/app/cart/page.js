@@ -287,9 +287,9 @@ export default function CartPage() {
               Guest Shopping Cart
             </h2>
             <p className="text-gray-700 mb-4 leading-relaxed">
-              You're currently shopping as a guest. To complete your purchase
-              and save your cart items for future visits, please log in to your
-              account.
+              You&apos;re currently shopping as a guest. To complete your
+              purchase and save your cart items for future visits, please log in
+              to your account.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/login?redirect=cart">
