@@ -48,8 +48,7 @@ const CartItem = React.memo(
             </Link>
             <div className="text-sm text-gray-600 mt-1">
               {item.variantName ||
-                `${item.variant?.flavor?.name || ""} ${
-                  item.variant?.weight?.value || ""
+                `${item.variant?.flavor?.name || ""} ${item.variant?.weight?.value || ""
                 }${item.variant?.weight?.unit || ""}`}
             </div>
           </div>
@@ -405,10 +404,10 @@ export default function CartPage() {
                     {((parseFloat(coupon.discountValue) > 90 &&
                       coupon.discountType === "PERCENTAGE") ||
                       coupon.isDiscountCapped) && (
-                      <p className="text-xs text-amber-600 mt-1">
-                        *Maximum discount capped at 90%
-                      </p>
-                    )}
+                        <p className="text-xs text-amber-600 mt-1">
+                          *Maximum discount capped at 90%
+                        </p>
+                      )}
                   </div>
                   <button
                     onClick={handleRemoveCoupon}
@@ -428,11 +427,10 @@ export default function CartPage() {
                       onChange={(e) =>
                         setCouponCode(e.target.value.toUpperCase())
                       }
-                      className={`flex-1 ${
-                        couponError
+                      className={`flex-1 ${couponError
                           ? "border-red-300 focus-visible:ring-red-300"
                           : ""
-                      }`}
+                        }`}
                     />
                     <Button
                       type="submit"

@@ -58,39 +58,39 @@ export const getAllProducts = asyncHandler(async (req, res) => {
             // Min price
             ...(minPrice
               ? [
-                  {
-                    OR: [
-                      { price: { gte: parseFloat(minPrice) } },
-                      {
-                        AND: [
-                          { salePrice: { not: null } },
-                          { salePrice: { gte: parseFloat(minPrice) } },
-                        ],
-                      },
-                    ],
-                  },
-                ]
+                {
+                  OR: [
+                    { price: { gte: parseFloat(minPrice) } },
+                    {
+                      AND: [
+                        { salePrice: { not: null } },
+                        { salePrice: { gte: parseFloat(minPrice) } },
+                      ],
+                    },
+                  ],
+                },
+              ]
               : []),
             // Max price
             ...(maxPrice
               ? [
-                  {
-                    OR: [
-                      {
-                        AND: [
-                          { salePrice: { not: null } },
-                          { salePrice: { lte: parseFloat(maxPrice) } },
-                        ],
-                      },
-                      {
-                        AND: [
-                          { salePrice: null },
-                          { price: { lte: parseFloat(maxPrice) } },
-                        ],
-                      },
-                    ],
-                  },
-                ]
+                {
+                  OR: [
+                    {
+                      AND: [
+                        { salePrice: { not: null } },
+                        { salePrice: { lte: parseFloat(maxPrice) } },
+                      ],
+                    },
+                    {
+                      AND: [
+                        { salePrice: null },
+                        { price: { lte: parseFloat(maxPrice) } },
+                      ],
+                    },
+                  ],
+                },
+              ]
               : []),
           ],
         },
@@ -211,10 +211,10 @@ export const getAllProducts = asyncHandler(async (req, res) => {
       description: product.description,
       category: primaryCategory
         ? {
-            id: primaryCategory.id,
-            name: primaryCategory.name,
-            slug: primaryCategory.slug,
-          }
+          id: primaryCategory.id,
+          name: primaryCategory.name,
+          slug: primaryCategory.slug,
+        }
         : null,
       image: imageUrl ? getFileUrl(imageUrl) : null,
       // Add variants for frontend fallback
@@ -222,16 +222,16 @@ export const getAllProducts = asyncHandler(async (req, res) => {
         ...variant,
         images: variant.images
           ? variant.images.map((image) => ({
-              ...image,
-              url: getFileUrl(image.url),
-            }))
+            ...image,
+            url: getFileUrl(image.url),
+          }))
           : [],
       })),
       basePrice:
         product.variants.length > 0
           ? parseFloat(
-              product.variants[0].salePrice || product.variants[0].price
-            )
+            product.variants[0].salePrice || product.variants[0].price
+          )
           : null,
       hasSale:
         product.variants.length > 0 && product.variants[0].salePrice !== null,
@@ -265,7 +265,8 @@ export const getAllProducts = asyncHandler(async (req, res) => {
 export const getProductBySlug = asyncHandler(async (req, res) => {
   const { slug } = req.params;
 
-  const product = await prisma.product.findUnique({
+  // Use findFirst to allow filtering by isActive along with slug
+  const product = await prisma.product.findFirst({
     where: {
       slug,
       isActive: true,
@@ -285,7 +286,7 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
           flavor: true,
           weight: true,
           images: {
-            orderBy: { order: "asc" }, // Sort images by order (0, 1, 2, 3...)
+            orderBy: { order: "asc" },
           },
         },
         orderBy: [{ flavor: { name: "asc" } }, { weight: { value: "asc" } }],
@@ -319,6 +320,23 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Product not found");
   }
 
+  // Determine a primary image for the product (fallback to variant images)
+  let primaryImageUrl = null;
+  if (product.images && product.images.length > 0) {
+    const primaryImg = product.images.find((img) => img.isPrimary) || product.images[0];
+    primaryImageUrl = primaryImg?.url || null;
+  } else if (product.variants && product.variants.length > 0) {
+    const variantWithImages = product.variants.find(
+      (v) => v.images && v.images.length > 0
+    );
+    if (variantWithImages) {
+      const primaryImg =
+        variantWithImages.images.find((img) => img.isPrimary) ||
+        variantWithImages.images[0];
+      primaryImageUrl = primaryImg?.url || null;
+    }
+  }
+
   // Get the category ID from the product's categories
   const categoryId =
     product.categories.length > 0 ? product.categories[0].category.id : null;
@@ -329,64 +347,65 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
     // Add primary category
     category:
       product.categories.length > 0 ? product.categories[0].category : null,
-    images: product.images.map((image) => ({
+    // Map product images with full URLs
+    images: (product.images || []).map((image) => ({
       ...image,
       url: getFileUrl(image.url),
     })),
+    // Add a top-level image field for easier frontend use
+    image: primaryImageUrl ? getFileUrl(primaryImageUrl) : null,
     // Format variants with proper image URLs
-    variants: product.variants.map((variant) => ({
+    variants: (product.variants || []).map((variant) => ({
       ...variant,
       flavor: variant.flavor
         ? {
-            ...variant.flavor,
-            image: variant.flavor.image
-              ? getFileUrl(variant.flavor.image)
-              : null,
-          }
+          ...variant.flavor,
+          image: variant.flavor.image
+            ? getFileUrl(variant.flavor.image)
+            : null,
+        }
         : null,
-      images: variant.images
-        ? variant.images.map((image) => ({
-            ...image,
-            url: getFileUrl(image.url),
-          }))
-        : [],
+      images: (variant.images || []).map((image) => ({
+        ...image,
+        url: getFileUrl(image.url),
+      })),
     })),
     // Group variants by flavor
     flavorOptions: Array.from(
-      new Set(product.variants.filter((v) => v.flavor).map((v) => v.flavor.id))
+      new Set((product.variants || []).filter((v) => v.flavor).map((v) => v.flavor.id))
     ).map((flavorId) => {
-      const flavor = product.variants.find(
+      const f = product.variants.find(
         (v) => v.flavor && v.flavor.id === flavorId
       ).flavor;
       return {
-        id: flavor.id,
-        name: flavor.name,
-        image: flavor.image ? getFileUrl(flavor.image) : null,
+        id: f.id,
+        name: f.name,
+        image: f.image ? getFileUrl(f.image) : null,
       };
     }),
     // Group variants by weight
     weightOptions: Array.from(
-      new Set(product.variants.filter((v) => v.weight).map((v) => v.weight.id))
+      new Set((product.variants || []).filter((v) => v.weight).map((v) => v.weight.id))
     )
       .map((weightId) => {
-        const weight = product.variants.find(
+        const w = product.variants.find(
           (v) => v.weight && v.weight.id === weightId
         ).weight;
         return {
-          id: weight.id,
-          value: weight.value,
-          unit: weight.unit,
-          display: `${weight.value}${weight.unit}`,
+          id: w.id,
+          value: w.value,
+          unit: w.unit,
+          display: `${w.value}${w.unit}`,
         };
       })
       .sort((a, b) => a.value - b.value),
     // Average rating
     avgRating:
-      product.reviews.length > 0
+      product.reviews && product.reviews.length > 0
         ? (
-            product.reviews.reduce((sum, review) => sum + review.rating, 0) /
-            product.reviews.length
-          ).toFixed(1)
+          product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+          product.reviews.length
+        ).toFixed(1)
         : null,
     reviewCount: product._count.reviews,
     // Include SEO fields
@@ -398,77 +417,75 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
   // Add related products
   const relatedProducts = categoryId
     ? await prisma.product.findMany({
-        where: {
-          categories: {
-            some: {
-              category: {
-                id: categoryId,
-              },
-            },
-          },
-          isActive: true,
-          id: { not: product.id },
-        },
-        include: {
-          images: {
-            where: { isPrimary: true },
-            take: 1,
-          },
-          variants: {
-            where: { isActive: true },
-            orderBy: { price: "asc" },
-            take: 1,
-            include: {
-              flavor: true,
-              weight: true,
-              images: true,
-            },
-          },
-          _count: {
-            select: {
-              reviews: {
-                where: {
-                  status: "APPROVED",
-                },
-              },
+      where: {
+        categories: {
+          some: {
+            category: {
+              id: categoryId,
             },
           },
         },
-        take: 4,
-      })
+        isActive: true,
+        id: { not: product.id },
+      },
+      include: {
+        images: {
+          where: { isPrimary: true },
+          take: 1,
+        },
+        variants: {
+          where: { isActive: true },
+          orderBy: { price: "asc" },
+          take: 1,
+          include: {
+            flavor: true,
+            weight: true,
+            images: true,
+          },
+        },
+        _count: {
+          select: {
+            reviews: {
+              where: {
+                status: "APPROVED",
+              },
+            },
+          },
+        },
+      },
+      take: 4,
+    })
     : [];
 
-  const formattedRelated = relatedProducts.map((p) => ({
-    id: p.id,
-    name: p.name,
-    slug: p.slug,
-    image: p.images[0] ? getFileUrl(p.images[0].url) : null,
-    basePrice:
-      p.variants.length > 0
-        ? parseFloat(p.variants[0].salePrice || p.variants[0].price)
-        : null,
-    hasSale: p.variants.length > 0 && p.variants[0].salePrice !== null,
-    regularPrice:
-      p.variants.length > 0 ? parseFloat(p.variants[0].price) : null,
-    reviewCount: p._count.reviews,
-    variants: p.variants.map((variant) => ({
-      ...variant,
-      flavor: variant.flavor
-        ? {
+  const formattedRelated = relatedProducts.map((p) => {
+    const relImage = p.images && p.images[0] ? p.images[0].url : null;
+    return {
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      image: relImage ? getFileUrl(relImage) : null,
+      basePrice:
+        p.variants.length > 0
+          ? parseFloat(p.variants[0].salePrice || p.variants[0].price)
+          : null,
+      hasSale: p.variants.length > 0 && p.variants[0].salePrice !== null,
+      regularPrice: p.variants.length > 0 ? parseFloat(p.variants[0].price) : null,
+      reviewCount: p._count.reviews,
+      variants: p.variants.map((variant) => ({
+        ...variant,
+        flavor: variant.flavor
+          ? {
             ...variant.flavor,
-            image: variant.flavor.image
-              ? getFileUrl(variant.flavor.image)
-              : null,
+            image: variant.flavor.image ? getFileUrl(variant.flavor.image) : null,
           }
-        : null,
-      images: variant.images
-        ? variant.images.map((image) => ({
-            ...image,
-            url: getFileUrl(image.url),
-          }))
-        : [],
-    })),
-  }));
+          : null,
+        images: (variant.images || []).map((image) => ({
+          ...image,
+          url: getFileUrl(image.url),
+        })),
+      })),
+    };
+  });
 
   res.status(200).json(
     new ApiResponsive(
@@ -518,15 +535,15 @@ export const getProductVariant = asyncHandler(async (req, res) => {
     ...variant,
     flavor: variant.flavor
       ? {
-          ...variant.flavor,
-          image: variant.flavor.image ? getFileUrl(variant.flavor.image) : null,
-        }
+        ...variant.flavor,
+        image: variant.flavor.image ? getFileUrl(variant.flavor.image) : null,
+      }
       : null,
     images: variant.images
       ? variant.images.map((image) => ({
-          ...image,
-          url: getFileUrl(image.url),
-        }))
+        ...image,
+        url: getFileUrl(image.url),
+      }))
       : [],
   };
 
@@ -578,15 +595,15 @@ export const getProductVariantById = asyncHandler(async (req, res) => {
     ...variant,
     flavor: variant.flavor
       ? {
-          ...variant.flavor,
-          image: variant.flavor.image ? getFileUrl(variant.flavor.image) : null,
-        }
+        ...variant.flavor,
+        image: variant.flavor.image ? getFileUrl(variant.flavor.image) : null,
+      }
       : null,
     images: variant.images
       ? variant.images.map((image) => ({
-          ...image,
-          url: getFileUrl(image.url),
-        }))
+        ...image,
+        url: getFileUrl(image.url),
+      }))
       : [],
     product: {
       ...variant.product,
@@ -782,10 +799,10 @@ export const getProductsByType = asyncHandler(async (req, res) => {
       description: product.description,
       category: primaryCategory
         ? {
-            id: primaryCategory.id,
-            name: primaryCategory.name,
-            slug: primaryCategory.slug,
-          }
+          id: primaryCategory.id,
+          name: primaryCategory.name,
+          slug: primaryCategory.slug,
+        }
         : null,
       image: imageUrl ? getFileUrl(imageUrl) : null,
       // Add variants for frontend fallback
@@ -793,16 +810,16 @@ export const getProductsByType = asyncHandler(async (req, res) => {
         ...variant,
         images: variant.images
           ? variant.images.map((image) => ({
-              ...image,
-              url: getFileUrl(image.url),
-            }))
+            ...image,
+            url: getFileUrl(image.url),
+          }))
           : [],
       })),
       basePrice:
         product.variants.length > 0
           ? parseFloat(
-              product.variants[0].salePrice || product.variants[0].price
-            )
+            product.variants[0].salePrice || product.variants[0].price
+          )
           : null,
       hasSale:
         product.variants.length > 0 && product.variants[0].salePrice !== null,
