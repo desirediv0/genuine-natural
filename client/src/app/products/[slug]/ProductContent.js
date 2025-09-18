@@ -58,7 +58,12 @@ export default function ProductContent({ slug }) {
         setProduct(productData);
         setRelatedProducts(response.data.relatedProducts || []);
 
-        if (productData.image) {
+        // Prefer product-level images if available (API returns product.images array)
+        if (productData.images && productData.images.length > 0) {
+          const primary = productData.images.find((img) => img.isPrimary) || productData.images[0];
+          // primary may already have a full url field
+          setMainImage(primary);
+        } else if (productData.image) {
           setMainImage({ url: productData.image });
         }
 
@@ -388,12 +393,18 @@ export default function ProductContent({ slug }) {
       // Use variant images if available
       currentImages = selectedVariant.images;
     } else if (
+      // If product-level images are available, use them
+      product?.images &&
+      product.images.length > 0
+    ) {
+      currentImages = product.images;
+    } else if (
       product?.image &&
       (!product?.variants ||
         product.variants.length === 0 ||
         !product.variants.some((v) => v.images && v.images.length > 0))
     ) {
-      // Only use product image if no variants have images
+      // Fallback to the single product.image string
       currentImages = [{ url: product.image }];
     } else {
       // If variants exist but selected variant has no images, try to find any variant with images
@@ -411,7 +422,7 @@ export default function ProductContent({ slug }) {
       return (
         <div className="relative aspect-square w-full bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
           <Image
-            src="/images/product-placeholder.jpg"
+            src={getImageUrl(null)}
             alt={product?.name || "Product"}
             fill
             className="object-contain p-6"
@@ -444,7 +455,7 @@ export default function ProductContent({ slug }) {
       <div className="space-y-6">
         <div className="relative aspect-square w-full bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
           <Image
-            src={getImageUrl(displayImage?.url || currentImages[0].url)}
+            src={getImageUrl(displayImage?.url || currentImages[0].url || displayImage?.url || currentImages[0]?.url)}
             alt={product?.name || "Product"}
             fill
             className="object-contain p-6"
@@ -456,15 +467,14 @@ export default function ProductContent({ slug }) {
           {currentImages.map((image, index) => (
             <div
               key={`${selectedVariant?.id || "product"}-${image.id || index}`}
-              className={`relative aspect-square w-full bg-gray-50 rounded-lg overflow-hidden cursor-pointer border-3 transition-all hover:shadow-md ${
-                displayImage?.url === image.url
-                  ? "border-[#000] shadow-lg"
-                  : "border-transparent hover:border-gray-300"
-              }`}
+              className={`relative aspect-square w-full bg-gray-50 rounded-lg overflow-hidden cursor-pointer border-3 transition-all hover:shadow-md ${displayImage?.url === image.url
+                ? "border-[#000] shadow-lg"
+                : "border-transparent hover:border-gray-300"
+                }`}
               onClick={() => setMainImage(image)}
             >
               <Image
-                src={getImageUrl(image.url) || "/placeholder.jpg"}
+                src={getImageUrl(image) || "/placeholder.jpg"}
                 alt={`${product.name} - Image ${index + 1}`}
                 fill
                 className="object-contain p-2"
@@ -477,9 +487,12 @@ export default function ProductContent({ slug }) {
   };
 
   const getImageUrl = (image) => {
+    // Accept either an image object ({ url }) or a string
     if (!image) return "/images/product-placeholder.jpg";
-    if (image.startsWith("http")) return image;
-    return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
+    const url = typeof image === "string" ? image : image.url;
+    if (!url) return "/images/product-placeholder.jpg";
+    if (url.startsWith("http")) return url;
+    return `https://desirediv-storage.blr1.digitaloceanspaces.com/${url}`;
   };
 
   const getPriceDisplay = () => {
@@ -658,9 +671,8 @@ export default function ProductContent({ slug }) {
             <>
               <ChevronRight className="h-4 w-4 mx-2 text-gray-400" />
               <Link
-                href={`/category/${
-                  product.category?.slug || product.categories[0].category.slug
-                }`}
+                href={`/category/${product.category?.slug || product.categories[0].category.slug
+                  }`}
                 className="text-gray-500 hover:text-[#000] transition-colors"
               >
                 {product.category?.name || product.categories[0].category.name}
@@ -755,13 +767,12 @@ export default function ProductContent({ slug }) {
                     return (
                       <button
                         key={flavor.id}
-                        className={`px-4 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
-                          selectedFlavor?.id === flavor.id
-                            ? "border-[#000] bg-[#000] text-white shadow-lg"
-                            : isAvailable
+                        className={`px-4 py-3 rounded-lg border-2 text-sm font-medium transition-all ${selectedFlavor?.id === flavor.id
+                          ? "border-[#000] bg-[#000] text-white shadow-lg"
+                          : isAvailable
                             ? "border-gray-300 hover:border-[#000] hover:text-[#000]"
                             : "border-gray-200 text-gray-400 cursor-not-allowed"
-                        }`}
+                          }`}
                         onClick={() => handleFlavorChange(flavor)}
                         disabled={!isAvailable}
                       >
@@ -786,22 +797,21 @@ export default function ProductContent({ slug }) {
                     );
                     const isAvailable = selectedFlavor
                       ? availableCombinations.some(
-                          (combo) =>
-                            combo.flavorId === selectedFlavor.id &&
-                            combo.weightId === weight.id
-                        )
+                        (combo) =>
+                          combo.flavorId === selectedFlavor.id &&
+                          combo.weightId === weight.id
+                      )
                       : availableFlavorIds.length > 0;
 
                     return (
                       <button
                         key={weight.id}
-                        className={`px-4 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
-                          selectedWeight?.id === weight.id
-                            ? "border-[#000] bg-[#000] text-white shadow-lg"
-                            : isAvailable
+                        className={`px-4 py-3 rounded-lg border-2 text-sm font-medium transition-all ${selectedWeight?.id === weight.id
+                          ? "border-[#000] bg-[#000] text-white shadow-lg"
+                          : isAvailable
                             ? "border-gray-300 hover:border-[#000] hover:text-[#000]"
                             : "border-gray-200 text-gray-400 cursor-not-allowed"
-                        }`}
+                          }`}
                         onClick={() => handleWeightChange(weight)}
                         disabled={!isAvailable}
                       >
@@ -912,11 +922,10 @@ export default function ProductContent({ slug }) {
 
               <Button
                 variant="outline"
-                className={`rounded-lg border-2  font-semibold transition-all ${
-                  isInWishlist
-                    ? "text-red-600 border-red-600 hover:bg-red-600 "
-                    : "border-[#2C3E50] text-[#2C3E50] hover:bg-red-600 "
-                }`}
+                className={`rounded-lg border-2  font-semibold transition-all ${isInWishlist
+                  ? "text-red-600 border-red-600 hover:bg-red-600 "
+                  : "border-[#2C3E50] text-[#2C3E50] hover:bg-red-600 "
+                  }`}
                 size="icon"
                 onClick={handleAddToWishlist}
                 disabled={isAddingToWishlist}
@@ -968,7 +977,7 @@ export default function ProductContent({ slug }) {
                 </div>
               )}
 
-              {product.tags && product.tags.length > 0 && (
+              {/* {product.tags && product.tags.length > 0 && (
                 <div className="flex">
                   <span className="font-semibold w-32 text-[#2C3E50]">
                     Tags:
@@ -987,7 +996,7 @@ export default function ProductContent({ slug }) {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -997,31 +1006,28 @@ export default function ProductContent({ slug }) {
           <div className="border-b border-gray-200">
             <div className="flex overflow-x-auto">
               <button
-                className={`px-8 py-4 font-semibold text-sm uppercase transition-colors ${
-                  activeTab === "description"
-                    ? "border-b-3 border-[#000] text-[#000] bg-[#000]/5"
-                    : "text-gray-500 hover:text-[#2C3E50]"
-                }`}
+                className={`px-8 py-4 font-semibold text-sm uppercase transition-colors ${activeTab === "description"
+                  ? "border-b-3 border-[#000] text-[#000] bg-[#000]/5"
+                  : "text-gray-500 hover:text-[#2C3E50]"
+                  }`}
                 onClick={() => setActiveTab("description")}
               >
                 Description
               </button>
               <button
-                className={`px-8 py-4 font-semibold text-sm uppercase transition-colors ${
-                  activeTab === "reviews"
-                    ? "border-b-3 border-[#000] text-[#000] bg-[#000]/5"
-                    : "text-gray-500 hover:text-[#2C3E50]"
-                }`}
+                className={`px-8 py-4 font-semibold text-sm uppercase transition-colors ${activeTab === "reviews"
+                  ? "border-b-3 border-[#000] text-[#000] bg-[#000]/5"
+                  : "text-gray-500 hover:text-[#2C3E50]"
+                  }`}
                 onClick={() => setActiveTab("reviews")}
               >
                 Reviews ({product.reviewCount || 0})
               </button>
               <button
-                className={`px-8 py-4 font-semibold text-sm uppercase transition-colors ${
-                  activeTab === "shipping"
-                    ? "border-b-3 border-[#000] text-[#000] bg-[#000]/5"
-                    : "text-gray-500 hover:text-[#2C3E50]"
-                }`}
+                className={`px-8 py-4 font-semibold text-sm uppercase transition-colors ${activeTab === "shipping"
+                  ? "border-b-3 border-[#000] text-[#000] bg-[#000]/5"
+                  : "text-gray-500 hover:text-[#2C3E50]"
+                  }`}
                 onClick={() => setActiveTab("shipping")}
               >
                 Shipping & Returns
