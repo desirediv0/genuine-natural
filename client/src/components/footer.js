@@ -7,7 +7,6 @@ import {
   Twitter,
   Youtube,
   Mail,
-  Phone,
   MapPin,
   Truck,
   Shield,
@@ -174,18 +173,11 @@ export function Footer() {
                   <Mail size={18} className="text-white" />
                 </div>
                 <span className="text-gray-300 group-hover:text-white transition-colors">
-                  support@beinggenuinenutrition.com
+                  connect.genuinenutrition@gmail.com
                 </span>
               </div>
 
-              <div className="flex items-center group">
-                <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mr-4 group-hover:bg-white/20 transition-all flex-shrink-0">
-                  <Phone size={18} className="text-white" />
-                </div>
-                <span className="text-gray-300 group-hover:text-white transition-colors">
-                  +91 8053980008
-                </span>
-              </div>
+
             </div>
           </div>
         </div>

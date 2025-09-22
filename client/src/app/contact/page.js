@@ -210,17 +210,12 @@ export default function ContactPage() {
                       contactInfo?.address || "89/2 Sector 39 Gurugram Haryana",
                     color: "bg-blue-500",
                   },
-                  {
-                    icon: Phone,
-                    title: "Call Us",
-                    content: contactInfo?.phone || "+91 8053980008 ",
-                    color: "bg-green-500",
-                  },
+
                   {
                     icon: Mail,
                     title: "Email Us",
                     content:
-                      contactInfo?.email || "support@beinggenuinenutrition.com",
+                      contactInfo?.email || "connect.genuinenutrition@gmail.com",
                     color: "bg-red-500",
                   },
                 ].map((item, index) => (

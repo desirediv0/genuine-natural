@@ -252,7 +252,7 @@ export const getDeleteTemplate = (deletionLink) => `
                     Contact our support team for assistance
                 </div>
             </div>
-            <p>If you didn't request this deletion, please contact our support team immediately at support@beinggenuinenutrition.com.</p>
+            <p>If you didn't request this deletion, please contact our support team immediately at connect.genuinenutrition@gmail.com.</p>
         </div>
         <div class="footer">
             © ${new Date().getFullYear()} Being Genuine Nutrition | Premium Supplements for Your Fitness Journey<br>
@@ -348,7 +348,7 @@ export const getResetTemplate = (resetLink) => `
             <p>Dear Valued Customer,</p>
             <p>We received a request to reset the password for your Being Genuine Nutrition account. Click the button below to create a new password:</p>
             <a href="${resetLink}" class="button">Reset Password</a>
-            <p>If you didn't request this password reset, please contact our support team immediately at support@beinggenuinenutrition.com</p>
+            <p>If you didn't request this password reset, please contact our support team immediately at connect.genuinenutrition@gmail.com</p>
             <p>This link will expire in 15 minutes for security reasons.</p>
         </div>
         <div class="footer">
@@ -454,8 +454,8 @@ export const getFeeReceiptTemplate = (data) => `
                 <p><strong>Amount Paid:</strong> ₹${data.amount}</p>
                 <p><strong>Payment ID:</strong> ${data.paymentId}</p>
                 <p><strong>Date:</strong> ${new Date(
-                  data.date
-                ).toLocaleDateString()}</p>
+    data.date
+).toLocaleDateString()}</p>
             </div>
             <p>Please find your receipt attached to this email. We look forward to supporting your fitness journey with our premium supplements.</p>
         </div>
@@ -554,24 +554,22 @@ export const getFeeNotificationTemplate = (data) => `
                 <div class="subscription-item">
                     <strong>Next Billing:</strong>
                     <span class="important">${new Date(
-                      data.dueDate
-                    ).toLocaleDateString()}</span>
+    data.dueDate
+).toLocaleDateString()}</span>
                 </div>
-                ${
-                  data.description
-                    ? `
+                ${data.description
+        ? `
                 <div class="subscription-item">
                     <strong>Description:</strong>
                     <span>${data.description}</span>
                 </div>
                 `
-                    : ""
-                }
+        : ""
+    }
             </div>
             <p>Thank you for subscribing to our premium supplements. Your fitness journey starts now!</p>
-            <a href="${
-              process.env.FRONTEND_URL
-            }/account/subscriptions" class="btn">View Subscription Details</a>
+            <a href="${process.env.FRONTEND_URL
+    }/account/subscriptions" class="btn">View Subscription Details</a>
         </div>
         <div class="footer">
             <p>© ${new Date().getFullYear()} Being Genuine Nutrition | Premium Supplements for Your Fitness Journey</p>
@@ -675,12 +673,12 @@ export const getPaymentSuccessTemplate = (data) => `
                 <div class="detail-row">
                     <strong>Date:</strong>
                     <span>${new Date(data.date).toLocaleString("en-IN", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}</span>
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+})}</span>
                 </div>
                 <div class="detail-row">
                     <strong>Product:</strong>
@@ -693,7 +691,7 @@ export const getPaymentSuccessTemplate = (data) => `
         </div>
         <div class="footer">
             <p>© ${new Date().getFullYear()} Being Genuine Nutrition | Premium Supplements for Your Fitness Journey</p>
-            <p>For any queries, please contact our support team at support@beinggenuinenutrition.com</p>
+            <p>For any queries, please contact our support team at connect.genuinenutrition@gmail.com</p>
         </div>
     </div>
 </body>
@@ -776,12 +774,11 @@ export const getPaymentFailureTemplate = (data) => `
                 <h3>Transaction Details:</h3>
                 <p><strong>Amount:</strong> ₹${data.amount}</p>
                 <p><strong>Date:</strong> ${new Date(data.date).toLocaleString(
-                  "en-IN"
-                )}</p>
+    "en-IN"
+)}</p>
                 <p><strong>Product:</strong> ${data.feeTitle}</p>
-                <p><strong>Error:</strong> ${
-                  data.error || "Transaction could not be completed"
-                }</p>
+                <p><strong>Error:</strong> ${data.error || "Transaction could not be completed"
+    }</p>
             </div>
 
             <p>Possible reasons for payment failure:</p>
@@ -800,7 +797,7 @@ export const getPaymentFailureTemplate = (data) => `
         </div>
         <div class="footer">
             <p>© ${new Date().getFullYear()} Being Genuine Nutrition | Premium Supplements for Your Fitness Journey</p>
-            <p>Need help? Contact our support team at support@beinggenuinenutrition.com</p>
+            <p>Need help? Contact our support team at connect.genuinenutrition@gmail.com</p>
         </div>
     </div>
 </body>
@@ -808,13 +805,13 @@ export const getPaymentFailureTemplate = (data) => `
 `;
 
 export const getFeeUpdateTemplate = ({
-  name,
-  feeTitle,
-  oldAmount,
-  newAmount,
-  oldDate,
-  newDate,
-  reason,
+    name,
+    feeTitle,
+    oldAmount,
+    newAmount,
+    oldDate,
+    newDate,
+    reason,
 }) => `
 <!DOCTYPE html>
 <html>
@@ -959,16 +956,14 @@ export const getCertificateGeneratedTemplate = (data) => `
             
             <div class="shipping-info">
                 <p><strong>Your premium supplements are now in transit!</strong></p>
-                <p>Tracking ID: <span class="tracking-id">${
-                  data.certificateId
-                }</span></p>
+                <p>Tracking ID: <span class="tracking-id">${data.certificateId
+    }</span></p>
                 <p>You can track your package using the tracking number above. Your fitness journey is about to get a boost with our premium supplements.</p>
             </div>
 
             <center>
-                <a href="${
-                  process.env.FRONTEND_URL
-                }/account/orders" class="button">Track Order</a>
+                <a href="${process.env.FRONTEND_URL
+    }/account/orders" class="button">Track Order</a>
             </center>
 
             <p>Thank you for choosing Being Genuine Nutrition. We're committed to supporting your fitness goals with the highest quality supplements!</p>
@@ -1230,9 +1225,8 @@ export const getOrderStatusUpdateTemplate = (data) => `
                 </div>
             </div>
             
-            ${
-              data.status === "SHIPPED"
-                ? `
+            ${data.status === "SHIPPED"
+        ? `
             <div class="tracking-info">
                 <h3>Tracking Information</h3>
                 <p><strong>Tracking Number:</strong> ${data.trackingNumber}</p>
@@ -1240,34 +1234,31 @@ export const getOrderStatusUpdateTemplate = (data) => `
                 <p>You can track your package using the tracking number above.</p>
             </div>
             `
-                : ""
-            }
+        : ""
+    }
             
-            ${
-              data.status === "DELIVERED"
-                ? `
+            ${data.status === "DELIVERED"
+        ? `
             <p>Your order has been successfully delivered! We hope you enjoy your premium supplements.</p>
             `
-                : ""
-            }
+        : ""
+    }
             
-            ${
-              data.status === "CANCELLED"
-                ? `
+            ${data.status === "CANCELLED"
+        ? `
             <p>Your order has been cancelled. If you have any questions about this cancellation, please contact our support team.</p>
             `
-                : ""
-            }
+        : ""
+    }
             
             <div class="button-container">
-                <a href="${
-                  process.env.FRONTEND_URL
-                }/account/orders" class="button">View Order Details</a>
+                <a href="${process.env.FRONTEND_URL
+    }/account/orders" class="button">View Order Details</a>
             </div>
         </div>
         <div class="footer">
             © ${new Date().getFullYear()} Being Genuine Nutrition | Premium Health Supplements<br>
-            Questions? Contact our customer support at support@beinggenuinenutrition.com
+            Questions? Contact our customer support at connect.genuinenutrition@gmail.com
         </div>
     </div>
 </body>
@@ -1397,8 +1388,8 @@ export const getOrderConfirmationTemplate = (data) => `
                 <div class="detail-row">
                     <span class="detail-label">Order Date:</span>
                     <span>${new Date(
-                      data.orderDate
-                    ).toLocaleDateString()}</span>
+    data.orderDate
+).toLocaleDateString()}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Payment Method:</span>
@@ -1416,16 +1407,16 @@ export const getOrderConfirmationTemplate = (data) => `
                 </thead>
                 <tbody>
                     ${data.items
-                      .map(
-                        (item) => `
+        .map(
+            (item) => `
                     <tr>
                         <td>${item.name} ${item.variant}</td>
                         <td>${item.quantity}</td>
                         <td>₹${item.price}</td>
                     </tr>
                     `
-                      )
-                      .join("")}
+        )
+        .join("")}
                     <tr class="total-row">
                         <td colspan="2">Subtotal</td>
                         <td>₹${data.subtotal}</td>
@@ -1450,22 +1441,19 @@ export const getOrderConfirmationTemplate = (data) => `
                 <p>
                     ${data.shippingAddress.name}<br>
                     ${data.shippingAddress.street}<br>
-                    ${data.shippingAddress.city}, ${
-  data.shippingAddress.state
-} ${data.shippingAddress.postalCode}<br>
+                    ${data.shippingAddress.city}, ${data.shippingAddress.state
+    } ${data.shippingAddress.postalCode}<br>
                     ${data.shippingAddress.country}
                 </p>
             </div>
             
             <p>You can track your order status in your account dashboard:</p>
             <div class="button-container">
-                <a href="${
-                  process.env.FRONTEND_URL
-                }/account/orders" class="button">Track Your Order</a>
+                <a href="${process.env.FRONTEND_URL
+    }/account/orders" class="button">Track Your Order</a>
             </div>
-            <p>If you can't click the button, copy and paste this link in your browser: <br>${
-              process.env.FRONTEND_URL
-            }/account/orders</p>
+            <p>If you can't click the button, copy and paste this link in your browser: <br>${process.env.FRONTEND_URL
+    }/account/orders</p>
         </div>
         <div class="footer">
             © ${new Date().getFullYear()} Being Genuine Nutrition | Premium Health Supplements<br>

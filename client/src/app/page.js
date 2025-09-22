@@ -11,8 +11,8 @@ import BenefitsSec from "@/components/benifit-sec";
 import FeaturedCategoriesSection from "@/components/catgry";
 
 import FeaturedProducts from "@/components/FeaturedProducts";
-import Hero from "@/components/hero";
-import FeatureBanner from "@/components/featurebanner";
+// Import the new individual parts so we can place them separately
+import FeatureBanner, { ShowcaseHero, FeatureCards, ProductShowcase } from "@/components/featurebanner";
 import Heading from "@/components/Heading";
 import HeroCarousel from "@/components/HeroCarosal";
 
@@ -289,11 +289,10 @@ const TestimonialsSection = () => {
                       transition={{ delay: 0.8 + i * 0.1, duration: 0.3 }}
                     >
                       <Star
-                        className={`h-5 w-5 ${
-                          i < testimonial.rating
-                            ? "text-black fill-black"
-                            : "text-black/30"
-                        }`}
+                        className={`h-5 w-5 ${i < testimonial.rating
+                          ? "text-black fill-black"
+                          : "text-black/30"
+                          }`}
                       />
                     </motion.div>
                   ))}
@@ -428,7 +427,6 @@ export default function Home() {
       {/* Featured Categories Section */}
       <FeaturedCategoriesSection />
 
-      <FeatureBanner />
 
       {/* Featured Products Section */}
       {featuredProducts.length > 0 && (
@@ -447,6 +445,7 @@ export default function Home() {
           </div>
         </section>
       )}
+      <FeatureBanner only="hero" />
 
       {/* Bestseller Products Section */}
       {bestsellerProducts.length > 0 && (
@@ -484,6 +483,8 @@ export default function Home() {
         </section>
       )}
 
+      <FeatureBanner only="cards" />
+
       {/* New Arrivals Section */}
       {newArrivalsProducts.length > 0 && (
         <section className="py-10 bg-white">
@@ -502,6 +503,7 @@ export default function Home() {
         </section>
       )}
 
+      <FeatureBanner only="showcase" />
       {/* <GymSupplementShowcase /> */}
       <BenefitsSec />
       <TestimonialsSection />
