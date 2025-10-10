@@ -131,7 +131,7 @@ export function Navbar() {
     if (searchQuery.trim()) {
       router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
       setIsSearchExpanded(false);
-      setIsMenuOpen(false);
+      closeMenu();
       setSearchQuery("");
     }
   };
@@ -215,7 +215,6 @@ export function Navbar() {
 
   const MobileMenu = ({
     isMenuOpen,
-    setIsMenuOpen,
     categories,
     searchQuery,
     setSearchQuery,
@@ -245,7 +244,8 @@ export function Navbar() {
       e.preventDefault();
       if (localSearchQuery.trim()) {
         router.push(`/products?search=${encodeURIComponent(localSearchQuery)}`);
-        setIsMenuOpen(false);
+        // use closeMenu helper so the isMenuOpenRef stays in sync immediately
+        closeMenu();
         // keep parent search state intact or clear after navigation; do not trigger extra rerenders here
         setLocalSearchQuery("");
       }
@@ -270,9 +270,9 @@ export function Navbar() {
             exit="hidden"
             variants={mobileMenuVariants}
             className="lg:hidden fixed inset-0 z-[99999] bg-white overflow-y-auto"
-            style={{ maxHeight: "95vh" }}
+            style={{ maxHeight: "100vh", WebkitOverflowScrolling: "touch" }}
           >
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col min-h-0">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -308,7 +308,7 @@ export function Navbar() {
                 </motion.button>
               </motion.div>
 
-              <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8 bg-gray-50">
+              <div className="flex-1 px-6 py-8 space-y-8 bg-gray-50 overflow-y-auto">
 
 
                 <motion.div
@@ -486,7 +486,7 @@ export function Navbar() {
                             <Link
                               href={item.href}
                               className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 group"
-                              onClick={() => setIsMenuOpen(false)}
+                              onClick={() => closeMenu()}
                             >
                               <div className="flex items-center space-x-3">
                                 <item.icon className="w-5 h-5 text-gray-600" />
@@ -504,7 +504,7 @@ export function Navbar() {
                           whileTap={{ scale: 0.98 }}
                           onClick={() => {
                             handleLogout();
-                            setIsMenuOpen(false);
+                            closeMenu();
                           }}
                           className="w-full mt-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-lg font-semibold border border-red-200"
                         >
@@ -743,11 +743,11 @@ export function Navbar() {
                           >
                             <div className="flex items-center justify-between px-6 py-4 bg-black text-white">
                               <div>
-                                <h3 className="text-xl font-bold flex items-center">
-                                  <Search className="w-6 h-6 mr-2" />
+                                <h3 className="text-lg md:text-xl font-bold flex items-center">
+                                  <Search className="md:w-6 md:h-6 h-4 w-4 mr-2" />
                                   Search Products
                                 </h3>
-                                <p className="text-sm text-gray-300 mt-1">
+                                <p className="text-xs md:text-sm text-gray-300 mt-1">
                                   Find your perfect solution
                                 </p>
                               </div>
@@ -759,18 +759,18 @@ export function Navbar() {
                                 onClick={() => setIsSearchExpanded(false)}
                                 aria-label="Close search"
                               >
-                                <X className="h-6 w-6" />
+                                <X className="md:w-6 md:h-6 h-4 w-4" />
                               </motion.button>
                             </div>
 
                             <div className="md:p-6 p-3">
                               <div className="relative">
-                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 md:w-6 md:h-6 h-4 w-4 text-gray-400" />
                                 <Input
                                   ref={searchInputRef}
                                   type="search"
                                   placeholder="Search for products, services..."
-                                  className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 focus:border-black focus:ring-0 rounded text-lg font-medium"
+                                  className="w-full pl-10 md:pl-12 pr-10 md:pr-12 py-4 border-2 border-gray-200 focus:border-black focus:ring-0 rounded text-lg font-medium"
                                   value={searchQuery}
                                   onChange={(e) =>
                                     setSearchQuery(e.target.value)
@@ -1024,20 +1024,20 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        <MobileMenu
-          isMenuOpen={isMenuOpen}
-          setIsMenuOpen={setIsMenuOpen}
-          categories={categories}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          handleSearch={handleSearch}
-          isAuthenticated={isAuthenticated}
-          user={user}
-          cart={cart}
-          handleLogout={handleLogout}
-        />
       </motion.header>
+
+      {/* Mobile Menu (rendered outside the animated header so fixed positioning is viewport-scoped) */}
+      <MobileMenu
+        isMenuOpen={isMenuOpen}
+        categories={categories}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        handleSearch={handleSearch}
+        isAuthenticated={isAuthenticated}
+        user={user}
+        cart={cart}
+        handleLogout={handleLogout}
+      />
 
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
