@@ -392,7 +392,7 @@ function ProductsContent() {
         </div>
 
         {/* Mobile filter toggle */}
-        <div className="md:hidden flex items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-sm">
+        <div className="md:hidden flex items-center justify-between mb-3 md:mb-6 bg-white p-4 rounded-lg shadow-sm">
           <h1 className="text-2xl font-bold text-black">Products</h1>
           <Button
             variant="outline"
@@ -613,7 +613,7 @@ function ProductsContent() {
           {/* Products Grid */}
           <div className="lg:w-3/4">
             {/* Header with count and sort */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-6 ">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-3 md:p-6 ">
               <div className="text-black mb-4 sm:mb-0">
                 {loading && !products.length ? (
                   <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
