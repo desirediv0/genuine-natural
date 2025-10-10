@@ -129,27 +129,26 @@ const HeroCarousel = () => {
           </CarouselContent>
 
           {/* Navigation Controls - Better positioned and sized */}
-          <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 z-30 bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm" />
-          <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 z-30 bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm" />
+          <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 z-10 bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm " />
+          <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 z-10 bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm" />
 
           {/* Dot Indicators - Better responsive sizing */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex space-x-2">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex space-x-2">
             {slides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2  rounded-full transition-all duration-300 ${
-                  index === currentSlide
-                    ? "bg-white scale-125 shadow-lg"
-                    : "bg-white/50 hover:bg-white/70"
-                }`}
+                className={`w-2 h-2  rounded-full transition-all duration-300 ${index === currentSlide
+                  ? "bg-white scale-125 shadow-lg"
+                  : "bg-white/50 hover:bg-white/70"
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
 
           {/* Autoplay Toggle - Better positioned */}
-          <div className="absolute top-4 right-4 z-30">
+          <div className="absolute top-4 right-4 z-10">
             <Button
               variant="outline"
               size="sm"

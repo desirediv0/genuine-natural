@@ -33,7 +33,7 @@ const CircularCategoryCard = ({ category, index }) => {
 
         {/* Main Image Container with Overlay */}
         <div className="relative w-full h-full overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
+          <div className="absolute inset-0 md:bg-gradient-to-t bg-gradient-to-b md:from-black from-black/70 via-black/50 to-transparent z-10" />
           <Image
             src={category.image || "/placeholder.jpg"}
             alt={category.name}
@@ -135,7 +135,7 @@ const FeaturedCategoriesCarousel = ({ categories }) => {
   }
 
   return (
-    <div className="relative px-4 p-2 md:p-4">
+    <div className="relative px-1 md:px-4 p-2 md:p-4">
       <Carousel
         setApi={setApi}
         // align start so carousel doesn't center the slides on init; trimSnaps keeps snaps tidy
@@ -161,7 +161,7 @@ const FeaturedCategoriesCarousel = ({ categories }) => {
         <CarouselNext className="hidden md:flex absolute -right-12 -translate-x-0 bg-black/90 text-white backdrop-blur-sm border-none shadow-lg hover:bg-black hover:scale-110 transition-all duration-300" />
 
         {/* Dot indicators */}
-        <div className="flex justify-center mt-8 gap-2">
+        <div className="flex justify-center mt-4 md:mt-8 gap-2">
           {(() => {
             // Determine items per page according to the largest breakpoint we set on CarouselItem
             const itemsPerPage = 5; // matches xl:basis-1/5 => 5 items per view on xl and up
@@ -208,7 +208,7 @@ const FeaturedCategoriesSection = () => {
   return (
     <section className="md:mt-3 py-4 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8 relative">
+        <div className="text-center mb-3 relative">
           <Heading
             title={"Featured Categories"}
             description={"Explore our collection of categories"}

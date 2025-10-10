@@ -129,9 +129,9 @@ const BenefitsSec = () => {
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-10 items-center mb-8">
           {/* Left Side - Benefits Grid */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-3 md:gap-6">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
@@ -248,7 +248,7 @@ const BenefitsSec = () => {
               and safety
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
             {certifications.map((cert, index) => (
               <motion.div
                 key={index}

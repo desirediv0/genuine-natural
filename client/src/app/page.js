@@ -183,7 +183,7 @@ const TestimonialsSection = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 max-w-7xl mx-auto px-4"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6 max-w-7xl mx-auto px-2 md:px-4"
         >
           {testimonials.map((testimonial, index) => (
             <motion.div
@@ -193,10 +193,10 @@ const TestimonialsSection = () => {
               whileHover={{ y: -10, scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="relative bg-white border-2 border-black rounded p-4 md:p-6 transition-all duration-300 hover:shadow-[12px_12px_0_0_#000] hover:-translate-x-2 hover:-translate-y-2 h-full">
+              <div className="relative bg-white border-2 border-black rounded p-3 md:p-6 transition-all duration-300 hover:shadow-[12px_12px_0_0_#000] hover:-translate-x-2 hover:-translate-y-2 h-full">
                 {/* Quote Icon */}
                 <motion.div
-                  className="absolute -top-4 -right-4 w-10 h-10 bg-black rounded flex items-center justify-center"
+                  className="hidden absolute -top-4 -right-4 w-10 h-10 bg-black rounded md:flex items-center justify-center"
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{
                     duration: 4,

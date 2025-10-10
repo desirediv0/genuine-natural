@@ -44,6 +44,7 @@ export function Navbar() {
   const searchInputRef = useRef(null);
   const navbarRef = useRef(null);
   const router = useRouter();
+  const isMenuOpenRef = useRef(false);
   const pathname = usePathname();
 
   // Enhanced scroll effect with hide/show functionality
@@ -70,14 +71,16 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // keep a ref updated for the click outside handler to check current menu state
   useEffect(() => {
-    setIsMenuOpen(false);
-    setIsSearchExpanded(false);
-    setActiveDropdown(null);
-  }, [pathname]);
+    isMenuOpenRef.current = isMenuOpen;
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // If mobile menu is open, ignore outside clicks so the overlay can handle interactions
+      if (isMenuOpenRef.current) return;
+
       if (navbarRef.current && !navbarRef.current.contains(event.target)) {
         setIsSearchExpanded(false);
         setActiveDropdown(null);
@@ -112,19 +115,14 @@ export function Navbar() {
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
+      // only disable scroll; avoid setting position fixed on mobile (keyboard issues)
       document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.width = "100%";
     } else {
       document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
     }
 
     return () => {
       document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
     };
   }, [isMenuOpen]);
 
@@ -160,6 +158,17 @@ export function Navbar() {
     if (!navbarRef.current?.contains(document.activeElement)) {
       setActiveDropdown(null);
     }
+  };
+
+  // helper to keep ref in sync immediately when opening/closing menu
+  const openMenu = () => {
+    isMenuOpenRef.current = true;
+    setIsMenuOpen(true);
+  };
+
+  const closeMenu = () => {
+    isMenuOpenRef.current = false;
+    setIsMenuOpen(false);
   };
 
   // Animation variants
@@ -216,6 +225,7 @@ export function Navbar() {
   }) => {
     const mobileSearchInputRef = useRef(null);
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
+    const searchTimeoutRef = useRef(null);
 
     // Sync local state with parent state
     useEffect(() => {
@@ -225,8 +235,8 @@ export function Navbar() {
     // Cleanup timeout on unmount
     useEffect(() => {
       return () => {
-        if (window.searchTimeout) {
-          clearTimeout(window.searchTimeout);
+        if (searchTimeoutRef.current) {
+          clearTimeout(searchTimeoutRef.current);
         }
       };
     }, []);
@@ -236,19 +246,17 @@ export function Navbar() {
       if (localSearchQuery.trim()) {
         router.push(`/products?search=${encodeURIComponent(localSearchQuery)}`);
         setIsMenuOpen(false);
-        setSearchQuery("");
+        // keep parent search state intact or clear after navigation; do not trigger extra rerenders here
         setLocalSearchQuery("");
       }
     };
 
     const handleSearchInputChange = (e) => {
-      e.stopPropagation();
-      e.preventDefault();
       const value = e.target.value;
       setLocalSearchQuery(value);
       // Only update parent state when user stops typing
-      clearTimeout(window.searchTimeout);
-      window.searchTimeout = setTimeout(() => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+      searchTimeoutRef.current = setTimeout(() => {
         setSearchQuery(value);
       }, 300);
     };
@@ -262,9 +270,7 @@ export function Navbar() {
             exit="hidden"
             variants={mobileMenuVariants}
             className="lg:hidden fixed inset-0 z-[99999] bg-white overflow-y-auto"
-            style={{ maxHeight: "100vh" }}
-            onTouchStart={(e) => e.stopPropagation()}
-            onTouchEnd={(e) => e.stopPropagation()}
+            style={{ maxHeight: "95vh" }}
           >
             <div className="flex flex-col h-full">
               <motion.div
@@ -276,7 +282,7 @@ export function Navbar() {
                 <Link
                   href="/"
                   className="flex items-center"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                 >
                   <motion.div
                     whileHover={{ scale: 1.05 }}
@@ -294,7 +300,7 @@ export function Navbar() {
                 <motion.button
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                   className="p-3 text-white hover:bg-white/10 rounded-xl transition-all duration-200"
                   aria-label="Close menu"
                 >
@@ -303,35 +309,7 @@ export function Navbar() {
               </motion.div>
 
               <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8 bg-gray-50">
-                <motion.form
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  onSubmit={handleMobileSearch}
-                  className="relative"
-                >
-                  <div className="relative bg-white rounded-xl border-2 border-gray-200 shadow-lg overflow-hidden hover:border-black transition-colors duration-300">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <Input
-                      ref={mobileSearchInputRef}
-                      type="search"
-                      placeholder="Search products..."
-                      className="w-full pl-12 pr-16 py-4 text-base border-0 focus:ring-0 focus:outline-none bg-transparent"
-                      value={localSearchQuery}
-                      onChange={handleSearchInputChange}
-                      autoComplete="off"
-                    />
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="submit"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-3 rounded-lg bg-black text-white hover:bg-gray-800 transition-all duration-200 shadow-md"
-                      aria-label="Search"
-                    >
-                      <Search className="h-4 w-4" />
-                    </motion.button>
-                  </div>
-                </motion.form>
+
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -357,15 +335,15 @@ export function Navbar() {
                     >
                       <Link
                         href={item.href}
-                        className="bg-white rounded-xl p-6 shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 group flex items-center justify-between"
-                        onClick={() => setIsMenuOpen(false)}
+                        className="bg-white transition-all duration-300 group flex items-center justify-between"
+                        onClick={closeMenu}
                       >
                         <div className="flex items-center space-x-4">
                           <motion.div
                             whileHover={{ scale: 1.1, rotate: 5 }}
-                            className="w-12 h-12 rounded-xl bg-black flex items-center justify-center group-hover:bg-gray-800 transition-all"
+                            className="w-10 h-10 rounded-xl bg-black flex items-center justify-center group-hover:bg-gray-800 transition-all"
                           >
-                            <item.icon className="w-6 h-6 text-white" />
+                            <item.icon className="w-4 h-4 text-white" />
                           </motion.div>
                           <span className="font-semibold text-lg text-gray-900">
                             {item.label}
@@ -382,13 +360,13 @@ export function Navbar() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="bg-white rounded-xl p-6 shadow-md border border-gray-200"
+                    className="bg-white"
                   >
                     <h3 className="font-bold text-xl mb-5 text-gray-900 flex items-center">
                       <div className="w-1 h-6 bg-black rounded-full mr-3"></div>
                       Collections
                     </h3>
-                    <div className="grid grid-cols-1 gap-3">
+                    <div className="grid grid-cols-1 gap-2 md:gap-3">
                       {categories.slice(0, 6).map((category, index) => (
                         <motion.div
                           key={category.id}
@@ -399,7 +377,7 @@ export function Navbar() {
                           <Link
                             href={`/category/${category.slug}`}
                             className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 group"
-                            onClick={() => setIsMenuOpen(false)}
+                            onClick={closeMenu}
                           >
                             <span className="font-medium text-gray-900">
                               {category.name}
@@ -417,9 +395,9 @@ export function Navbar() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 }}
-                  className="bg-white rounded-xl p-6 shadow-md border border-gray-200"
+                  className="bg-white rounded-xl p-5 shadow-md border border-gray-200"
                 >
-                  <h3 className="font-bold text-xl mb-5 text-gray-900 flex items-center">
+                  <h3 className="font-bold text-xl mb-3 text-gray-900 flex items-center">
                     <div className="w-1 h-6 bg-black rounded-full mr-3"></div>
                     <ClientOnly fallback="Account">
                       {isAuthenticated ? "My Account" : "Account"}
@@ -432,30 +410,33 @@ export function Navbar() {
                         <p className="text-gray-600 mb-4">
                           Join us for better shopping experience!
                         </p>
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Link
-                            href="/login"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block w-full py-3 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                        <div className="flex  items-center justify-center">
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+
                           >
-                            Login to Account
-                          </Link>
-                        </motion.div>
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Link
-                            href="/register"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block w-full py-3 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                            <Link
+                              href="/login"
+                              onClick={closeMenu}
+                              className=" w-full py-3 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                            >
+                              Login to Account
+                            </Link>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
-                            Create Account
-                          </Link>
-                        </motion.div>
+                            <Link
+                              href="/register"
+                              onClick={closeMenu}
+                              className=" w-full py-3 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                            >
+                              Create Account
+                            </Link>
+                          </motion.div>
+                        </div>
                       </div>
                     }
                   >
@@ -535,30 +516,32 @@ export function Navbar() {
                         <p className="text-gray-600 mb-4">
                           Join us for better shopping experience!
                         </p>
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Link
-                            href="/login"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block w-full py-3 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                        <div className="flex items-center justify-center gap-4">
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
-                            Login to Account
-                          </Link>
-                        </motion.div>
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Link
-                            href="/register"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block w-full py-3 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                            <Link
+                              href="/login"
+                              onClick={closeMenu}
+                              className="block w-full py-3 px-5 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                            >
+                              Login to Account
+                            </Link>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
-                            Create Account
-                          </Link>
-                        </motion.div>
+                            <Link
+                              href="/register"
+                              onClick={closeMenu}
+                              className="block w-full py-3 px-5 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                            >
+                              Create Account
+                            </Link>
+                          </motion.div>
+                        </div>
                       </div>
                     )}
                   </ClientOnly>
@@ -577,11 +560,10 @@ export function Navbar() {
         initial={{ y: 0 }}
         animate={isNavVisible ? "visible" : "hidden"}
         variants={navVariants}
-        className={`md:fixed sticky top-0 left-0 right-0 z-30 transition-all duration-300 ${
-          isScrolled
-            ? "bg-white/95 backdrop-blur-xl shadow-xl border-b border-gray-200 w-[95%] mx-auto mt-4 rounded-2xl"
-            : "bg-white shadow-lg border-b border-gray-100 w-full"
-        }`}
+        className={`md:fixed sticky top-0 left-0 right-0 z-30 transition-all duration-300 ${isScrolled
+          ? "bg-white/95 backdrop-blur-xl shadow-xl border-b border-gray-200 w-[95%] mx-auto mt-4 rounded-2xl"
+          : "bg-white shadow-lg border-b border-gray-100 w-full"
+          }`}
         ref={navbarRef}
       >
         <Toaster position="top-center" />
@@ -595,7 +577,7 @@ export function Navbar() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 focus:outline-none"
-                  onClick={() => setIsMenuOpen(true)}
+                  onClick={openMenu}
                   aria-label="Open menu"
                 >
                   <Menu className="h-6 w-6" />
@@ -654,11 +636,10 @@ export function Navbar() {
                 >
                   <motion.button
                     whileHover={{ scale: 1.02 }}
-                    className={`px-4 py-2 font-semibold ${
-                      activeDropdown === "categories"
-                        ? "text-black bg-gray-50"
-                        : "text-gray-700 hover:text-black hover:bg-gray-50"
-                    } transition-all duration-200 flex items-center focus:outline-none rounded-lg relative group`}
+                    className={`px-4 py-2 font-semibold ${activeDropdown === "categories"
+                      ? "text-black bg-gray-50"
+                      : "text-gray-700 hover:text-black hover:bg-gray-50"
+                      } transition-all duration-200 flex items-center focus:outline-none rounded-lg relative group`}
                     onClick={() => toggleDropdown("categories")}
                     aria-expanded={activeDropdown === "categories"}
                   >
@@ -731,10 +712,10 @@ export function Navbar() {
               </nav>
 
               {/* Right side - Search, Cart, Account */}
-              <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-4 z-50">
                 {/* Search */}
                 <motion.div
-                  className="relative hidden sm:block"
+                  className="relative block pl-3 z-50"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
@@ -746,7 +727,7 @@ export function Navbar() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="fixed inset-0 bg-black/50 z-40"
+                          className="fixed inset-0 bg-black/50 z-50"
                           onClick={() => setIsSearchExpanded(false)}
                         />
                         <motion.div
@@ -758,7 +739,7 @@ export function Navbar() {
                         >
                           <form
                             onSubmit={handleSearch}
-                            className="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden max-w-2xl mx-auto"
+                            className="relative bg-white rounded-xl shadow-2xl border border-gray-800 overflow-hidden max-w-2xl mx-auto"
                           >
                             <div className="flex items-center justify-between px-6 py-4 bg-black text-white">
                               <div>
@@ -782,14 +763,14 @@ export function Navbar() {
                               </motion.button>
                             </div>
 
-                            <div className="p-6">
+                            <div className="md:p-6 p-3">
                               <div className="relative">
                                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
                                 <Input
                                   ref={searchInputRef}
                                   type="search"
                                   placeholder="Search for products, services..."
-                                  className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 focus:border-black focus:ring-0 rounded-xl text-lg font-medium"
+                                  className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 focus:border-black focus:ring-0 rounded text-lg font-medium"
                                   value={searchQuery}
                                   onChange={(e) =>
                                     setSearchQuery(e.target.value)
@@ -817,7 +798,7 @@ export function Navbar() {
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => setIsSearchExpanded(false)}
-                                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 font-semibold"
+                                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 font-semibold text-xs md:text-sm"
                               >
                                 Cancel
                               </motion.button>
@@ -825,11 +806,11 @@ export function Navbar() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="submit"
-                                className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 font-semibold shadow-lg group"
+                                className="px-4 md:px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 font-semibold shadow-lg group"
                               >
-                                <Search className="h-5 w-5" />
-                                Search Now
-                                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                <Search className="md:h-5 md:w-5 h-3 w-3" />
+                                <span className="text-xs md:text-sm"> Search Now</span>
+                                <ArrowRight className="md:h-5 md:w-5 h-3 w-3 group-hover:translate-x-1 transition-transform" />
                               </motion.button>
                             </div>
                           </form>
@@ -861,7 +842,7 @@ export function Navbar() {
                 <ClientOnly>
                   <Link
                     href="/cart"
-                    className="p-2 text-gray-600 hover:text-primary transition-colors relative"
+                    className="p-2 text-gray-600 hover:text-primary transition-colors relative hidden md:block"
                   >
                     <ShoppingCart className="h-5 w-5" />
                     {getCartItemCount() > 0 && (
@@ -884,11 +865,10 @@ export function Navbar() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`p-2 ${
-                      activeDropdown === "account"
-                        ? "text-black bg-gray-100"
-                        : "text-gray-600 hover:text-black hover:bg-gray-100"
-                    } rounded-xl transition-all duration-200 flex items-center focus:outline-none`}
+                    className={`p-2 ${activeDropdown === "account"
+                      ? "text-black bg-gray-100"
+                      : "text-gray-600 hover:text-black hover:bg-gray-100"
+                      } rounded-xl transition-all duration-200 flex items-center focus:outline-none`}
                     onClick={() => toggleDropdown("account")}
                     aria-expanded={activeDropdown === "account"}
                   >
@@ -1064,9 +1044,8 @@ export function Navbar() {
         <div className="grid grid-cols-4 gap-1">
           <Link
             href="/"
-            className={`flex flex-col items-center justify-center py-2 px-1 ${
-              pathname === "/" ? "text-primary" : "text-gray-600"
-            }`}
+            className={`flex flex-col items-center justify-center py-2 px-1 ${pathname === "/" ? "text-primary" : "text-gray-600"
+              }`}
           >
             <svg
               className="h-6 w-6"
@@ -1082,11 +1061,10 @@ export function Navbar() {
 
           <Link
             href={isAuthenticated ? "/account" : "/login"}
-            className={`flex flex-col items-center justify-center py-2 px-1 ${
-              pathname.includes("/account") || pathname === "/login"
-                ? "text-primary"
-                : "text-gray-600"
-            }`}
+            className={`flex flex-col items-center justify-center py-2 px-1 ${pathname.includes("/account") || pathname === "/login"
+              ? "text-primary"
+              : "text-gray-600"
+              }`}
           >
             <ClientOnly fallback={<LogIn className="h-6 w-6" />}>
               {isAuthenticated ? (
@@ -1098,21 +1076,21 @@ export function Navbar() {
             <span className="text-xs mt-1">You</span>
           </Link>
 
-          <button
-            onClick={() => setIsMenuOpen(true)}
-            className="flex flex-col items-center justify-center py-2 px-1 text-gray-600 w-full"
+          <Link
+            href="/cart"
+            className={`flex relative flex-col items-center justify-center py-2 px-1  w-full ${pathname === "/cart" ? "text-primary" : "text-gray-600"
+              }`}
           >
-            <svg
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <span className="text-xs mt-1">More</span>
-          </button>
+            <div className="relative">
+              <ShoppingCart className="h-6 w-6" />
+              {getCartItemCount() > 0 && (
+                <span className="absolute -top-2 -right-4 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                  {getCartItemCount()}
+                </span>
+              )}
+              <span className="text-xs mt-1">Cart</span>
+            </div>
+          </Link>
 
           <motion.a
             href="https://genuinenutrition.com/"
