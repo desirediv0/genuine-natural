@@ -129,7 +129,9 @@ export function Navbar() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
+      // encode spaces as '+' for form-style query strings
+      const encodeQuery = (s) => encodeURIComponent(s).replace(/%20/g, "+");
+      router.push(`/products?search=${encodeQuery(searchQuery)}`);
       setIsSearchExpanded(false);
       closeMenu();
       setSearchQuery("");
@@ -243,7 +245,8 @@ export function Navbar() {
     const handleMobileSearch = (e) => {
       e.preventDefault();
       if (localSearchQuery.trim()) {
-        router.push(`/products?search=${encodeURIComponent(localSearchQuery)}`);
+        const encodeQuery = (s) => encodeURIComponent(s).replace(/%20/g, "+");
+        router.push(`/products?search=${encodeQuery(localSearchQuery)}`);
         // use closeMenu helper so the isMenuOpenRef stays in sync immediately
         closeMenu();
         // keep parent search state intact or clear after navigation; do not trigger extra rerenders here

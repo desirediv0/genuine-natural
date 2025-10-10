@@ -203,6 +203,34 @@ function ProductsContent() {
     ]);
   }, [filters.minPrice, filters.maxPrice, maxPossiblePrice]);
 
+  // Keep filters in sync with URL query params so navigation via router.push
+  // (for example from the navbar search) updates the UI when already on /products
+  useEffect(() => {
+    setFilters((prev) => {
+      const next = { ...prev };
+      let changed = false;
+
+      if (next.search !== searchQuery) {
+        next.search = searchQuery;
+        changed = true;
+      }
+
+      if (next.category !== categorySlug) {
+        next.category = categorySlug;
+        changed = true;
+      }
+
+      if (changed) {
+        // reset to first page on new filter/query
+        setPagination((p) => ({ ...p, page: 1 }));
+        return next;
+      }
+
+      return prev;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, categorySlug]);
+
   useEffect(() => {
     const fetchMaxPrice = async () => {
       try {
@@ -341,7 +369,7 @@ function ProductsContent() {
   }
 
   return (
-    <div className="bg-gray-50 py-16 min-h-screen ">
+    <div className="bg-gray-50 py-8 md:py-16 min-h-screen">
       <div className="container mx-auto px-4">
         {/* Hero Banner */}
         <div className="relative w-full h-[350px] mb-12 overflow-hidden">
@@ -379,13 +407,12 @@ function ProductsContent() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <div
-            className={`lg:w-1/4 ${
-              mobileFiltersOpen
-                ? "block fixed inset-0 z-50 bg-white p-4 overflow-auto"
-                : "hidden"
-            } lg:block lg:static lg:z-auto lg:bg-transparent lg:p-0`}
+            className={`lg:w-1/4 ${mobileFiltersOpen
+              ? "block fixed inset-0 z-50 bg-white p-4 overflow-auto"
+              : "hidden"
+              } lg:block lg:static lg:z-auto lg:bg-transparent lg:p-0`}
           >
-            <div className="bg-white rounded-none shadow-sm border border-black sticky top-20">
+            <div className="bg-white rounded-none shadow-sm  sticky top-20">
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-xl font-bold text-black">FILTERS</h2>
                 <div className="flex gap-3">
@@ -442,11 +469,10 @@ function ProductsContent() {
                 </div>
                 <div className="space-y-3">
                   <div
-                    className={`cursor-pointer hover:text-black transition-colors ${
-                      filters.category === ""
-                        ? "font-semibold text-black"
-                        : "text-gray-600"
-                    }`}
+                    className={`cursor-pointer hover:text-black transition-colors ${filters.category === ""
+                      ? "font-semibold text-black"
+                      : "text-gray-600"
+                      }`}
                     onClick={() => handleFilterChange("category", "")}
                   >
                     All Categories
@@ -454,11 +480,10 @@ function ProductsContent() {
                   {categories.map((category) => (
                     <div key={category.id} className="ml-3">
                       <div
-                        className={`cursor-pointer hover:text-black flex items-center transition-colors ${
-                          filters.category === category.slug
-                            ? "font-semibold text-black"
-                            : "text-gray-600"
-                        }`}
+                        className={`cursor-pointer hover:text-black flex items-center transition-colors ${filters.category === category.slug
+                          ? "font-semibold text-black"
+                          : "text-gray-600"
+                          }`}
                         onClick={() =>
                           handleFilterChange("category", category.slug)
                         }
@@ -471,11 +496,10 @@ function ProductsContent() {
                           {category.children.map((child) => (
                             <div
                               key={child.id}
-                              className={`cursor-pointer hover:text-black text-sm transition-colors ${
-                                filters.category === child.slug
-                                  ? "font-semibold text-black"
-                                  : "text-gray-600"
-                              }`}
+                              className={`cursor-pointer hover:text-black text-sm transition-colors ${filters.category === child.slug
+                                ? "font-semibold text-black"
+                                : "text-gray-600"
+                                }`}
                               onClick={() =>
                                 handleFilterChange("category", child.slug)
                               }
@@ -500,11 +524,10 @@ function ProductsContent() {
                 </div>
                 <div className="space-y-3">
                   <div
-                    className={`cursor-pointer hover:text-black transition-colors ${
-                      selectedFlavors.length === 0
-                        ? "font-semibold text-black"
-                        : "text-gray-600"
-                    }`}
+                    className={`cursor-pointer hover:text-black transition-colors ${selectedFlavors.length === 0
+                      ? "font-semibold text-black"
+                      : "text-gray-600"
+                      }`}
                     onClick={() => {
                       setSelectedFlavors([]);
                       handleFilterChange("flavor", "");
@@ -516,11 +539,10 @@ function ProductsContent() {
                   {flavors.map((flavor) => (
                     <div
                       key={flavor.id}
-                      className={`cursor-pointer hover:text-black ml-3 flex items-center transition-colors ${
-                        selectedFlavors.includes(flavor.id)
-                          ? "font-semibold text-black"
-                          : "text-gray-600"
-                      }`}
+                      className={`cursor-pointer hover:text-black ml-3 flex items-center transition-colors ${selectedFlavors.includes(flavor.id)
+                        ? "font-semibold text-black"
+                        : "text-gray-600"
+                        }`}
                       onClick={() => handleFlavorChange(flavor.id)}
                     >
                       <div className="w-4 h-4 border-2 border-gray-300 rounded mr-3 flex items-center justify-center">
@@ -554,11 +576,10 @@ function ProductsContent() {
                 </div>
                 <div className="space-y-3">
                   <div
-                    className={`cursor-pointer hover:text-black transition-colors ${
-                      selectedWeights.length === 0
-                        ? "font-semibold text-black"
-                        : "text-gray-600"
-                    }`}
+                    className={`cursor-pointer hover:text-black transition-colors ${selectedWeights.length === 0
+                      ? "font-semibold text-black"
+                      : "text-gray-600"
+                      }`}
                     onClick={() => {
                       setSelectedWeights([]);
                       handleFilterChange("weight", "");
@@ -570,11 +591,10 @@ function ProductsContent() {
                   {weights.map((weight) => (
                     <div
                       key={weight.id}
-                      className={`cursor-pointer hover:text-black ml-3 flex items-center transition-colors ${
-                        selectedWeights.includes(weight.id)
-                          ? "font-semibold text-black"
-                          : "text-gray-600"
-                      }`}
+                      className={`cursor-pointer hover:text-black ml-3 flex items-center transition-colors ${selectedWeights.includes(weight.id)
+                        ? "font-semibold text-black"
+                        : "text-gray-600"
+                        }`}
                       onClick={() => handleWeightChange(weight.id)}
                     >
                       <div className="w-4 h-4 border-2 border-gray-300 rounded mr-3 flex items-center justify-center">
@@ -593,7 +613,7 @@ function ProductsContent() {
           {/* Products Grid */}
           <div className="lg:w-3/4">
             {/* Header with count and sort */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-6 rounded-none shadow-sm border border-black">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-6 ">
               <div className="text-black mb-4 sm:mb-0">
                 {loading && !products.length ? (
                   <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
@@ -633,12 +653,12 @@ function ProductsContent() {
                         ? "newest"
                         : filters.sort === "createdAt" &&
                           filters.order === "asc"
-                        ? "oldest"
-                        : filters.sort === "name" && filters.order === "asc"
-                        ? "name-asc"
-                        : filters.sort === "name" && filters.order === "desc"
-                        ? "name-desc"
-                        : "newest"
+                          ? "oldest"
+                          : filters.sort === "name" && filters.order === "asc"
+                            ? "name-asc"
+                            : filters.sort === "name" && filters.order === "desc"
+                              ? "name-desc"
+                              : "newest"
                     }
                   >
                     <option value="newest">Featured</option>
@@ -657,89 +677,89 @@ function ProductsContent() {
               selectedWeights.length > 0 ||
               filters.minPrice ||
               filters.maxPrice) && (
-              <div className="flex flex-wrap items-center gap-3 mb-8 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-                <span className="text-sm font-semibold text-black">
-                  Active Filters:
-                </span>
+                <div className="flex flex-wrap items-center gap-3 mb-8 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+                  <span className="text-sm font-semibold text-black">
+                    Active Filters:
+                  </span>
 
-                {filters.search && (
-                  <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
-                    <span>Search: {filters.search}</span>
-                    <button
-                      onClick={() => handleFilterChange("search", "")}
-                      className="ml-2"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {filters.search && (
+                    <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
+                      <span>Search: {filters.search}</span>
+                      <button
+                        onClick={() => handleFilterChange("search", "")}
+                        className="ml-2"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                {filters.category && (
-                  <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
-                    <span>
-                      Category:{" "}
-                      {categories.find((c) => c.slug === filters.category)
-                        ?.name || filters.category}
-                    </span>
-                    <button
-                      onClick={() => handleFilterChange("category", "")}
-                      className="ml-2"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {filters.category && (
+                    <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
+                      <span>
+                        Category:{" "}
+                        {categories.find((c) => c.slug === filters.category)
+                          ?.name || filters.category}
+                      </span>
+                      <button
+                        onClick={() => handleFilterChange("category", "")}
+                        className="ml-2"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                {selectedFlavors.length > 0 && (
-                  <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
-                    <span>
-                      Flavor:{" "}
-                      {flavors.find((f) => f.id === selectedFlavors[0])?.name ||
-                        selectedFlavors[0]}
-                    </span>
-                    <button
-                      onClick={() => {
-                        setSelectedFlavors([]);
-                        handleFilterChange("flavor", "");
-                      }}
-                      className="ml-2"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {selectedFlavors.length > 0 && (
+                    <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
+                      <span>
+                        Flavor:{" "}
+                        {flavors.find((f) => f.id === selectedFlavors[0])?.name ||
+                          selectedFlavors[0]}
+                      </span>
+                      <button
+                        onClick={() => {
+                          setSelectedFlavors([]);
+                          handleFilterChange("flavor", "");
+                        }}
+                        className="ml-2"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                {selectedWeights.length > 0 && (
-                  <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
-                    <span>
-                      Weight:{" "}
-                      {weights.find((w) => w.id === selectedWeights[0])
-                        ?.display || selectedWeights[0]}
-                    </span>
-                    <button
-                      onClick={() => {
-                        setSelectedWeights([]);
-                        handleFilterChange("weight", "");
-                      }}
-                      className="ml-2"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {selectedWeights.length > 0 && (
+                    <div className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center">
+                      <span>
+                        Weight:{" "}
+                        {weights.find((w) => w.id === selectedWeights[0])
+                          ?.display || selectedWeights[0]}
+                      </span>
+                      <button
+                        onClick={() => {
+                          setSelectedWeights([]);
+                          handleFilterChange("weight", "");
+                        }}
+                        className="ml-2"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                <button
-                  onClick={clearFilters}
-                  className="text-sm text-black underline font-medium ml-2"
-                >
-                  Clear All
-                </button>
-              </div>
-            )}
+                  <button
+                    onClick={clearFilters}
+                    className="text-sm text-black underline font-medium ml-2"
+                  >
+                    Clear All
+                  </button>
+                </div>
+              )}
 
             {/* Products Grid */}
             {loading && products.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
                 {[...Array(pagination.limit || 12)].map((_, index) => (
                   <ProductCardSkeleton key={index} />
                 ))}
@@ -764,7 +784,7 @@ function ProductsContent() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -774,7 +794,7 @@ function ProductsContent() {
             {/* Pagination with updated styling */}
             {pagination.pages > 1 && (
               <div className="flex justify-center items-center mt-12">
-                <div className="flex items-center bg-white rounded-none shadow-sm border border-black overflow-hidden">
+                <div className="flex items-center bg-white rounded-none shadow-sm  overflow-hidden">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -798,11 +818,10 @@ function ProductsContent() {
                           key={page}
                           onClick={() => handlePageChange(page)}
                           disabled={loading}
-                          className={`px-4 py-3 font-medium transition-colors ${
-                            pagination.page === page
-                              ? "bg-black text-white"
-                              : "hover:bg-gray-50 text-black"
-                          }`}
+                          className={`px-4 py-3 font-medium transition-colors ${pagination.page === page
+                            ? "bg-black text-white"
+                            : "hover:bg-gray-50 text-black"
+                            }`}
                         >
                           {page}
                         </button>

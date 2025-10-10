@@ -127,7 +127,7 @@ const ProductCard = ({ product }) => {
       className="bg-white overflow-hidden transition-all hover:shadow-lg shadow-md rounded-sm group h-full flex flex-col "
     >
       {/* Product Image Section */}
-      <div className="relative h-40 md:h-48  w-full overflow-hidden bg-gray-50">
+      <div className="relative h-40 md:h-48  w-full overflow-hidden bg-white">
         <Link href={`/products/${product.slug}`}>
           <Image
             src={(() => {
