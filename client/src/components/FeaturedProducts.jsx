@@ -41,8 +41,8 @@ const FeaturedProducts = ({
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container mx-auto px-4">
+      <section className="py-5 md:py-8 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto px-2 md:px-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {[...Array(4)].map((_, index) => (
               <ProductSkeleton key={index} />
@@ -55,8 +55,8 @@ const FeaturedProducts = ({
 
   if (error) {
     return (
-      <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container mx-auto px-4">
+      <section className="py-5 md:py-8 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto px-2 md:px-4">
           <div className="text-center">
             <p className="text-red-500">Failed to load products</p>
           </div>
@@ -66,8 +66,8 @@ const FeaturedProducts = ({
   }
 
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4">
+    <section className="py-5 md:py-8 bg-gradient-to-b from-gray-50 to-white">
+      <div className="container mx-auto px-2 md:px-4">
         {/* Products Carousel */}
         <div className="relative px-2 md:px-8">
           <Carousel
@@ -81,7 +81,7 @@ const FeaturedProducts = ({
               {products.map((product) => (
                 <CarouselItem
                   key={product.id || product.slug || Math.random().toString()}
-                  className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                  className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6"
                 >
                   <div className="transform hover:-translate-y-2 transition-all duration-500">
                     <ProductCard
@@ -97,23 +97,23 @@ const FeaturedProducts = ({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex -left-4 lg:-left-6 w-12 h-12 lg:w-14 lg:h-14 bg-white border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 transform hover:scale-110 rounded-xl shadow-lg" />
-            <CarouselNext className="hidden md:flex -right-4 lg:-right-6 w-12 h-12 lg:w-14 lg:h-14 bg-white border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 transform hover:scale-110 rounded-xl shadow-lg" />
+            <CarouselPrevious className="hidden md:flex -left-4 lg:-left-6 w-10 h-10  bg-white border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 transform hover:scale-110 rounded shadow" />
+            <CarouselNext className="hidden md:flex -right-4 lg:-right-6 w-10 h-10  bg-white border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 transform hover:scale-110 rounded shadow" />
           </Carousel>
         </div>
 
         {/* View All Products Button */}
-        <div className="text-center mt-16">
+        <div className="text-center mt-4 md:mt-8">
           <Link href="/products">
             <Button
               variant="default"
               size="lg"
-              className="mt-3 group/btn inline-flex items-center space-x-2 bg-white/90 border border-black  backdrop-blur-sm text-black px-6 py-2 rounded-lg text-base font-medium hover:bg-black hover:text-white transition-all duration-300"
+              className="mt-3 group/btn inline-flex items-center space-x-2 bg-white/90 border border-black  backdrop-blur-sm text-black px-3 md:px-6 py-2 rounded text-base font-medium hover:bg-black hover:text-white transition-all duration-300"
             >
-              <span className="mr-3 transition-transform duration-500 group-hover:translate-x-1 text-base md:text-lg">
+              <span className="mr-2 md:mr-3 transition-transform duration-500 group-hover:translate-x-1 text-sm md:text-lg">
                 View All Products
               </span>
-              <span className="relative top-[1px] transition-transform duration-500 group-hover:translate-x-3 text-lg md:text-xl">
+              <span className="relative md:top-[1px] transition-transform duration-500 group-hover:translate-x-3 text-lg md:text-xl">
                 →
               </span>
             </Button>

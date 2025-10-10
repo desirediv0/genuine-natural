@@ -15,6 +15,7 @@ const defaultBenefits = [
     benefits: ["ISO 22000 Certified", "Lab Tested Purity", "No Harmful Additives", "100% Natural"],
     color: "from-blue-500/20 to-blue-600/10",
     iconColor: "text-blue-400",
+    class: "col-span-1",
   },
   {
     id: 2,
@@ -24,6 +25,7 @@ const defaultBenefits = [
     benefits: ["Clinical Studies", "Expert Formulated", "Proven Results", "Safe & Effective"],
     color: "from-green-500/20 to-green-600/10",
     iconColor: "text-green-400",
+    class: "col-span-1",
   },
   {
     id: 3,
@@ -33,6 +35,7 @@ const defaultBenefits = [
     benefits: ["24/7 Support", "Money-Back Guarantee", "Free Consultations", "Personalized Plans"],
     color: "from-red-500/20 to-red-600/10",
     iconColor: "text-red-400",
+    class: "col-span-2 md:col-span-1",
   },
 ];
 
@@ -112,7 +115,7 @@ export default function ShowcaseBanner({
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-2 md:px-4 pt-10">
         {showHero && <ShowcaseHero stats={stats} />}
         {showCards && <FeatureCards benefits={benefits} />}
         {showShowcase && <ProductShowcase imageSrc={imageSrc} />}

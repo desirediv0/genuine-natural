@@ -1,6 +1,6 @@
 "use client";
 import { formatCurrency, fetchApi } from "@/lib/utils";
-import { Eye, Heart, Star } from "lucide-react";
+import { Eye, Heart } from "lucide-react";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
@@ -19,11 +19,6 @@ const getImageUrl = (image) => {
   return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
 };
 
-// Helper function to calculate discount percentage
-const calculateDiscountPercentage = (regularPrice, salePrice) => {
-  if (!regularPrice || !salePrice || regularPrice <= salePrice) return 0;
-  return Math.round(((regularPrice - salePrice) / regularPrice) * 100);
-};
 
 const ProductCard = ({ product }) => {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -125,16 +120,14 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  // Count variants
-  const variantCount = product.variants ? product.variants.length : 0;
 
   return (
     <div
       key={product.id}
-      className="bg-white overflow-hidden transition-all hover:shadow-lg shadow-md rounded-sm group h-full flex flex-col min-h-[450px]"
+      className="bg-white overflow-hidden transition-all hover:shadow-lg shadow-md rounded-sm group h-full flex flex-col "
     >
       {/* Product Image Section */}
-      <div className="relative h-48 md:h-64 w-full overflow-hidden bg-gray-50">
+      <div className="relative h-40 md:h-48  w-full overflow-hidden bg-gray-50">
         <Link href={`/products/${product.slug}`}>
           <Image
             src={(() => {
@@ -201,92 +194,65 @@ const ProductCard = ({ product }) => {
           <button
             onClick={(e) => handleAddToWishlist(product, e)}
             disabled={isAddingToWishlist[product.id]}
-            className={`bg-white border border-gray-300 p-1.5 rounded-sm hover:bg-gray-50 transition-colors ${
-              wishlistItems[product.id] ? "text-red-500" : "text-gray-600"
-            }`}
+            className={`bg-white border border-gray-300 p-1.5 rounded-sm hover:bg-gray-50 transition-colors ${wishlistItems[product.id] ? "text-red-500" : "text-gray-600"
+              }`}
           >
             <Heart
-              className={`h-4 w-4 ${
-                wishlistItems[product.id] ? "fill-current" : ""
-              }`}
+              className={`h-4 w-4 ${wishlistItems[product.id] ? "fill-current" : ""
+                }`}
             />
           </button>
         </div>
       </div>
 
       {/* Product Details Section */}
-      <div className="p-4 text-center flex-1 flex flex-col justify-between">
+      <div className="p-2 md:p-4 flex-1 flex flex-col justify-between">
         {/* Product Title */}
-        <Link
-          href={`/products/${product.slug}`}
-          className="hover:text-primary mb-2"
-        >
-          <h3 className="font-medium text-sm text-black line-clamp-2 leading-tight min-h-[2.5rem]">
+        <Link href={`/products/${product.slug}`} className="hover:text-primary mb-2">
+          <h3 className="font-medium text-xs md:text-sm text-black line-clamp-2 leading-tight md:min-h-[2.5rem] text-left">
             {product.name}
           </h3>
         </Link>
 
-        {/* Rating */}
-        <div className="flex items-center justify-center mb-2">
-          <div className="flex text-gray-400">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className="h-3 w-3"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              />
-            ))}
-          </div>
-          <span className="text-xs text-gray-500 ml-1">
-            ({product.reviewCount || 0})
-          </span>
-        </div>
-
-        {/* Pricing */}
-        <div className="flex items-center justify-center mb-2 min-h-[2rem]">
-          {product.hasSale ? (
-            <div className="flex items-center gap-2 md:flex-row flex-col">
+        {/* Footer: price left, add-to-cart right */}
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <div className="min-h-[2rem] text-left">
+            {product.hasSale ? (
+              <div className="flex items-center  flex-col text-left">
+                <span className="font-bold text-sm md:text-lg text-black">
+                  {formatCurrency(product.basePrice)}
+                </span>
+                <span className="text-gray-500 line-through text-xs md:text-sm">
+                  {formatCurrency(product.regularPrice)}
+                </span>
+              </div>
+            ) : (
               <span className="font-bold text-lg text-black">
                 {formatCurrency(product.basePrice)}
               </span>
-              <span className="text-gray-500 line-through text-sm">
-                {formatCurrency(product.regularPrice)}
-              </span>
-            </div>
-          ) : (
-            <span className="font-bold text-lg text-black">
-              {formatCurrency(product.basePrice)}
-            </span>
-          )}
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Main Add to Cart button (compact, not full width) */}
+            <Button
+              onClick={() => handleAddToCart(product)}
+              className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-3 rounded-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none w-auto"
+              disabled={isAddingToCart[product.id]}
+            >
+              {isAddingToCart[product.id] ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2">
+                  <ShoppingCart className="h-4 w-4" />
+                  <span className="text-sm hidden sm:inline">Add</span>
+                </div>
+              )}
+            </Button>
+          </div>
         </div>
-
-        {/* Variants */}
-        {variantCount > 1 && (
-          <span className="text-xs text-gray-500 mb-3">
-            {variantCount} variants
-          </span>
-        )}
-
-        {/* Add to Cart Button */}
-        <Button
-          onClick={() => handleAddToCart(product)}
-          className="w-full bg-black hover:bg-gray-800 text-white font-medium py-2.5 px-4 rounded-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          disabled={isAddingToCart[product.id]}
-        >
-          {isAddingToCart[product.id] ? (
-            <div className="flex items-center justify-center gap-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-              <span className="text-sm">Adding...</span>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center gap-2">
-              <ShoppingCart className="h-4 w-4" />
-              <span className="text-sm">Add to Cart</span>
-            </div>
-          )}
-        </Button>
       </div>
 
       {/* Quick View Dialog */}

@@ -11,7 +11,6 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import Headtext from "./ui/headtext";
 import Image from "next/image";
 import Heading from "./Heading";
 
@@ -25,7 +24,7 @@ const CircularCategoryCard = ({ category, index }) => {
       className="flex flex-col items-center group"
     >
       <motion.div
-        className="relative w-[280px] h-[280px] rounded-2xl overflow-hidden group cursor-pointer"
+        className="relative w-full aspect-square rounded overflow-hidden group cursor-pointer"
         whileHover={{ scale: 1.03 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
@@ -36,17 +35,17 @@ const CircularCategoryCard = ({ category, index }) => {
         <div className="relative w-full h-full overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
           <Image
-            width={800}
-            height={800}
             src={category.image || "/placeholder.jpg"}
             alt={category.name}
-            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            className="object-cover transform group-hover:scale-110 transition-transform duration-700"
           />
 
           {/* Category Content Overlay */}
-          <div className="absolute inset-0 z-20 p-6 flex flex-col justify-between">
+          <div className="absolute inset-0 z-20 p-4 sm:p-6 flex flex-col justify-between ">
             <motion.div
-              className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-lg self-end flex items-center space-x-2"
+              className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-lg self-end hidden md:flex items-center space-x-2"
               whileHover={{ scale: 1.05 }}
             >
               <span className="w-1.5 h-1.5 bg-black rounded-full animate-pulse" />
@@ -56,19 +55,19 @@ const CircularCategoryCard = ({ category, index }) => {
             </motion.div>
 
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-white drop-shadow-md tracking-wide">
+              <h3 className="text-lg sm:text-xl font-bold text-white drop-shadow-md tracking-wide truncate">
                 {category.name}
               </h3>
-              <p className="text-sm text-white/90 line-clamp-2 drop-shadow-md">
+              <p className="text-xs sm:text-sm text-white/90 line-clamp-2 drop-shadow-md">
                 {category.description || "Explore our collection"}
               </p>
 
               <motion.button
-                className="mt-3 group/btn inline-flex items-center space-x-2 bg-white/90 backdrop-blur-sm text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-black hover:text-white transition-all duration-300"
+                className="md:mt-3  group/btn inline-flex items-center md:space-x-2 bg-white/90 backdrop-blur-sm text-black px-3 py-1.5 rounded text-sm sm:text-base font-medium hover:bg-black hover:text-white transition-all duration-300"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span>Shop Now</span>
+                <span className="hidden md:block">Shop Now</span>
                 <svg
                   className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform"
                   fill="none"
@@ -136,17 +135,20 @@ const FeaturedCategoriesCarousel = ({ categories }) => {
   }
 
   return (
-    <div className="relative px-4 p-8">
+    <div className="relative px-4 p-2 md:p-4">
       <Carousel
         setApi={setApi}
-        opts={{ loop: true }}
+        // align start so carousel doesn't center the slides on init; trimSnaps keeps snaps tidy
+        opts={{ loop: true, align: "start", containScroll: "trimSnaps" }}
         className="w-full max-w-7xl mx-auto"
       >
         <CarouselContent className="-ml-4">
           {categories.map((category, index) => (
             <CarouselItem
               key={category.id || index}
-              className="pl-4 basis-full md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+              // Show 2 items per view on small screens, 3 on medium, 4 on large, 5 on xl+
+              // add overflow-hidden and min-w-0 so flex-basis items don't overflow their container
+              className="pl-4 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 overflow-hidden min-w-0"
             >
               <Link href={`/category/${category.slug || ""}`} className="block">
                 <CircularCategoryCard category={category} index={index} />
@@ -160,20 +162,22 @@ const FeaturedCategoriesCarousel = ({ categories }) => {
 
         {/* Dot indicators */}
         <div className="flex justify-center mt-8 gap-2">
-          {Array.from({ length: Math.ceil(categories.length / 4) }).map(
-            (_, idx) => (
+          {(() => {
+            // Determine items per page according to the largest breakpoint we set on CarouselItem
+            const itemsPerPage = 5; // matches xl:basis-1/5 => 5 items per view on xl and up
+            const pageCount = Math.max(1, Math.ceil(categories.length / itemsPerPage));
+            return Array.from({ length: pageCount }).map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => api?.scrollTo(idx * 4)}
-                className={`w-8 h-1 rounded-full transition-all duration-300 ${
-                  Math.floor(currentIndex / 4) === idx
-                    ? "bg-black w-12"
-                    : "bg-gray-400"
-                }`}
+                onClick={() => api?.scrollTo(idx * itemsPerPage)}
+                className={`w-8 h-1 rounded-full transition-all duration-300 ${Math.floor(currentIndex / itemsPerPage) === idx
+                  ? "bg-black w-12"
+                  : "bg-gray-400"
+                  }`}
                 aria-label={`Go to slide group ${idx + 1}`}
               />
-            )
-          )}
+            ));
+          })()}
         </div>
       </Carousel>
     </div>
@@ -202,7 +206,7 @@ const FeaturedCategoriesSection = () => {
   }, []);
 
   return (
-    <section className="mt-5 py-8 overflow-hidden">
+    <section className="md:mt-3 py-4 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 relative">
           <Heading
@@ -237,7 +241,7 @@ const FeaturedCategoriesSection = () => {
         )}
 
         <motion.div
-          className="text-center mt-8"
+          className="text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -245,11 +249,11 @@ const FeaturedCategoriesSection = () => {
         >
           <Link href="/categories">
             <motion.button
-              className="mt-3 group/btn inline-flex items-center space-x-2 bg-white/90 border border-black  backdrop-blur-sm text-black px-6 py-2 rounded-lg text-base font-medium hover:bg-black hover:text-white transition-all duration-300"
+              className="mt-3 group/btn inline-flex items-center space-x-2 bg-white/90 border border-black  backdrop-blur-sm text-black px-3 md:px-6 py-2 rounded-lg text-base font-medium hover:bg-black hover:text-white transition-all duration-300"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <span>View All Categories</span>
+              <span className="text-sm md:text-base">View All Categories</span>
               <svg
                 className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform"
                 fill="none"
