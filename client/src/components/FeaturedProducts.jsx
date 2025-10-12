@@ -69,7 +69,7 @@ const FeaturedProducts = ({
     <section className="py-5 md:py-8 bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-2 md:px-4">
         {/* Products Carousel */}
-        <div className="relative px-2 md:px-8">
+        <div className="relative px-2 md:px-6">
           <Carousel
             opts={{
               align: "start",

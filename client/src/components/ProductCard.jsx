@@ -206,7 +206,7 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Product Details Section */}
-      <div className="p-2 md:p-4 flex-1 flex flex-col justify-between">
+      <div className="p-3 flex-1 flex flex-col justify-between">
         {/* Product Title */}
         <Link href={`/products/${product.slug}`} className="hover:text-primary mb-2">
           <h3 className="font-medium text-xs md:text-sm text-black line-clamp-2 leading-tight md:min-h-[2.5rem] text-left">
@@ -241,13 +241,13 @@ const ProductCard = ({ product }) => {
               disabled={isAddingToCart[product.id]}
             >
               {isAddingToCart[product.id] ? (
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-2">
                   <ShoppingCart className="h-4 w-4" />
-                  <span className="text-sm hidden sm:inline">Add</span>
+
                 </div>
               )}
             </Button>

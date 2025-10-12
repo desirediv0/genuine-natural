@@ -344,7 +344,7 @@ export default function Home() {
           </div>
         </section>
       )}
-      <FeatureBanner only="hero" />
+
 
       {/* Bestseller Products Section */}
       {bestsellerProducts.length > 0 && (
@@ -402,9 +402,10 @@ export default function Home() {
         </section>
       )}
 
-      <FeatureBanner only="showcase" />
       {/* <GymSupplementShowcase /> */}
+      <FeatureBanner only="hero" />
       <BenefitsSec />
+      <FeatureBanner only="showcase" />
       <TestimonialsSection />
     </div>
   );
