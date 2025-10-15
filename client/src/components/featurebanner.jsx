@@ -49,7 +49,6 @@ const defaultStats = [
 export default function ShowcaseBanner({
   benefits = defaultBenefits,
   stats = defaultStats,
-  imageSrc,
   showHero = true,
   showCards = true,
   showShowcase = true,
@@ -118,7 +117,7 @@ export default function ShowcaseBanner({
       <div className="relative z-10 max-w-7xl mx-auto px-2 md:px-4 pt-10">
         {showHero && <ShowcaseHero stats={stats} />}
         {showCards && <FeatureCards benefits={benefits} />}
-        {showShowcase && <ProductShowcase imageSrc={imageSrc} />}
+        {showShowcase && <ProductShowcase />}
       </div>
     </div>
   );

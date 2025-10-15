@@ -6,8 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Zap, ArrowRight, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cover } from "@/assets";
 
-export default function ProductShowcase({ imageSrc = "/placeholder.jpg" }) {
+export default function ProductShowcase() {
     return (
         <motion.div className="grid md:grid-cols-2 gap-12 items-center mb-10" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.2 }}>
             <div>
@@ -42,8 +43,8 @@ export default function ProductShowcase({ imageSrc = "/placeholder.jpg" }) {
             </div>
 
             <motion.div className="relative" whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                <div className="relative h-80 rounded overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20">
-                    <Image src={imageSrc} alt="Premium nutrition products showcase" fill className="object-cover opacity-80" />
+                <div className="relative h-96 rounded overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20">
+                    <Image src={cover} alt="Premium nutrition products showcase" fill className="object-cover opacity-80" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                     <div className="absolute bottom-6 left-6 text-white">
                         <p className="text-sm font-medium mb-1">Premium Collection</p>

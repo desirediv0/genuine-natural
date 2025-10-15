@@ -318,7 +318,7 @@ export function Navbar() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="space-y-6"
+                  className="space-y-4 lg:space-y-6"
                 >
                   {[
                     {
@@ -379,7 +379,7 @@ export function Navbar() {
                         >
                           <Link
                             href={`/category/${category.slug}`}
-                            className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 group"
+                            className="flex items-center justify-between p-3 hover:bg-gray-50 rounded transition-all duration-200 group"
                             onClick={closeMenu}
                           >
                             <span className="font-medium text-gray-900">
@@ -398,7 +398,7 @@ export function Navbar() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 }}
-                  className="bg-white rounded-xl p-5 shadow-md border border-gray-200"
+                  className="bg-white rounded p-5 shadow-md border border-gray-200"
                 >
                   <h3 className="font-bold text-xl mb-3 text-gray-900 flex items-center">
                     <div className="w-1 h-6 bg-black rounded-full mr-3"></div>
@@ -422,7 +422,7 @@ export function Navbar() {
                             <Link
                               href="/login"
                               onClick={closeMenu}
-                              className=" w-full py-3 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                              className=" w-full py-3 bg-black text-white text-center rounded font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
                             >
                               Login to Account
                             </Link>
@@ -434,7 +434,7 @@ export function Navbar() {
                             <Link
                               href="/register"
                               onClick={closeMenu}
-                              className=" w-full py-3 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                              className=" w-full py-3 border-2 border-gray-200 text-black text-center rounded font-semibold hover:bg-black hover:text-white transition-all duration-200"
                             >
                               Create Account
                             </Link>
@@ -488,7 +488,7 @@ export function Navbar() {
                           >
                             <Link
                               href={item.href}
-                              className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 group"
+                              className="flex items-center justify-between p-3 hover:bg-gray-50 rounded transition-all duration-200 group"
                               onClick={() => closeMenu()}
                             >
                               <div className="flex items-center space-x-3">
@@ -509,7 +509,7 @@ export function Navbar() {
                             handleLogout();
                             closeMenu();
                           }}
-                          className="w-full mt-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-lg font-semibold border border-red-200"
+                          className="w-full mt-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded font-semibold border border-red-200"
                         >
                           Logout
                         </motion.button>
@@ -527,7 +527,7 @@ export function Navbar() {
                             <Link
                               href="/login"
                               onClick={closeMenu}
-                              className="block w-full py-3 px-5 bg-black text-white text-center rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
+                              className="block w-full py-3 px-5 bg-black text-white text-center rounded font-semibold hover:bg-gray-800 transition-all duration-200 shadow-lg"
                             >
                               Login to Account
                             </Link>
@@ -539,7 +539,7 @@ export function Navbar() {
                             <Link
                               href="/register"
                               onClick={closeMenu}
-                              className="block w-full py-3 px-5 border-2 border-gray-200 text-black text-center rounded-lg font-semibold hover:bg-black hover:text-white transition-all duration-200"
+                              className="block w-full py-3 px-5 border-2 border-gray-200 text-black text-center rounded font-semibold hover:bg-black hover:text-white transition-all duration-200"
                             >
                               Create Account
                             </Link>
@@ -599,14 +599,14 @@ export function Navbar() {
                       alt="Being Genuine Nutrition Logo"
                       width={200}
                       height={200}
-                      className="h-10 w-auto "
+                      className="h-8 md:h-9 w-auto"
                     />
                   </motion.div>
                 </Link>
               </motion.div>
 
               {/* Desktop Navigation */}
-              <nav className="hidden lg:flex items-center space-x-8">
+              <nav className="hidden lg:flex items-center space-x-3">
                 {[
                   { href: "/products", label: "Shop Now" },
                   { href: "/blog", label: "Resources" },
@@ -621,7 +621,7 @@ export function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className="px-4 py-2 font-semibold text-gray-700 hover:text-black transition-all duration-200 relative group rounded-lg"
+                      className="px-4 py-2 font-semibold text-gray-700 hover:text-black transition-all duration-200 relative group rounded"
                     >
                       <span className="relative z-10">{item.label}</span>
                     </Link>
@@ -642,7 +642,7 @@ export function Navbar() {
                     className={`px-4 py-2 font-semibold ${activeDropdown === "categories"
                       ? "text-black bg-gray-50"
                       : "text-gray-700 hover:text-black hover:bg-gray-50"
-                      } transition-all duration-200 flex items-center focus:outline-none rounded-lg relative group`}
+                      } transition-all duration-200 flex items-center focus:outline-none rounded relative group`}
                     onClick={() => toggleDropdown("categories")}
                     aria-expanded={activeDropdown === "categories"}
                   >
@@ -664,11 +664,11 @@ export function Navbar() {
                         animate="visible"
                         exit="hidden"
                         variants={dropdownVariants}
-                        className="absolute left-0 top-full mt-2 w-80 bg-white/95 backdrop-blur-xl shadow-2xl rounded-xl py-4 border border-gray-200 z-50"
+                        className="absolute left-0 top-full mt-2 w-80 bg-white/95 backdrop-blur-xl shadow-2xl rounded py-4 border border-gray-200 z-50"
                       >
                         <div className="px-6 py-3 border-b border-gray-100">
-                          <h3 className="font-bold text-lg text-gray-800 flex items-center">
-                            <Star className="w-5 h-5 mr-2 text-black" />
+                          <h3 className="font-bold text-base text-gray-800 flex items-center">
+
                             Browse Collections
                           </h3>
                         </div>
@@ -700,7 +700,7 @@ export function Navbar() {
                           >
                             <Link
                               href="/categories"
-                              className="flex items-center justify-center w-full py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-200 font-semibold group"
+                              className="flex items-center justify-center w-full py-3 bg-black text-white rounded hover:bg-gray-800 transition-all duration-200 font-semibold group  text-sm"
                               onClick={() => setActiveDropdown(null)}
                             >
                               Explore All Collections
@@ -742,7 +742,7 @@ export function Navbar() {
                         >
                           <form
                             onSubmit={handleSearch}
-                            className="relative bg-white rounded-xl shadow-2xl border border-gray-800 overflow-hidden max-w-2xl mx-auto"
+                            className="relative bg-white rounded shadow-2xl border border-gray-800 overflow-hidden max-w-2xl mx-auto"
                           >
                             <div className="flex items-center justify-between px-6 py-4 bg-black text-white">
                               <div>
@@ -758,7 +758,7 @@ export function Navbar() {
                                 whileHover={{ scale: 1.1, rotate: 90 }}
                                 whileTap={{ scale: 0.9 }}
                                 type="button"
-                                className="p-2 rounded-lg hover:bg-white/10 transition-all duration-200"
+                                className="p-2 rounded hover:bg-white/10 transition-all duration-200"
                                 onClick={() => setIsSearchExpanded(false)}
                                 aria-label="Close search"
                               >
@@ -801,7 +801,7 @@ export function Navbar() {
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => setIsSearchExpanded(false)}
-                                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 font-semibold text-xs md:text-sm"
+                                className="px-6 py-3 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-all duration-200 font-semibold text-xs md:text-sm"
                               >
                                 Cancel
                               </motion.button>
@@ -809,7 +809,7 @@ export function Navbar() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="submit"
-                                className="px-4 md:px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 font-semibold shadow-lg group"
+                                className="px-4 md:px-8 py-3 bg-black text-white rounded hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 font-semibold shadow-lg group"
                               >
                                 <Search className="md:h-5 md:w-5 h-3 w-3" />
                                 <span className="text-xs md:text-sm"> Search Now</span>
@@ -967,7 +967,7 @@ export function Navbar() {
                                     handleLogout();
                                     setActiveDropdown(null);
                                   }}
-                                  className="w-full py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-lg font-semibold"
+                                  className="w-full py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded font-semibold"
                                 >
                                   Logout
                                 </motion.button>
@@ -992,7 +992,7 @@ export function Navbar() {
                                       href="/login"
                                       onClick={() => setActiveDropdown(null)}
                                     >
-                                      <Button className="w-full py-3 bg-black hover:bg-gray-800 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                                      <Button className="w-full py-3 bg-black hover:bg-gray-800 rounded font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                                         Login to Account
                                       </Button>
                                     </Link>
@@ -1007,7 +1007,7 @@ export function Navbar() {
                                     >
                                       <Button
                                         variant="outline"
-                                        className="w-full py-3 border-2 border-gray-200 text-black hover:bg-black hover:text-white rounded-lg font-semibold transition-all duration-200"
+                                        className="w-full py-3 border-2 border-gray-200 text-black hover:bg-black hover:text-white rounded font-semibold transition-all duration-200"
                                       >
                                         Create Account
                                       </Button>

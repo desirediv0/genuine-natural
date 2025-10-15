@@ -95,15 +95,19 @@ const CircularCategoryCard = ({ category, index }) => {
 
 const SkeletonLoader = () => {
   return (
-    <div className="flex flex-col items-center animate-pulse">
-      <div className="w-[320px] h-[420px] rounded-[30px] bg-gray-200 relative overflow-hidden">
-        <div className="h-[250px] bg-gray-300" />
-        <div className="p-6">
-          <div className="h-8 bg-gray-300 rounded-lg w-3/4 mb-3" />
-          <div className="h-4 bg-gray-300 rounded w-full mb-2" />
-          <div className="h-4 bg-gray-300 rounded w-2/3 mb-6" />
-          <div className="absolute bottom-6 left-6 right-6">
-            <div className="h-12 bg-gray-300 rounded-2xl w-full" />
+    <div className="w-full animate-pulse">
+      <div className="w-full aspect-square rounded overflow-hidden bg-gray-200">
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          <div className="p-4 md:p-6 flex flex-col justify-between h-full">
+            <div>
+              <div className="h-6 bg-gray-300 rounded w-3/4 mb-3" />
+              <div className="h-4 bg-gray-300 rounded w-full mb-2" />
+              <div className="h-4 bg-gray-300 rounded w-2/3" />
+            </div>
+            <div className="mt-2">
+              <div className="h-10 bg-gray-300 rounded w-24 mx-auto" />
+            </div>
           </div>
         </div>
       </div>
@@ -219,9 +223,11 @@ const FeaturedCategoriesSection = () => {
         </div>
 
         {categoriesLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-            {[...Array(3)].map((_, index) => (
-              <SkeletonLoader key={index} />
+          <div className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-2 px-4">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="w-full p-2">
+                <SkeletonLoader />
+              </div>
             ))}
           </div>
         ) : error ? (
