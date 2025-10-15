@@ -43,7 +43,7 @@ export default function ProductShowcase() {
             </div>
 
             <motion.div className="relative" whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                <div className="relative h-96 rounded overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20">
+                <div className="relative  aspect-[16/12] rounded overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20">
                     <Image src={cover} alt="Premium nutrition products showcase" fill className="object-cover opacity-80" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                     <div className="absolute bottom-6 left-6 text-white">
