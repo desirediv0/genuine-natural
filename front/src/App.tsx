@@ -34,6 +34,7 @@ import { Card, CardContent } from "./components/ui/card";
 import UserManagementPage from "./pages/UserManagementPage";
 import AnalyticsDashboard from "@/pages/AnalyticsDashboard";
 import BrandsPage from "./pages/BrandsPage";
+import BannersPage from "./pages/BannersPage.tsx";
 
 // Protected Route Component
 const ProtectedRoute = ({
@@ -294,6 +295,38 @@ const App = () => {
                 action={Action.UPDATE}
               >
                 <WeightsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="banners/new"
+            element={
+              <ProtectedRoute
+                resource={Resource.BANNERS}
+                action={Action.CREATE}
+              >
+                <BannersPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="banners/:id"
+            element={
+              <ProtectedRoute
+                resource={Resource.BANNERS}
+                action={Action.UPDATE}
+              >
+                <BannersPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="banners"
+            element={
+              <ProtectedRoute resource={Resource.BANNERS} action={Action.READ}>
+                <BannersPage />
               </ProtectedRoute>
             }
           />

@@ -5,14 +5,14 @@ import { useState, useEffect } from "react";
 import { fetchApi } from "@/lib/utils";
 
 import { motion } from "framer-motion";
-import { Star, Quote, CheckCircle, Award, Users } from "lucide-react";
+import { Star, Quote, Award, Users } from "lucide-react";
 
 import BenefitsSec from "@/components/benifit-sec";
 import FeaturedCategoriesSection from "@/components/catgry";
 
 import FeaturedProducts from "@/components/FeaturedProducts";
 // Import the new individual parts so we can place them separately
-import FeatureBanner, { ShowcaseHero, FeatureCards, ProductShowcase } from "@/components/featurebanner";
+import FeatureBanner from "@/components/featurebanner";
 import Heading from "@/components/Heading";
 import HeroCarousel from "@/components/HeroCarosal";
 
